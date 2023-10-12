@@ -1,0 +1,128 @@
+name: Triage with MITRE ATTACK
+description: A sample app to demonstrate Mitre Triage and auto remediation features made in Vue.
+logo: ""
+manifest_version: "2023-05-09"
+ignored:
+    - CITATION.cff
+    - CODE_OF_CONDUCT.md
+    - LICENSE
+    - SECURITY.md
+    - SUPPORT.md
+    - docs
+    - shared
+    - node_modules
+    - yarn.lock
+    - package.json
+    - ui/node_modules
+    - ui/shared/node_modules
+    - ui/(extensions|pages)/[^\/]*?/public
+    - ui/(extensions|pages)/[^\/]*?/index.html
+    - ui/(extensions|pages)/[^\/]*?/favicon.ico
+    - ui/(extensions|pages)/.*?/node_modules
+    - ui/(extensions|pages)/.*?/config
+    - ui/(extensions|pages)/.*?/src
+    - ui/(extensions|pages)/.*?/\.gitignore
+    - ui/(extensions|pages)/.*?/package\.json
+    - ui/(extensions|pages)/.*?/tsconfig\.json
+    - ui/(extensions|pages)/.*?/tsconfig\..*\.json
+    - ui/(extensions|pages)/.*?/.*?\.(md|log|lock|cjs)
+    - ui/(extensions|pages)/.*?/*\.ts
+    - ui/(extensions|pages)/*\.gz
+ui:
+    homepage: pages.mitre-vue
+    extensions:
+        - name: Triage App
+          description: MITRE Auto Remediation
+          path: ui/extensions/remediations/dist
+          entrypoint: ui/extensions/remediations/dist/index.html
+          sockets:
+            - activity.detections.details
+            - crowdscore.incidents.details
+          content_security_policy:
+            connect-src:
+                - self
+                - 'data:'
+                - https://cdn.jsdelivr.net
+            style-src:
+                - https://cdn.jsdelivr.net
+            style-src-elem: []
+            script-src:
+                - https://cdn.jsdelivr.net
+            form-action: []
+            img-src:
+                - https://cdn.jsdelivr.net
+                - self
+                - 'data:'
+            media-src: []
+            object-src: []
+          permissions: []
+    pages:
+        mitre-vue:
+            name: mitre-vue
+            description: MITRE App
+            path: ui/pages/chart-vue/dist
+            entrypoint: ui/pages/chart-vue/dist/index.html
+            content_security_policy:
+                connect-src:
+                    - self
+                    - 'data:'
+                    - https://cdn.jsdelivr.net
+                style-src:
+                    - https://cdn.jsdelivr.net
+                style-src-elem: []
+                script-src:
+                    - https://cdn.jsdelivr.net
+                form-action: []
+                img-src:
+                    - https://cdn.jsdelivr.net
+                    - self
+                    - 'data:'
+                media-src: []
+                object-src: []
+            permissions: []
+    dashboards: {}
+    navigation:
+        - path: /
+          name: Mitre Chart
+          permissions: []
+          ref: pages.mitre-vue
+        - path: /wizard
+          name: Mitre - Configure Actions Wizard
+          permissions: []
+          ref: pages.mitre-vue
+        - path: /notify-it
+          name: Mitre - Configure Notify IT Action
+          permissions: []
+          ref: pages.mitre-vue
+        - path: /notify-ir
+          name: Mitre - Configure Notify IR Action
+          permissions: []
+          ref: pages.mitre-vue
+api_integrations: []
+rtr_scripts: []
+collections:
+    - name: mitreAutoRemediationJira
+      description: Auto remediation Jira Config Collection.
+      schema: collections/mitre-auto-remediation-jira-schema.json
+      permissions: []
+      workflow_integration: null
+    - name: mitreAutoRemediationCreatedIssues
+      description: Auto remediation Created Issues history Collection.
+      schema: collections/mitre-auto-remediation-created-schema.json
+      permissions: []
+      workflow_integration: null
+auth:
+    scopes:
+        - alerts:read
+        - detects:read
+        - custom-storage:write
+        - custom-storage:read
+        - api-integrations:read
+        - api-integrations:write
+    permissions: {}
+    roles: []
+functions: []
+workflows: []
+logscale:
+    saved_searches: []
+    views: []

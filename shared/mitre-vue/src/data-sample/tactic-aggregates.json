@@ -1,0 +1,1445 @@
+{
+  "resources": [
+    {
+      "name": "Tactic",
+      "buckets": [
+        {
+          "label": "TA0006",
+          "count": 108307,
+          "sub_aggregates": [
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1003",
+                  "count": 108307,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 103391,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 4916,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 96073
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 12234
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 0,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 0,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 103391,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 4916,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            },
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 96073
+                },
+                {
+                  "label": 1696118400000,
+                  "key_as_string": "2023-10-01T00:00:00.000Z",
+                  "count": 12234
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "TA0002",
+          "count": 99102,
+          "sub_aggregates": [
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1203",
+                  "count": 86802,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 86802,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 0,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 77088
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 9714
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1059",
+                  "count": 7374,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 2476,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 4898,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 6408
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 966
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1129",
+                  "count": 4918,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 4918,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 4274
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 644
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1059.001",
+                  "count": 8,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 8,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 0,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 8
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 0,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 89286,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 9816,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 0,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            },
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 87778
+                },
+                {
+                  "label": 1696118400000,
+                  "key_as_string": "2023-10-01T00:00:00.000Z",
+                  "count": 11324
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "TA0005",
+          "count": 19602,
+          "sub_aggregates": [
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1036",
+                  "count": 16248,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 16248,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 0,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 13876
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 2372
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1574.002",
+                  "count": 2448,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 2448,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 2126
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 322
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1014",
+                  "count": 858,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 0,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 858,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 332
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 526
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1055",
+                  "count": 24,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 8,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 16,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 24
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1202",
+                  "count": 8,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 8,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 0,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 8
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1211",
+                  "count": 8,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 8,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 8
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1218",
+                  "count": 8,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 8,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 8
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 0,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 16264,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 2480,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 858,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            },
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 16382
+                },
+                {
+                  "label": 1696118400000,
+                  "key_as_string": "2023-10-01T00:00:00.000Z",
+                  "count": 3220
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "TA0001",
+          "count": 1638,
+          "sub_aggregates": [
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1190",
+                  "count": 1630,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 1396,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 234,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 1434
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 196
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "label": "T1566.001",
+                  "count": 8,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 8,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 8
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 1396,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 0,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 242,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 0,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            },
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 1442
+                },
+                {
+                  "label": 1696118400000,
+                  "key_as_string": "2023-10-01T00:00:00.000Z",
+                  "count": 196
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "TA0010",
+          "count": 366,
+          "sub_aggregates": [
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 0,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 0,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 366,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 0,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            },
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 136
+                },
+                {
+                  "label": 1696118400000,
+                  "key_as_string": "2023-10-01T00:00:00.000Z",
+                  "count": 230
+                }
+              ]
+            },
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1048",
+                  "count": 366,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 366,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 136
+                        },
+                        {
+                          "label": 1696118400000,
+                          "key_as_string": "2023-10-01T00:00:00.000Z",
+                          "count": 230
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "TA0004",
+          "count": 8,
+          "sub_aggregates": [
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1548.002",
+                  "count": 8,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 8,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 8
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 0,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 0,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 8,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 0,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            },
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "TA0003",
+          "count": 4,
+          "sub_aggregates": [
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 4
+                }
+              ]
+            },
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1547.001",
+                  "count": 4,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 4,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 0,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 4
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 0,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 0,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 4,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 0,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "TA0040",
+          "count": 2,
+          "sub_aggregates": [
+            {
+              "name": "Technique",
+              "buckets": [
+                {
+                  "label": "T1486",
+                  "count": 2,
+                  "sub_aggregates": [
+                    {
+                      "name": "Severity",
+                      "buckets": [
+                        {
+                          "label": "0.0-20.0",
+                          "count": 0,
+                          "to": 20,
+                          "from": 0
+                        },
+                        {
+                          "label": "20.0-40.0",
+                          "count": 0,
+                          "to": 40,
+                          "from": 20
+                        },
+                        {
+                          "label": "40.0-60.0",
+                          "count": 0,
+                          "to": 60,
+                          "from": 40
+                        },
+                        {
+                          "label": "60.0-80.0",
+                          "count": 0,
+                          "to": 80,
+                          "from": 60
+                        },
+                        {
+                          "label": "80.0-101.0",
+                          "count": 2,
+                          "to": 101,
+                          "from": 80
+                        }
+                      ]
+                    },
+                    {
+                      "name": "TrendData",
+                      "buckets": [
+                        {
+                          "label": 1693526400000,
+                          "key_as_string": "2023-09-01T00:00:00.000Z",
+                          "count": 2
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Severity",
+              "buckets": [
+                {
+                  "label": "0.0-20.0",
+                  "count": 0,
+                  "to": 20,
+                  "from": 0
+                },
+                {
+                  "label": "20.0-40.0",
+                  "count": 0,
+                  "to": 40,
+                  "from": 20
+                },
+                {
+                  "label": "40.0-60.0",
+                  "count": 0,
+                  "to": 60,
+                  "from": 40
+                },
+                {
+                  "label": "60.0-80.0",
+                  "count": 0,
+                  "to": 80,
+                  "from": 60
+                },
+                {
+                  "label": "80.0-101.0",
+                  "count": 2,
+                  "to": 101,
+                  "from": 80
+                }
+              ]
+            },
+            {
+              "name": "TrendData",
+              "buckets": [
+                {
+                  "label": 1693526400000,
+                  "key_as_string": "2023-09-01T00:00:00.000Z",
+                  "count": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

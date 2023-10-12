@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json-schema.org/examples/product.schema.json",
+  "title": "Mitre Auto Remediation Jira Issue",
+  "description": "A Mitre Auto Remediation Jira Issue Creation Log Collection",
+  "type": "object",
+  "x-cs-indexable-fields": [
+    {
+      "field": "/issueId",
+      "type": "string"
+    },
+    {
+      "field": "/issueKey",
+      "type": "string"
+    },
+    {
+      "field": "/detectionId",
+      "type": "string"
+    },
+    {
+      "field": "/creationDate",
+      "type": "string"
+    },
+    {
+      "field": "/notificationType",
+      "type": "string"
+    }
+  ],
+  "properties": {
+    "account": {
+      "description": "Jira Account Id",
+      "type": "string"
+    },
+    "priority": {
+      "description": "Jira Priority Id",
+      "type": "string"
+    },
+    "issueType": {
+      "description": "Jira Issue Type Id",
+      "type": "string"
+    },
+    "summary": {
+      "description": "Jira Summary",
+      "type": "string"
+    },
+    "description": {
+      "description": "Jira Description",
+      "type": "string"
+    },
+    "project": {
+      "description": "Jira Project",
+      "type": "string"
+    },
+    "labels": {
+      "description": "Labels for the auto remediation ticket",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "issueId": {
+      "description": "Created Issue ID",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "issueKey": {
+      "description": "Created Issue Key",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "issueLink": {
+      "description": "Created Issue API Link",
+      "type": "string"
+    },
+    "detectionId": {
+      "description": "Detection ID",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "creationDate": {
+      "description": "Creation Date",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "notificationType": {
+      "description": "Notification Type",
+      "type": "string",
+      "x-cs-indexable": true
+    }
+  },
+  "required": [
+    "account",
+    "priority",
+    "issueType",
+    "summary",
+    "project",
+    "labels",
+    "issueId",
+    "issueKey",
+    "issueLink",
+    "detectionId",
+    "creationDate",
+    "notificationType"
+  ]
+}

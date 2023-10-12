@@ -1,0 +1,97 @@
+:root,
+.theme-light,
+.theme-dark {
+  --border-radius: 2px;
+  --sl-input-color: var(--titles-and-attributes);
+  --sl-input-color-hover: var(--text-and-icons);
+  --sl-input-color-focus: var(--text-and-icons);
+  --sl-input-color-disabled: var(--disabled);
+  --sl-panel-background-color: var(--ground-floor);
+  --sl-color-neutral-700: var(--titles-and-attributes);
+  --sl-overlay-background-color: var(--overlay-2);
+  --sl-shadow-x-large: var(--elevation-lg);
+  --sl-tooltip-background-color: var(--surface-inner);
+  --sl-tooltip-color: var(--text-and-icons);
+  --sl-tooltip-drop-shadow: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06));
+}
+
+.tooltip,
+sl-tooltip::part(base) {
+  filter: var(--sl-tooltip-drop-shadow);
+  -webkit-filter: var(--sl-tooltip-drop-shadow);
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
+
+sl-option,
+sl-menu-item {
+  padding: 0;
+}
+
+.input__control,
+sl-input::part(input),
+sl-select::part(input),
+sl-textarea::part(input) {
+  background: none;
+}
+
+.sl-toast-stack {
+  right: 0;
+  left: auto;
+  position: fixed;
+}
+
+.sl-toast-backdrop {
+  z-index: calc(var(--sl-z-index-toast) - 1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--basement);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  display: block;
+  content: '';
+}
+
+.sl-toast-stack sl-alert.static::part(base) {
+  position: fixed;
+}
+
+.theme-dark .sl-toast-backdrop,
+.theme-light .theme-mezzanine .sl-toast-backdrop {
+  background-color: rgb(29, 28, 33, 0.75);
+}
+
+.theme-light .sl-toast-backdrop {
+  background-color: rgb(255, 255, 255, 0.75);
+}
+
+
+sl-select::part(listbox) {
+  padding: 0;
+  border-radius: 2px;
+  border: 1px solid var(--lines-light);
+  background: var(--surface-2xl);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.sl-toast-stack sl-alert::part(base) {
+  background-color: var(--surface-2xl);
+  border-width: 0;
+  border-top-width: 0.25rem
+}
+
+.type-sm-underline {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  text-decoration: underline;
+}
+
+sl-button::part(base) {
+  --sl-input-border-radius-medium: var(--border-radius);
+  --sl-input-border-radius-small: var(--border-radius);
+}

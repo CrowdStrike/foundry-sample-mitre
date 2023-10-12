@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "ui/extensions/remediations",
+      "ui/pages/chart-vue",
+      "shared/mitre-vue"
+    ],
+    "nohoist": [
+      "ui/**",
+      "shared/**"
+    ]
+  },
+  "scripts": {
+    "start": "run-p start-extension start-page",
+    "build": "run-p build-extension build-page",
+    "build:watch": "run-p build-extension:watch build-page:watch",
+    "test:unit": "run-p test-extension:unit test-page:unit test-vue-shared:unit",
+    "format": "run-p format-extension format-page format-vue-shared",
+    "test": "run-p test-extension:unit test-page:unit test-vue-shared:unit",
+    "lint": "run-p lint-extension lint-page lint-vue-shared lint-vue-shared",
+    "lint:fix": "run-p lint-extension:fix lint-page:fix lint-vue-shared:fix",
+    "start-extension": "cd ./ui/extensions/remediations && yarn start",
+    "start-page": "cd ./ui/pages/chart-vue && yarn start",
+    "build-extension": "cd ./ui/extensions/remediations && yarn build",
+    "build-extension:watch": "cd ./ui/extensions/remediations && yarn build-watch",
+    "build-page": "cd ./ui/pages/chart-vue && yarn build",
+    "build-page:watch": "cd ./ui/pages/chart-vue && yarn build-watch",
+    "test-extension:unit": "cd ./ui/extensions/remediations && yarn run test:unit",
+    "test-page:unit": "cd ./ui/pages/chart-vue && yarn run test:unit",
+    "test-vue-shared:unit": "cd ./shared/mitre-vue && yarn test:unit",
+    "format-extension": "cd ./ui/extensions/remediations && yarn run format",
+    "format-page": "cd ./ui/pages/chart-vue && yarn run format",
+    "format-vue-shared": "cd ./shared/mitre-vue && yarn run format",
+    "lint-extension": "cd ./ui/extensions/remediations && yarn run lint",
+    "lint-page": "cd ./ui/pages/chart-vue && yarn run lint",
+    "lint-vue-shared": "cd ./shared/mitre-vue && yarn run lint",
+    "lint-extension:fix": "cd ./ui/extensions/remediations && yarn run lint:fix",
+    "lint-page:fix": "cd ./ui/pages/chart-vue && yarn run lint:fix",
+    "lint-vue-shared:fix": "cd ./shared/mitre-vue && yarn run lint:fix"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "volta": {
+    "node": "18.12.1",
+    "yarn": "1.22.19"
+  }
+}
