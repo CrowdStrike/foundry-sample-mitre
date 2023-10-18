@@ -36,7 +36,7 @@ With the following, you should be able to start and develop all of the projects 
 ### If you are developing a page
 
 1. Search the page id id in the `manifest.yml`, copy it.
-2. Go to `foundry/page/{{page-id}}` (**note**: replace `{{page-id}}` with the copied one in step 5)
+2. Go to `foundry/page/{{page-id}}` (**note**: replace `{{page-id}}` with the one you find in the manifest.)
 3. be sure that the **development** mode is active, or you will be seeing the current "deployed" page
 
 ### If you are developing an extension
