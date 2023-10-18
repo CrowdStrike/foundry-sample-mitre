@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json-schema.org/examples/product.schema.json",
+  "title": "Mitre Auto Remediation Jira Config",
+  "description": "A Mitre Auto Remediation Jira Configuration Collection",
+  "type": "object",
+  "x-cs-indexable-fields": [
+    {
+      "field": "/account",
+      "type": "string"
+    },
+    {
+      "field": "/priority",
+      "type": "string"
+    },
+    {
+      "field": "/issueType",
+      "type": "string"
+    },
+    {
+      "field": "/summary",
+      "type": "string"
+    },
+    {
+      "field": "/description",
+      "type": "string"
+    },
+    {
+      "field": "/project",
+      "type": "string"
+    }
+  ],
+  "properties": {
+    "account": {
+      "description": "Jira Account Id",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "priority": {
+      "description": "Jira Priority Id",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "issueType": {
+      "description": "Jira Issue Type Id",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "summary": {
+      "description": "Jira Summary",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "description": {
+      "description": "Jira Description",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "project": {
+      "description": "Jira Project",
+      "type": "string",
+      "x-cs-indexable": true
+    },
+    "labels": {
+      "description": "Labels for the auto remediation ticket",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "account",
+    "priority",
+    "issueType",
+    "summary",
+    "project",
+    "labels"
+  ]
+}

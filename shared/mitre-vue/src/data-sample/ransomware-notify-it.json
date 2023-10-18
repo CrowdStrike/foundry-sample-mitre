@@ -1,0 +1,9 @@
+{
+  "project": "10001",
+  "account": "3e0eb9589ab14727bc0a5b66b5588c5a",
+  "priority": "1",
+  "labels": ["Test1"],
+  "issueType": "10002",
+  "summary": "Ransomware ${Tactic} via ${Technique} detected on ${Hostname}",
+  "description": "test description"
+}

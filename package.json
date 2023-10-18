@@ -1,0 +1,83 @@
+{
+  "version": "1.0.0",
+  "private": true,
+  "description": "A sample app to demonstrate Mitre Triage and auto remediation features made in Vue.",
+  "keywords": [
+    "javascript",
+    "vue",
+    "MITRE",
+    "foundry-js"
+  ],
+  "homepage": "https://github.com/CrowdStrike/foundry-sample-mitre#readme",
+  "bugs": {
+    "url": "https://github.com/CrowdStrike/foundry-sample-mitre/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrowdStrike/foundry-sample-mitre",
+    "directory": "foundry-sample-mitre"
+  },
+  "license": "MIT",
+  "author": "CrowdStrike Team",
+  "files": [
+    "README.md",
+    "SECURITY.md",
+    "SUPPORT.md",
+    "LICENSE",
+    "CODE_OF_CONDUCT.md",
+    "CITATION.cff",
+    "manifest.yml",
+    "ui",
+    "collections",
+    "shared"
+  ],
+  "workspaces": {
+    "packages": [
+      "ui/extensions/remediations",
+      "ui/pages/chart-vue",
+      "shared/mitre-vue"
+    ],
+    "nohoist": [
+      "ui/**",
+      "shared/**"
+    ]
+  },
+  "scripts": {
+    "build": "run-p build-extension build-page",
+    "build-extension": "cd ./ui/extensions/remediations && yarn build",
+    "build-extension:watch": "cd ./ui/extensions/remediations && yarn build-watch",
+    "build-page": "cd ./ui/pages/chart-vue && yarn build",
+    "build-page:watch": "cd ./ui/pages/chart-vue && yarn build-watch",
+    "build:watch": "run-p build-extension:watch build-page:watch",
+    "format": "run-p format-extension format-page format-vue-shared",
+    "format-extension": "cd ./ui/extensions/remediations && yarn run format",
+    "format-page": "cd ./ui/pages/chart-vue && yarn run format",
+    "format-vue-shared": "cd ./shared/mitre-vue && yarn run format",
+    "lint": "run-p lint-extension lint-page lint-vue-shared lint-vue-shared",
+    "lint-extension": "cd ./ui/extensions/remediations && yarn run lint",
+    "lint-extension:fix": "cd ./ui/extensions/remediations && yarn run lint:fix",
+    "lint-page": "cd ./ui/pages/chart-vue && yarn run lint",
+    "lint-page:fix": "cd ./ui/pages/chart-vue && yarn run lint:fix",
+    "lint-vue-shared": "cd ./shared/mitre-vue && yarn run lint",
+    "lint-vue-shared:fix": "cd ./shared/mitre-vue && yarn run lint:fix",
+    "lint:fix": "run-p lint-extension:fix lint-page:fix lint-vue-shared:fix",
+    "start": "run-p start-extension start-page",
+    "start-extension": "cd ./ui/extensions/remediations && yarn start",
+    "start-page": "cd ./ui/pages/chart-vue && yarn start",
+    "test": "run-p test-extension:unit test-page:unit test-vue-shared:unit",
+    "test-extension:unit": "cd ./ui/extensions/remediations && yarn run test:unit",
+    "test-page:unit": "cd ./ui/pages/chart-vue && yarn run test:unit",
+    "test-vue-shared:unit": "cd ./shared/mitre-vue && yarn test:unit",
+    "test:unit": "run-p test-extension:unit test-page:unit test-vue-shared:unit"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "engines": {
+    "node": ">=18.12.1"
+  },
+  "volta": {
+    "node": "18.12.1",
+    "yarn": "1.22.19"
+  }
+}
