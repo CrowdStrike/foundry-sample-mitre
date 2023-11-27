@@ -82,22 +82,23 @@ ui:
             permissions: []
     dashboards: {}
     navigation:
-        - path: /
-          name: Mitre Chart
-          permissions: []
-          ref: pages.mitre-vue
-        - path: /wizard
-          name: Mitre - Configure Actions Wizard
-          permissions: []
-          ref: pages.mitre-vue
-        - path: /notify-it
-          name: Mitre - Configure Notify IT Action
-          permissions: []
-          ref: pages.mitre-vue
-        - path: /notify-ir
-          name: Mitre - Configure Notify IR Action
-          permissions: []
-          ref: pages.mitre-vue
+        links:
+            - path: /
+              name: Mitre Chart
+              permissions: []
+              ref: pages.mitre-vue
+            - path: /wizard
+              name: Mitre - Configure Actions Wizard
+              permissions: []
+              ref: pages.mitre-vue
+            - path: /notify-it
+              name: Mitre - Configure Notify IT Action
+              permissions: []
+              ref: pages.mitre-vue
+            - path: /notify-ir
+              name: Mitre - Configure Notify IR Action
+              permissions: []
+              ref: pages.mitre-vue
 api_integrations: []
 rtr_scripts: []
 collections:
@@ -125,4 +126,3 @@ functions: []
 workflows: []
 logscale:
     saved_searches: []
-    views: []
