@@ -11,17 +11,12 @@ As mentioned in [SUPPORT](https://github.com/CrowdStrike/foundry-sample-mitre/bl
 
 Please report suspected security vulnerabilities by:
 
-+ Submitting
+- Submitting
   a [bug](https://github.com/CrowdStrike/foundry-sample-mitre/issues/new?assignees=&labels=bug+%3Abug%3A&template=bug_report.md&title=%5B+BUG+%5D+...).
-+ Starting a new [discussion](https://github.com/CrowdStrike/foundry-sample-mitre/discussions).
-+ Submitting a [pull request](https://github.com/CrowdStrike/foundry-sample-mitre/pulls) to potentially resolve the issue. (New
+- Submitting a [pull request](https://github.com/CrowdStrike/foundry-sample-mitre/pulls) to potentially resolve the issue. (New
   contributors: please review the content
   located [here](https://github.com/CrowdStrike/foundry-sample-mitre/blob/main/CONTRIBUTING.md).)
-+ Sending an email to __foundry@crowdstrike.com__.
-
-## Disclosure and mitigation process
-
-TODO !!!
+- Sending an email to __oss-security@crowdstrike.com__.
 
 ---
 

@@ -5,19 +5,44 @@
 The Triage with MITRE Attack sample Foundry app is a community-driven, open source project which serves as an example of an app which can be built using CrowdStrike's Foundry ecosystem.
 `foundry-sample-mitre` is not a formal CrowdStrike project and is maintained by the open source developer community.
 
-# CrowdStrike Triage with MITRE ATT&CK
+This app is one of several App Templates included in Foundry that you can use to jumpstart your development.
+It comes complete with a set of preconfigured capabilities aligned to its business purpose.
 
-This folder contains all the projects and the configuration for the `mitre` sample app (vue).
-In here you can find, **collections**, **ui** and the apps' `manifest.yml`.
+## Description
 
-**collections** are used for some components inside the extension and main app, the projects are stored inside `ui`
+The CrowdStrike Triage for MITRE ATT&CK app provides SOC analysts with a focused, MITRE-prioritized view of their XDR detections and enables both automated and manual remediation actions.
 
-In `ui` you can find:
+This app provides a filtered dashboard for the existing Falcon console Detections page, helping users focus on a manageable set of detections.
 
-- **extensions**: contains `remediations` app
-- **pages**: contains `chart-vue` which is the Mitre's chart page done with vue
+You can use this app to configure automated and manual actions for specific tactics and techniques.
 
-_while `remediations` and `chart-vue` are **vue projects**, all related with one another, it's **worth noticing** that you can add other projects with other technologies, completely un-related with the forementioned._
+## Basic information
+
+### Dependencies
+
+- Foundry CLI
+- Go v1.21+ (needed if modifying functions). See https://go.dev/learn/ for instructions to install.
+- YARN (needed if modifying UI). See https://yarnpkg.com/getting-started for instructions to install.
+
+### Foundry capabilities used
+
+- **Collections.** Used by the app to store JIRA configuration for response actions and the history of issues created from the app.
+- **UI navigation.** Adds the app to the Falcon navigation for easy access.
+- **UI pages.** Custom UI pages to display results and manage the app.
+- **UI extensions.** UI extension that is configured to run in a socket on the Detections page of the Falcon console.
+
+### Languages and frameworks used
+
+- UI
+  - HTML, CSS
+  - Typescript, Vue
+
+### Directory structure
+
+- `collections`. Schemas used in the collections used by this app.
+- `ui/pages/chart-vue`. Single Page Application which serves as the frontend of the app.
+- `ui/extensions/remediations`. Single Page Application which serves as the extension mounted in the Detections page of the Falcon console.
+- `shared/mitre-vue`. Utility code and components shared between the `ui/pages/chart-vue` and `ui/extensions/remediations`.
 
 ## Development
 
@@ -33,21 +58,36 @@ With the following, you should be able to start and develop all of the projects 
 3. Concurrently, run `foundry ui run`.
 4. now you are ready to test your changes with local code (remember to turn on "development mode"
 
-### If you are developing a page
+## Deploying and installing the app
 
-1. Search the page id id in the `manifest.yml`, copy it.
-2. Go to `foundry/page/{{page-id}}` (**note**: replace `{{page-id}}` with the one you find in the manifest.)
-3. be sure that the **development** mode is active, or you will be seeing the current "deployed" page
+For detailed info about deploying and installing this app in your CID, see the Falcon Foundry product documentation:
 
-### If you are developing an extension
+- Deploy an app
+  - US-1: [Deploy an app](https://falcon.crowdstrike.com/documentation/page/ofd46a1c/deploy-an-app)
+  - US-2: [Deploy an app](https://falcon.us-2.crowdstrike.com/documentation/page/ofd46a1c/deploy-an-app)
+  - EU-1: [Deploy an app](https://falcon.eu-1.crowdstrike.com/documentation/page/ofd46a1c/deploy-an-app)
+- Create a new app using this app as template
+  - US-1: [Create an app from a template](https://falcon.crowdstrike.com/documentation/page/l159717b/create-an-app#c4378b86)
+  - US-2: [Create an app from a template](https://falcon.us-2.crowdstrike.com/documentation/page/l159717b/create-an-app#c4378b86)
+  - EU-1: [Create an app from a template](https://falcon.eu-1.crowdstrike.com/documentation/page/l159717b/create-an-app#c4378b86)
+- Run this app in development mode after deployment
+  - US-1: [Iterate in development mode](https://falcon.crowdstrike.com/documentation/page/fb88e442/view-and-manage-apps#d5175ae2)
+  - US-2: [Iterate in development mode](https://falcon.us-2.crowdstrike.com/documentation/page/fb88e442/view-and-manage-apps#d5175ae2)
+  - EU-1: [Iterate in development mode](https://falcon.eu-1.crowdstrike.com/documentation/page/fb88e442/view-and-manage-apps#d5175ae2)
+- Work with the Foundry capabilities of this app
+  - US-1: [App capabilities](https://falcon.crowdstrike.com/documentation/category/u0daabab/app-capabilities)
+  - US-2: [App capabilities](https://falcon.us-2.crowdstrike.com/documentation/category/u0daabab/app-capabilities)
+  - EU-1: [App capabilities](https://falcon.eu-1.crowdstrike.com/documentation/category/u0daabab/app-capabilities)
 
-1. Go to the page where your extension is mounted.
-2. be sure that the **development** mode is active, or you will be seeing the current "deployed" extension
+## Foundry resources
 
-## Hands-on projects
+See our product documentation:
 
-You can find more about the specific projects and libraries with the following links:
+- US-1: [Falcon Foundry](https://falcon.crowdstrike.com/documentation/category/c3d64B8e/falcon-foundry)
+- US-2: [Falcon Foundry](https://falcon.us-2.crowdstrike.com/documentation/category/c3d64B8e/falcon-foundry)
+- EU-1: [Falcon Foundry](https://falcon.eu-1.crowdstrike.com/documentation/category/c3d64B8e/falcon-foundry)
 
-- [Mitre chart (vue)](./ui//pages/chart-vue/README.md)
-- [Auto remediation extension](./ui/extensions/remediations/README.md)
-- [Mitre's shared vue logic](./ui/shared/mitre-vue/README.md)
+---
+
+<p align="center"><img src="https://raw.githubusercontent.com/CrowdStrike/falconpy/main/docs/asset/cs-logo-footer.png"><BR/><img width="300px" src="https://raw.githubusercontent.com/CrowdStrike/falconpy/main/docs/asset/adversary-goblin-panda.png"></P>
+<h3><P align="center">WE STOP BREACHES</P></h3>
