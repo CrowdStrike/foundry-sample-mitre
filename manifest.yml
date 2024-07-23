@@ -1,5 +1,5 @@
 name: Triage with MITRE ATTACK
-description: A sample app to demonstrate Mitre Triage and auto remediation features made in Vue.
+description: Provides a focused, MITRE-prioritized view of XDR detections 
 logo: ""
 manifest_version: "2023-05-09"
 ignored:
