@@ -5,12 +5,14 @@
 The Triage with MITRE Attack sample Foundry app is a community-driven, open source project which serves as an example of an app which can be built using CrowdStrike's Foundry ecosystem.
 `foundry-sample-mitre` is an open source project, not a CrowdStrike product. As such, it carries no formal support, expressed or implied.
 
-This app is one of several App Templates included in Foundry that you can use to jumpstart your development.
-It comes complete with a set of preconfigured capabilities aligned to its business purpose.
+This app is one of several App Templates included in Foundry that you can use to jumpstart your development. It comes complete with a set of 
+preconfigured capabilities aligned to its business purpose. Deploy this app from the Templates page with a single click in the Foundry UI, or 
+create an app from this template using the CLI.
 
 ## Description
 
-The CrowdStrike Triage for MITRE ATT&CK app provides SOC analysts with a focused, MITRE-prioritized view of their XDR detections and enables both automated and manual remediation actions.
+The CrowdStrike Triage for MITRE ATT&CK app provides SOC analysts with a focused, MITRE-prioritized view of their XDR detections and enables 
+both automated and manual remediation actions.
 
 This app provides a filtered dashboard for the existing Falcon console Detections page, helping users focus on a manageable set of detections.
 
