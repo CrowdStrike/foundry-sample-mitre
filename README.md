@@ -20,9 +20,9 @@ You can use this app to configure automated and manual actions for specific tact
 
 ## Prerequisites
 
-* Foundry CLI (instructions below)
+* The Foundry CLI (instructions below).
 * Go v1.21+ (needed if modifying the app's functions). See https://go.dev/learn for installation instructions.
-* YARN (needed if modifying the app's UI). See https://yarnpkg.com/getting-started for installation instructions.
+* Yarn (needed if modifying the app's UI). See https://yarnpkg.com/getting-started for installation instructions.
 
 ### Install the Foundry CLI
 
@@ -52,11 +52,11 @@ Run `foundry version` to verify it's installed correctly.
 
 ## Getting Started
 
-Clone this sample to your local system, or [download as a zip file](https://github.com/CrowdStrike/foundry-sample-scalable-rtr/archive/refs/heads/main.zip).
+Clone this sample to your local system, or [download as a zip file](https://github.com/CrowdStrike/foundry-sample-mitre/archive/refs/heads/main.zip).
 
 ```shell
-git clone https://github.com/CrowdStrike/foundry-sample-scalable-rtr
-cd foundry-sample-scalable-rtr
+git clone https://github.com/CrowdStrike/foundry-sample-mitre
+cd foundry-sample-mitre
 ```
 
 Log in to Foundry:
