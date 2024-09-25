@@ -7,7 +7,7 @@ jobs:
       matrix:
         path:
           - ui/extensions/remediations
-          - up/pages/chart-vue
+          - ui/pages/chart-vue
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
