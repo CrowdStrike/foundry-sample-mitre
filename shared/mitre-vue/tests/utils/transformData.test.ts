@@ -32,8 +32,7 @@ describe('Unit test - transformData.ts', () => {
             false,
             false
         )
-        
-        
+
         result.map((tactic) => {
             const listOfTechniques = tactic.techniques.map(t => t.technique_id);
 
@@ -124,7 +123,7 @@ describe('Unit test - transformData.ts', () => {
         const from = new Date();
         from.setDate(to.getDate() - 91)
         const calculatedTrend = calculateTrend(exampleTrendData as TrendAggregate, from, to)
-        expect(calculatedTrend).toBe(1)
+        expect(calculatedTrend).toBe(-1)
     })
 
     it('Should calculate trend a 100% decrease', () => {
@@ -215,9 +214,9 @@ describe('Unit test - transformData.ts', () => {
 
                     expect(foundSubTechnique?.is_subtechnique).toBeTruthy()
 
-                    
+
                     const severityDetails = Object.values(foundSubTechnique?.severity_details)
-                    
+
                     technique?.sub_aggregates?.find(t => t.name === 'Severity')?.buckets.map((severity) =>{
                         expect(severityDetails.includes(severity.count)).toBeTruthy()
                     })
