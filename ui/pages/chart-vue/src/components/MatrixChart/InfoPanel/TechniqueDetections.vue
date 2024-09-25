@@ -2,11 +2,7 @@
 /**
  * Technique Detections Component
  */
-import {
-  ActivityIcon,
-  ExternalLink16Icon,
-  MitreDetectionFilledIcon
-} from '@mitre/vue-shared/icons'
+import { ActivityIcon, ExternalLink16Icon, MitreDetectionFilledIcon } from '@mitre/vue-shared/icons'
 import type { I18NComposer } from '@mitre/vue-shared/plugins/i18n'
 import SYMBOLS from '@mitre/vue-shared/utils/symbols'
 import { type SeverityDetail } from '@mitre/vue-shared/types'

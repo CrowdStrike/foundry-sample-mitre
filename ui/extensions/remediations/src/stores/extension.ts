@@ -3,11 +3,7 @@
  */
 import type FalconApi from '@crowdstrike/foundry-js'
 import type { I18NComposer } from '@mitre/vue-shared/plugins/i18n'
-import type {
-  DetectionItem,
-  JiraPriorityItem,
-  NotifyConfig
-} from '@mitre/vue-shared/types'
+import type { DetectionItem, JiraPriorityItem, NotifyConfig } from '@mitre/vue-shared/types'
 import {
   getCreatedIssue,
   getNotifyIRConfig,
