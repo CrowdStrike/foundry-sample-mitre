@@ -6,6 +6,7 @@ jobs:
     strategy:
       matrix:
         path:
+          - shared/mitre-vue
           - ui/extensions/remediations
           - ui/pages/chart-vue
     name: Build and Test
