@@ -183,10 +183,7 @@ export const useMatrixChartStore = defineStore('matrix-chart', () => {
             showSubtechniques.value
           )
 
-          const sortedTactics = reorderItems(
-            rawTactics,
-            showSubtechniques.value
-          )
+          const sortedTactics = reorderItems(rawTactics, showSubtechniques.value)
 
           tactics.value = sortedTactics
           setTechniqueMapping(tactics.value)

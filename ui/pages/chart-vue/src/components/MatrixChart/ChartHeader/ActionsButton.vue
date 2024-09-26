@@ -4,10 +4,7 @@
  */
 import { useConfigureJiraStore } from '@/stores/configure-jira'
 import type FalconApi from '@crowdstrike/foundry-js'
-import {
-  DotsMenuClosed24Component,
-  DotsMenuOpen24Component
-} from '@mitre/vue-shared/icons'
+import { DotsMenuClosed24Component, DotsMenuOpen24Component } from '@mitre/vue-shared/icons'
 import type { I18NComposer } from '@mitre/vue-shared/plugins/i18n'
 import SYMBOLS from '@mitre/vue-shared/utils/symbols'
 import { inject, ref } from 'vue'

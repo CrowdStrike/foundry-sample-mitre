@@ -2,10 +2,7 @@
 /**
  * Formatted detections number (compact format after 9999)
  */
-import {
-  MitreDetectionFilledIcon,
-  MitreDetectionOutlinedIcon
-} from '@mitre/vue-shared/icons'
+import { MitreDetectionFilledIcon, MitreDetectionOutlinedIcon } from '@mitre/vue-shared/icons'
 import type { I18NComposer } from '@mitre/vue-shared/plugins/i18n'
 import SYMBOLS from '@mitre/vue-shared/utils/symbols'
 import { computed, inject } from 'vue'
