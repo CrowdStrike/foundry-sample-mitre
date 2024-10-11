@@ -25,7 +25,7 @@
     "vue-router": "^4.2.2"
   },
   "devDependencies": {
-    "@modyfi/vite-plugin-yaml": "^1.0.4",
+    "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@rollup/plugin-yaml": "^4.1.1",
     "@rushstack/eslint-patch": "^1.2.0",
     "@tsconfig/node18": "^2.0.1",
