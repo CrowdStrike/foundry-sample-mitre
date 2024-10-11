@@ -24,7 +24,7 @@
     "vue-i18n": "^9.3.0-beta.14-77e850b"
   },
   "devDependencies": {
-    "@modyfi/vite-plugin-yaml": "^1.0.4",
+    "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@rushstack/eslint-patch": "^1.2.0",
     "@tsconfig/node18": "^2.0.1",
     "@types/jsdom": "^21.1.1",
