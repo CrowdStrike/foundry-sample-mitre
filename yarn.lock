@@ -533,7 +533,7 @@ __metadata:
     "@vue/eslint-config-prettier": "npm:7.1.0"
     "@vue/eslint-config-typescript": "npm:^11.0.3"
     "@vue/test-utils": "npm:^2.3.2"
-    "@vue/tsconfig": "npm:^0.4.0"
+    "@vue/tsconfig": "npm:^0.5.1"
     eslint: "npm:8.35.0"
     eslint-config-prettier: "npm:9.0.0"
     eslint-plugin-prettier: "npm:^4.2.1"
@@ -578,7 +578,7 @@ __metadata:
     "@vue/eslint-config-prettier": "npm:7.1.0"
     "@vue/eslint-config-typescript": "npm:^11.0.3"
     "@vue/test-utils": "npm:^2.3.2"
-    "@vue/tsconfig": "npm:^0.4.0"
+    "@vue/tsconfig": "npm:^0.5.1"
     eslint: "npm:8.35.0"
     eslint-config-prettier: "npm:9.0.0"
     eslint-plugin-prettier: "npm:^4.2.1"
@@ -617,7 +617,7 @@ __metadata:
     "@vue/eslint-config-prettier": "npm:7.1.0"
     "@vue/eslint-config-typescript": "npm:^11.0.3"
     "@vue/test-utils": "npm:^2.3.2"
-    "@vue/tsconfig": "npm:^0.4.0"
+    "@vue/tsconfig": "npm:^0.5.1"
     eslint: "npm:8.35.0"
     eslint-config-prettier: "npm:9.0.0"
     eslint-plugin-prettier: "npm:^4.2.1"
@@ -1424,10 +1424,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/tsconfig@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@vue/tsconfig@npm:0.4.0"
-  checksum: 10c0/3387b64f812d32a13d4b75f3a4b5d27bf5e3de2f25dfdcc62f3ffb871a7a073d83925d3ec332090033d48359a92dc8467ed20bfd538a0d8f245f025e1e08a8fc
+"@vue/tsconfig@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "@vue/tsconfig@npm:0.5.1"
+  checksum: 10c0/cf4049c0daf26579e42803eca661809f95f9196323b4a6aec1714ac3c80df37b44d3878468f56e2f3d1fe64640fe9cb42f20db42509ef858ab059fe05e0dd862
   languageName: node
   linkType: hard
 
