@@ -29,7 +29,7 @@
     "@tsconfig/node18": "^2.0.1",
     "@types/jsdom": "^21.1.1",
     "@types/lodash.get": "^4.4.7",
-    "@types/node": "^18.16.17",
+    "@types/node": "^22.9.3",
     "@types/sinon": "^10.0.16",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-prettier": "7.1.0",

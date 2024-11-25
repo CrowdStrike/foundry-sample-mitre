@@ -527,7 +527,7 @@ __metadata:
     "@types/lodash.debounce": "npm:^4.0.7"
     "@types/lodash.defaultsdeep": "npm:^4.6.7"
     "@types/lodash.get": "npm:^4.4.7"
-    "@types/node": "npm:^18.16.17"
+    "@types/node": "npm:^22.9.3"
     "@types/sinon": "npm:^10.0.16"
     "@vitejs/plugin-vue": "npm:^4.2.3"
     "@vue/eslint-config-prettier": "npm:7.1.0"
@@ -572,7 +572,7 @@ __metadata:
     "@tsconfig/node18": "npm:^2.0.1"
     "@types/jsdom": "npm:^21.1.1"
     "@types/lodash.get": "npm:^4.4.7"
-    "@types/node": "npm:^18.16.17"
+    "@types/node": "npm:^22.9.3"
     "@types/sinon": "npm:^10.0.16"
     "@vitejs/plugin-vue": "npm:^4.2.3"
     "@vue/eslint-config-prettier": "npm:7.1.0"
@@ -612,7 +612,7 @@ __metadata:
     "@types/jsdom": "npm:^21.1.1"
     "@types/lodash.defaultsdeep": "npm:^4.6.7"
     "@types/lodash.get": "npm:^4.4.7"
-    "@types/node": "npm:^18.16.17"
+    "@types/node": "npm:^22.9.3"
     "@vitejs/plugin-vue": "npm:^4.2.3"
     "@vue/eslint-config-prettier": "npm:7.1.0"
     "@vue/eslint-config-typescript": "npm:^11.0.3"
@@ -989,10 +989,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.16.17":
-  version: 18.18.4
-  resolution: "@types/node@npm:18.18.4"
-  checksum: 10c0/17891f8b8fd107813eaea0dce58d2008173f3c90df4f5998da3d01d6b225e9908922156ac83240b0230d3813f1a29b5f7e065a2aa993285af062e3a3779f88dd
+"@types/node@npm:^22.9.3":
+  version: 22.9.3
+  resolution: "@types/node@npm:22.9.3"
+  dependencies:
+    undici-types: "npm:~6.19.8"
+  checksum: 10c0/954ec72bf29436ea62425a9563914a9c1e93f97b18194acd51d74d13998a701977547ed2985ed3a0e97211b785436d28377116e5f613bfcf3182d9bd81d784dc
   languageName: node
   linkType: hard
 
@@ -5918,6 +5920,13 @@ __metadata:
   version: 5.25.3
   resolution: "undici-types@npm:5.25.3"
   checksum: 10c0/60a47c6db451c00d27186d86a41fbd9677fa1f6d1a5350bff342c3985bd79fc3f5a638ebf56bbce21df46c701a687db43b3fbd588e1726e58047cea14d182fef
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.19.8":
+  version: 6.19.8
+  resolution: "undici-types@npm:6.19.8"
+  checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
   languageName: node
   linkType: hard
 
