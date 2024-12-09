@@ -15,7 +15,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@crowdstrike/foundry-js": "0.10.0",
+    "@crowdstrike/foundry-js": "0.17.0",
     "@intlify/unplugin-vue-i18n": "^0.12.3",
     "@mitre/vue-shared": "*",
     "@shoelace-style/shoelace": "^2.8.0",

@@ -46,14 +46,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@crowdstrike/foundry-js@npm:0.10.0":
-  version: 0.10.0
-  resolution: "@crowdstrike/foundry-js@npm:0.10.0"
+"@crowdstrike/foundry-js@npm:0.17.0":
+  version: 0.17.0
+  resolution: "@crowdstrike/foundry-js@npm:0.17.0"
   dependencies:
-    emittery: "npm:^1.0.1"
+    emittery: "npm:^1.0.3"
     typescript-memoize: "npm:^1.1.1"
-    uuid: "npm:9.0.0"
-  checksum: 10c0/416cadf54d1bdaf4c7bdac5ec95828cab1009cb3490c522808f12ea462bcd5107d59f8ff0fa574eb4cfa41d3a9662dccc38fd191bb54f7f84c9932b301177bc1
+    uuid: "npm:^9.0.1"
+  checksum: 10c0/4d3fde607c119ea670a2152394bc5efd5dcd1a71c397bdcfaca88f96c3a17dd8b6fdc8ac39722c8dfb85d67ec72234d2b3d93b9bcfe119f4e5ff99223c0a8f44
   languageName: node
   linkType: hard
 
@@ -515,7 +515,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/chart-vue@workspace:ui/pages/chart-vue"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.10.0"
+    "@crowdstrike/foundry-js": "npm:0.17.0"
     "@intlify/unplugin-vue-i18n": "npm:^0.12.3"
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:^1.1.0"
@@ -563,7 +563,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/remediations@workspace:ui/extensions/remediations"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.10.0"
+    "@crowdstrike/foundry-js": "npm:0.17.0"
     "@intlify/unplugin-vue-i18n": "npm:^0.12.3"
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:^1.1.0"
@@ -604,7 +604,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/vue-shared@workspace:shared/mitre-vue"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.10.0"
+    "@crowdstrike/foundry-js": "npm:0.17.0"
     "@intlify/unplugin-vue-i18n": "npm:^1.2.0"
     "@rushstack/eslint-patch": "npm:^1.2.0"
     "@shoelace-style/shoelace": "npm:^2.8.0"
@@ -2237,10 +2237,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emittery@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "emittery@npm:1.0.1"
-  checksum: 10c0/2587f2f42bb5e004ba1cde61352d2151f4dd4f29eb79ad36f82e200da2faec9742d7bfca1492a024d60396e001e4b07d9b2b9c43be33547ff751ba8ff87c42ce
+"emittery@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "emittery@npm:1.0.3"
+  checksum: 10c0/91605d044f3891dd1f8ab731aeb94b520488b21e707f7064dcbcf5303bac3b4e7133dfa23c343ede1fc970340bd78a9b1aed522b805bc15104606bba630dd71e
   languageName: node
   linkType: hard
 
@@ -5991,12 +5991,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.0":
-  version: 9.0.0
-  resolution: "uuid@npm:9.0.0"
+"uuid@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
   bin:
     uuid: dist/bin/uuid
-  checksum: 10c0/8867e438990d1d33ac61093e2e4e3477a2148b844e4fa9e3c2360fa4399292429c4b6ec64537eb1659c97b2d10db349c673ad58b50e2824a11e0d3630de3c056
+  checksum: 10c0/1607dd32ac7fc22f2d8f77051e6a64845c9bce5cd3dd8aa0070c074ec73e666a1f63c7b4e0f4bf2bc8b9d59dc85a15e17807446d9d2b17c8485fbc2147b27f9b
   languageName: node
   linkType: hard
 
