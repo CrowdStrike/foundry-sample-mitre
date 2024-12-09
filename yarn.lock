@@ -688,7 +688,7 @@ __metadata:
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:^1.1.0"
     "@rollup/plugin-yaml": "npm:^4.1.1"
-    "@rushstack/eslint-patch": "npm:^1.2.0"
+    "@rushstack/eslint-patch": "npm:^1.10.4"
     "@shoelace-style/shoelace": "npm:^2.8.0"
     "@tsconfig/node18": "npm:^2.0.1"
     "@types/jsdom": "npm:^21.1.1"
@@ -735,7 +735,7 @@ __metadata:
     "@intlify/unplugin-vue-i18n": "npm:^0.12.3"
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:^1.1.0"
-    "@rushstack/eslint-patch": "npm:^1.2.0"
+    "@rushstack/eslint-patch": "npm:^1.10.4"
     "@shoelace-style/shoelace": "npm:^2.8.0"
     "@tsconfig/node18": "npm:^2.0.1"
     "@types/jsdom": "npm:^21.1.1"
@@ -774,7 +774,7 @@ __metadata:
   dependencies:
     "@crowdstrike/foundry-js": "npm:0.17.0"
     "@intlify/unplugin-vue-i18n": "npm:^1.2.0"
-    "@rushstack/eslint-patch": "npm:^1.2.0"
+    "@rushstack/eslint-patch": "npm:^1.10.4"
     "@shoelace-style/shoelace": "npm:^2.8.0"
     "@tsconfig/node18": "npm:^2.0.1"
     "@types/jsdom": "npm:^21.1.1"
@@ -1103,10 +1103,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/eslint-patch@npm:^1.2.0":
-  version: 1.5.1
-  resolution: "@rushstack/eslint-patch@npm:1.5.1"
-  checksum: 10c0/bef32de80a93aebf3db8a2fcb408e2644918f4382bfd0851baf054cd0de3ece86bab3916d06798c236e0c951e3fc88e0921cd7edf89abb21b2418056ff9a3621
+"@rushstack/eslint-patch@npm:^1.10.4":
+  version: 1.10.4
+  resolution: "@rushstack/eslint-patch@npm:1.10.4"
+  checksum: 10c0/de312bd7a3cb0f313c9720029eb719d8762fe54946cce2d33ac142b1cbb5817c4a5a92518dfa476c26311602d37f5a8f7caa90a0c73e3d6a56f9a05d2799c172
   languageName: node
   linkType: hard
 
