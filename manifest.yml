@@ -1,6 +1,9 @@
 name: Triage with MITRE ATTACK
-description: Provides a focused, MITRE-prioritized view of XDR detections 
+description: Provides a focused, MITRE-prioritized view of XDR detections
 logo: ""
+vendor: ""
+vendor_products: []
+use_case: ""
 manifest_version: "2023-05-09"
 ignored:
     - CITATION.cff
@@ -56,6 +59,7 @@ ui:
             media-src: []
             object-src: []
           permissions: []
+          is_ui_builder: false
     pages:
         mitre-vue:
             name: mitre-vue
@@ -124,5 +128,8 @@ auth:
     roles: []
 functions: []
 workflows: []
+parsers: []
 logscale:
     saved_searches: []
+lookup_files: []
+app_docs: []
