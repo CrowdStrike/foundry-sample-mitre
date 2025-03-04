@@ -1,7 +1,11 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/"
+    directories:
+      - "/"
+      - "/shared/mitre-vue"
+      - "/ui/extensions/remediations"
+      - "/ui/pages/chart-vue"
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
