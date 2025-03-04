@@ -760,7 +760,7 @@ __metadata:
     "@rollup/plugin-yaml": "npm:^4.1.1"
     "@rushstack/eslint-patch": "npm:^1.10.4"
     "@shoelace-style/shoelace": "npm:^2.8.0"
-    "@tsconfig/node18": "npm:^2.0.1"
+    "@tsconfig/node18": "npm:^18.2.4"
     "@types/jsdom": "npm:^21.1.1"
     "@types/lodash.debounce": "npm:^4.0.9"
     "@types/lodash.defaultsdeep": "npm:^4.6.7"
@@ -807,7 +807,7 @@ __metadata:
     "@modyfi/vite-plugin-yaml": "npm:^1.1.0"
     "@rushstack/eslint-patch": "npm:^1.10.4"
     "@shoelace-style/shoelace": "npm:^2.8.0"
-    "@tsconfig/node18": "npm:^2.0.1"
+    "@tsconfig/node18": "npm:^18.2.4"
     "@types/jsdom": "npm:^21.1.1"
     "@types/lodash.get": "npm:^4.4.7"
     "@types/node": "npm:^22.10.1"
@@ -846,7 +846,7 @@ __metadata:
     "@intlify/unplugin-vue-i18n": "npm:^1.2.0"
     "@rushstack/eslint-patch": "npm:^1.10.4"
     "@shoelace-style/shoelace": "npm:^2.8.0"
-    "@tsconfig/node18": "npm:^2.0.1"
+    "@tsconfig/node18": "npm:^18.2.4"
     "@types/jsdom": "npm:^21.1.1"
     "@types/lodash.defaultsdeep": "npm:^4.6.7"
     "@types/lodash.get": "npm:^4.4.7"
@@ -1310,10 +1310,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/node18@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@tsconfig/node18@npm:2.0.1"
-  checksum: 10c0/1094f56667a3f62acd1f383533d7ae5c8679d314456c6362792059f565d9f7483aef6adba1ac7cdfefc24cf5eb2cbb6c40a51087bfbaabbbf883fd8e1a15e23e
+"@tsconfig/node18@npm:^18.2.4":
+  version: 18.2.4
+  resolution: "@tsconfig/node18@npm:18.2.4"
+  checksum: 10c0/cdfd17f212660374eb2765cd5907b2252e43cfa2623cd52307a49f004327ef49bbe7d53c78b0aca57f33e9a5cb0d7d2eb5ded9be1235e6212f65c9f0699322b6
   languageName: node
   linkType: hard
 
