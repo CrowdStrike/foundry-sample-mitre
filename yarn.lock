@@ -798,7 +798,7 @@ __metadata:
     "@tsconfig/node18": "npm:^18.2.4"
     "@types/jsdom": "npm:^21.1.1"
     "@types/lodash.debounce": "npm:^4.0.9"
-    "@types/lodash.defaultsdeep": "npm:^4.6.7"
+    "@types/lodash.defaultsdeep": "npm:^4.6.9"
     "@types/lodash.get": "npm:^4.4.7"
     "@types/node": "npm:^22.13.9"
     "@types/sinon": "npm:^10.0.16"
@@ -883,7 +883,7 @@ __metadata:
     "@shoelace-style/shoelace": "npm:^2.20.0"
     "@tsconfig/node18": "npm:^18.2.4"
     "@types/jsdom": "npm:^21.1.1"
-    "@types/lodash.defaultsdeep": "npm:^4.6.7"
+    "@types/lodash.defaultsdeep": "npm:^4.6.9"
     "@types/lodash.get": "npm:^4.4.7"
     "@types/node": "npm:^22.13.9"
     "@vitejs/plugin-vue": "npm:^5.2.1"
@@ -1434,12 +1434,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.defaultsdeep@npm:^4.6.7":
-  version: 4.6.7
-  resolution: "@types/lodash.defaultsdeep@npm:4.6.7"
+"@types/lodash.defaultsdeep@npm:^4.6.9":
+  version: 4.6.9
+  resolution: "@types/lodash.defaultsdeep@npm:4.6.9"
   dependencies:
     "@types/lodash": "npm:*"
-  checksum: 10c0/e33573c620f23e84c1ed620d929aafd02722bf4ebabebd170df0e0d423461ba0055c7e9f108da4f742feee1f30cef88ddc4c41bf4b443d07231ce1918746e870
+  checksum: 10c0/25bc4ea8f5c6d9e2f44b2dded846e143a834339c01decde2af0dfd8e9d391f1b1911367165550f7929f9236194238a1bee4a4d2f19a10a2d8bde88a1f446adb5
   languageName: node
   linkType: hard
 
