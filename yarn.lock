@@ -767,7 +767,7 @@ __metadata:
     "@types/lodash.get": "npm:^4.4.7"
     "@types/node": "npm:^22.10.1"
     "@types/sinon": "npm:^10.0.16"
-    "@vitejs/plugin-vue": "npm:^4.2.3"
+    "@vitejs/plugin-vue": "npm:^5.2.1"
     "@vue/eslint-config-prettier": "npm:7.1.0"
     "@vue/eslint-config-typescript": "npm:^11.0.3"
     "@vue/test-utils": "npm:^2.4.6"
@@ -812,7 +812,7 @@ __metadata:
     "@types/lodash.get": "npm:^4.4.7"
     "@types/node": "npm:^22.10.1"
     "@types/sinon": "npm:^10.0.16"
-    "@vitejs/plugin-vue": "npm:^4.2.3"
+    "@vitejs/plugin-vue": "npm:^5.2.1"
     "@vue/eslint-config-prettier": "npm:7.1.0"
     "@vue/eslint-config-typescript": "npm:^11.0.3"
     "@vue/test-utils": "npm:^2.4.6"
@@ -851,7 +851,7 @@ __metadata:
     "@types/lodash.defaultsdeep": "npm:^4.6.7"
     "@types/lodash.get": "npm:^4.4.7"
     "@types/node": "npm:^22.10.1"
-    "@vitejs/plugin-vue": "npm:^4.2.3"
+    "@vitejs/plugin-vue": "npm:^5.2.1"
     "@vue/eslint-config-prettier": "npm:7.1.0"
     "@vue/eslint-config-typescript": "npm:^11.0.3"
     "@vue/test-utils": "npm:^2.4.6"
@@ -1584,13 +1584,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-vue@npm:^4.2.3":
-  version: 4.4.0
-  resolution: "@vitejs/plugin-vue@npm:4.4.0"
+"@vitejs/plugin-vue@npm:^5.2.1":
+  version: 5.2.1
+  resolution: "@vitejs/plugin-vue@npm:5.2.1"
   peerDependencies:
-    vite: ^4.0.0
+    vite: ^5.0.0 || ^6.0.0
     vue: ^3.2.25
-  checksum: 10c0/a430fbc504e2d14848b94866d52c8d5044ec216b1bf9304f53e3d3f3045da634db9c986e8ed2b0605fcc94e19fe67dc9c7e10971bd5aab444ca4167a71cd197d
+  checksum: 10c0/927c06ccf591812c8195967ad550059a77a922cc9f9672f4e83451538a421427bd4daf8cce20366baa3a70882b2ff6c4e5fea2c1fdc3fd24a8caa061c893c2d8
   languageName: node
   linkType: hard
 
