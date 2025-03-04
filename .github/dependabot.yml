@@ -6,6 +6,7 @@ updates:
       - "/shared/mitre-vue"
       - "/ui/extensions/remediations"
       - "/ui/pages/chart-vue"
+    open-pull-requests-limit: 10
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
