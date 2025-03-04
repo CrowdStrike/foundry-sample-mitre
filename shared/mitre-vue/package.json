@@ -43,7 +43,7 @@
     "@types/jsdom": "^21.1.1",
     "@types/lodash.defaultsdeep": "^4.6.7",
     "@types/lodash.get": "^4.4.7",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.13.9",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "7.1.0",
     "@vue/eslint-config-typescript": "^11.0.3",
