@@ -38,10 +38,10 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@crowdstrike/foundry-js@0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@crowdstrike/foundry-js/-/foundry-js-0.17.0.tgz#ff187d84ff1dbb51660e43eda6f5526f32553fe9"
-  integrity sha512-CzX4/6O4q0nPInnOqawT5eb0f5zMh1fIFoLTWWYzxQ26oaW2HAE61nRTb21jOIlkkoICYNTB1lO7mzdbVgdPsA==
+"@crowdstrike/foundry-js@0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@crowdstrike/foundry-js/-/foundry-js-0.17.1.tgz#00f513a97425bda24d40bb583ad0dd65af519ef0"
+  integrity sha512-HRsQ/ELijdIMWlnDkUBO/P2/Ju8Uf4EcpyCv9eLMAMCIHN5JzaILS/hWG/KkbgCFeOag961Y6+wktCuJ7MqMHA==
   dependencies:
     emittery "^1.0.3"
     typescript-memoize "^1.1.1"
