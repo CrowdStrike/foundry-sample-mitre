@@ -63,7 +63,7 @@
     "prettier": "^3.5.3",
     "typescript": "5.0.2",
     "vite": "^6.0.3",
-    "vitest": "^0.32.0",
+    "vitest": "^3.0.8",
     "vue-tsc": "^2.2.8"
   },
   "volta": {
