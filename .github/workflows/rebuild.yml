@@ -40,4 +40,4 @@ jobs:
           commit-message: 'Rebuild with latest dependencies'
           title: 'Rebuild with latest dependencies'
           body: Weekly build with latest dependencies.
-          labels: 'theme: dependencies'
+          labels: 'dependencies'
