@@ -53,7 +53,7 @@
     "nx": "20.6.4",
     "patch-package": "8.0.0",
     "prettier": "^3.5.3",
-    "sinon": "^19.0.4",
+    "sinon": "^20.0.0",
     "typescript": "5.0.2",
     "vite": "^6.2.3",
     "vitest": "^3.0.7",
