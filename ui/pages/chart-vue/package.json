@@ -33,7 +33,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.defaultsdeep": "^4.6.9",
     "@types/lodash.get": "^4.4.7",
-    "@types/node": "^22.13.14",
+    "@types/node": "^22.14.0",
     "@types/sinon": "^17.0.4",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/eslint-config-prettier": "10.2.0",
