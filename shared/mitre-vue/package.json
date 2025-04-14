@@ -33,7 +33,7 @@
     "@crowdstrike/foundry-js": "0.17.1",
     "@intlify/unplugin-vue-i18n": "^6.0.5",
     "@shoelace-style/shoelace": "^2.20.1",
-    "pinia": "^3.0.1",
+    "pinia": "^3.0.2",
     "vue": "^3.5.13",
     "vue-i18n": "^11.1.3"
   },
