@@ -1,3 +1,4 @@
+app_id: 84edbef848674d7a8f04260d746eaec9
 name: Triage with MITRE ATTACK
 description: Provides a focused, MITRE-prioritized view of XDR detections
 logo: ""
@@ -34,7 +35,8 @@ ignored:
 ui:
     homepage: pages.mitre-vue
     extensions:
-        - name: Triage App
+        - id: 73da3ad9048043128f79c3099372b217
+          name: Triage App
           description: MITRE Auto Remediation
           path: ui/extensions/remediations/dist
           entrypoint: ui/extensions/remediations/dist/index.html
@@ -62,6 +64,7 @@ ui:
           is_ui_builder: false
     pages:
         mitre-vue:
+            id: cd4e1321d4d84dfdb1bea73f7503d925
             name: mitre-vue
             description: MITRE App
             path: ui/pages/chart-vue/dist
@@ -86,6 +89,7 @@ ui:
             permissions: []
     dashboards: {}
     navigation:
+        id: cfa17abe01c44e018982e195b5102b7c
         links:
             - path: /
               name: Mitre Chart
@@ -132,4 +136,4 @@ parsers: []
 logscale:
     saved_searches: []
 lookup_files: []
-app_docs: []
+docs: {}
