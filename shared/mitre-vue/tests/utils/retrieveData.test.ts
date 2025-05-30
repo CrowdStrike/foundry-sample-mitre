@@ -50,7 +50,7 @@ describe('Unit test - retrieveData.ts', () => {
         expect(request[0]?.sub_aggregates?.[1]).toMatchObject(severityAggregation)
         expect(request[0]?.sub_aggregates?.[2]).toMatchObject({name: 'TrendData', interval: 'hour'})
         expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[0]).toMatchObject(severityAggregation)
-        expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[1]).toContain({name: 'TrendData', interval: 'hour'})
+        expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[1]).toMatchObject({name: 'TrendData', interval: 'hour'})
     })
 
     it('Should build and get the correct request object without trends and CS ids filtered out', () => {
