@@ -5,6 +5,11 @@ updates:
     open-pull-requests-limit: 10
     schedule:
       interval: "weekly"
+    groups:
+      typescript:
+        patterns:
+          - 'typescript'
+          - 'vue-tsc'
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
