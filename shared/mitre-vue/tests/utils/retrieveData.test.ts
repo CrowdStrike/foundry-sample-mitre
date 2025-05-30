@@ -44,24 +44,24 @@ describe('Unit test - retrieveData.ts', () => {
 
     it('Should build and get the correct request object with trends and filterCS', () => {
         const request = getRequest('1h', true, matrixMapInfos, false)
-        expect(request?.[0]).toContain({field: 'tactic_id'})
+        expect(request?.[0]).toMatchObject({field: 'tactic_id'})
         expect(request?.[0].filter).toContain("+tactic_id:['id','csid']")
         expect(request?.[0].filter).toContain("+technique_id:['cstid','tid']")
-        expect(request[0]?.sub_aggregates?.[1]).toContain(severityAggregation)
-        expect(request[0]?.sub_aggregates?.[2]).toContain({name: 'TrendData', interval: 'hour'})
-        expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[0]).toContain(severityAggregation)
-        expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[1]).toContain({name: 'TrendData', interval: 'hour'})
+        expect(request[0]?.sub_aggregates?.[1]).toMatchObject(severityAggregation)
+        expect(request[0]?.sub_aggregates?.[2]).toMatchObject({name: 'TrendData', interval: 'hour'})
+        expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[0]).toMatchObject(severityAggregation)
+        expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[1]).toMatchObject({name: 'TrendData', interval: 'hour'})
     })
 
     it('Should build and get the correct request object without trends and CS ids filtered out', () => {
 
         const request = getRequest('1h', false, matrixMapInfos, true)
-        expect(request?.[0]).toContain({field: 'tactic_id'})
+        expect(request?.[0]).toMatchObject({field: 'tactic_id'})
         expect(request?.[0].filter).toContain("+tactic_id:['id']")
         expect(request?.[0].filter).toContain("+technique_id:['tid']")
-        expect(request[0].sub_aggregates?.[1]).toContain(severityAggregation)
+        expect(request[0].sub_aggregates?.[1]).toMatchObject(severityAggregation)
         expect(request[0].sub_aggregates?.[2]).undefined
-        expect(request[0].sub_aggregates?.[0]?.sub_aggregates?.[0]).toContain(severityAggregation)
+        expect(request[0].sub_aggregates?.[0]?.sub_aggregates?.[0]).toMatchObject(severityAggregation)
         expect(request[0].sub_aggregates?.[0]?.sub_aggregates?.[1]).undefined
     })
 
@@ -70,10 +70,10 @@ describe('Unit test - retrieveData.ts', () => {
 
         Object.keys(timeRanges).map((timeRange) => {
             const request = getRequest(timeRange as TimeRangeValue, true, matrixMapInfos, true)
-            expect(request?.[0]?.sub_aggregates?.[2]).toContain({interval: timeRanges[timeRange]})
+            expect(request?.[0]?.sub_aggregates?.[2]).toMatchObject({interval: timeRanges[timeRange]})
         })
         const request = getRequest('test' as unknown as TimeRangeValue, true, matrixMapInfos, true)
-        expect(request?.[0]?.sub_aggregates?.[2]).toContain({interval: 'hour'})
+        expect(request?.[0]?.sub_aggregates?.[2]).toMatchObject({interval: 'hour'})
     })
 
     it('Should call postAggregatesAlertsV1 api', () => {
