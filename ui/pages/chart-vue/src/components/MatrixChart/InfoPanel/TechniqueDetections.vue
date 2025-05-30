@@ -13,7 +13,7 @@ const { t } = inject<I18NComposer>(SYMBOLS.I18N) as I18NComposer
 
 const props = defineProps<{
   detectionUrl: string
-  goToDetections: (event?: MouseEvent) => void
+  goToDetections: (event: MouseEvent) => void
   severityDetails: SeverityDetail
   detectionsNumber: number
 }>()
