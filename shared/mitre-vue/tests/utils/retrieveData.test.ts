@@ -48,7 +48,7 @@ describe('Unit test - retrieveData.ts', () => {
         expect(request?.[0].filter).toContain("+tactic_id:['id','csid']")
         expect(request?.[0].filter).toContain("+technique_id:['cstid','tid']")
         expect(request[0]?.sub_aggregates?.[1]).toMatchObject(severityAggregation)
-        expect(request[0]?.sub_aggregates?.[2]).toContain({name: 'TrendData', interval: 'hour'})
+        expect(request[0]?.sub_aggregates?.[2]).toMatchObject({name: 'TrendData', interval: 'hour'})
         expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[0]).toContain(severityAggregation)
         expect(request[0]?.sub_aggregates?.[0]?.sub_aggregates?.[1]).toContain({name: 'TrendData', interval: 'hour'})
     })
@@ -61,7 +61,7 @@ describe('Unit test - retrieveData.ts', () => {
         expect(request?.[0].filter).toContain("+technique_id:['tid']")
         expect(request[0].sub_aggregates?.[1]).toMatchObject(severityAggregation)
         expect(request[0].sub_aggregates?.[2]).undefined
-        expect(request[0].sub_aggregates?.[0]?.sub_aggregates?.[0]).toContain(severityAggregation)
+        expect(request[0].sub_aggregates?.[0]?.sub_aggregates?.[0]).toMatchObject(severityAggregation)
         expect(request[0].sub_aggregates?.[0]?.sub_aggregates?.[1]).undefined
     })
 
