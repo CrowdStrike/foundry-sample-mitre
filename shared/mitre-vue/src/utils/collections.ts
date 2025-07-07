@@ -333,16 +333,8 @@ export const setNotifyITConfig = async function (
     if (await checkBaseCollectionConfigured(falconApi)) {
       const collection = falconApi.collection({ collection: MITRE_AUTO_REMEDIATION_COLLECTION })
 
-      const result = (await collection.write(notifyITKey, deepToRaw(values))) as CollectionResult
-
-      if (result.errors?.length) {
-        return {
-          saved: false,
-          error: new Error(result.errors[0].message)
-        }
-      } else {
-        return { saved: true }
-      }
+      await collection.write(notifyITKey, deepToRaw(values))
+      return { saved: true }
     } else {
       return {
         saved: false,
@@ -377,16 +369,8 @@ export const setNotifyIRConfig = async function (
     if (await checkBaseCollectionConfigured(falconApi)) {
       const collection = falconApi.collection({ collection: MITRE_AUTO_REMEDIATION_COLLECTION })
 
-      const result = (await collection.write(notifyIRKey, deepToRaw(values))) as CollectionResult
-
-      if (result.errors?.length) {
-        return {
-          saved: false,
-          error: new Error(result.errors[0].message)
-        }
-      } else {
-        return { saved: true }
-      }
+      await collection.write(notifyIRKey, deepToRaw(values))
+      return { saved: true }
     } else {
       return {
         saved: false,
@@ -493,8 +477,7 @@ export const saveCreatedIssue = async function (
     })
 
     const key = calculateCreatedIssueKey(falconApi, notificationType)
-    const result = (await collection.write(key, deepToRaw(values))) as CollectionResult
-
-    return !result.errors?.length ? values : undefined
+    await collection.write(key, deepToRaw(values))
+    return values
   }
 }
