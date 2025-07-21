@@ -333,12 +333,15 @@ export const setNotifyITConfig = async function (
     if (await checkBaseCollectionConfigured(falconApi)) {
       const collection = falconApi.collection({ collection: MITRE_AUTO_REMEDIATION_COLLECTION })
 
-      const result = (await collection.write(notifyITKey, deepToRaw(values))) as CollectionResult
+      const result = (await collection.write(
+        notifyITKey,
+        deepToRaw(values)
+      )) as unknown as CollectionResult
 
-      if (result.errors?.length) {
+      if (!result || result.errors?.length) {
         return {
           saved: false,
-          error: new Error(result.errors[0].message)
+          error: new Error(result?.errors?.[0]?.message)
         }
       } else {
         return { saved: true }
@@ -377,12 +380,15 @@ export const setNotifyIRConfig = async function (
     if (await checkBaseCollectionConfigured(falconApi)) {
       const collection = falconApi.collection({ collection: MITRE_AUTO_REMEDIATION_COLLECTION })
 
-      const result = (await collection.write(notifyIRKey, deepToRaw(values))) as CollectionResult
+      const result = (await collection.write(
+        notifyIRKey,
+        deepToRaw(values)
+      )) as unknown as CollectionResult
 
-      if (result.errors?.length) {
+      if (!result || result.errors?.length) {
         return {
           saved: false,
-          error: new Error(result.errors[0].message)
+          error: new Error(result?.errors?.[0]?.message)
         }
       } else {
         return { saved: true }
@@ -434,7 +440,9 @@ export const getCreatedIssue = async function (
     const collection = falconApi.collection({
       collection: MITRE_AUTO_REMEDIATION_CREATED_ISSUES_COLLECTION
     })
-    const result: CreatedIssuesValues = (await collection.read(key)) as CreatedIssuesValues
+    const result: CreatedIssuesValues = (await collection.read(
+      key
+    )) as unknown as CreatedIssuesValues
 
     if (result?.account && result?.project && result?.issueId) {
       return result
@@ -493,8 +501,8 @@ export const saveCreatedIssue = async function (
     })
 
     const key = calculateCreatedIssueKey(falconApi, notificationType)
-    const result = (await collection.write(key, deepToRaw(values))) as CollectionResult
+    const result = (await collection.write(key, deepToRaw(values))) as unknown as CollectionResult
 
-    return !result.errors?.length ? values : undefined
+    return !result || result?.errors?.length ? undefined : values
   }
 }
