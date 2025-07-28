@@ -570,55 +570,55 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nx/nx-darwin-arm64@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-darwin-arm64/-/nx-darwin-arm64-21.3.7.tgz#30ad5a166800c8a2bf936573aab8ffcd295b6a94"
-  integrity sha512-/I8tpxDNZ3Xq9DnC5Y0q7II0e+1dV+vWwGTj/hxTM6oVo9wv9hBVkzA5F+UL2AJ20BrlPe34EKtIxaRfkd7SHQ==
+"@nx/nx-darwin-arm64@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-darwin-arm64/-/nx-darwin-arm64-21.3.8.tgz#be517e69f23b31e9b709147edc741a7c0ba0cb70"
+  integrity sha512-S1IUA8LIgCJRGyYVMzm/pABhb8Z/vod1ZwVrfK4ilGgjp5fpw4Dv5AVxlTGq1+nMpofB6K5jEZTOGSIe0K0g2Q==
 
-"@nx/nx-darwin-x64@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-darwin-x64/-/nx-darwin-x64-21.3.7.tgz#c8bad568ca408b5791b903a8754ce862702c3044"
-  integrity sha512-l5P6wmrnFz3zY+AnDCf2PqqlrDnDMULl5E58KC3ax49kqkWc/1umauJJeP/tzWRYGd4yHL4/SbtKU0HRT91l7Q==
+"@nx/nx-darwin-x64@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-darwin-x64/-/nx-darwin-x64-21.3.8.tgz#3fc160eb67c167848817922ce4fd2343a320c1c1"
+  integrity sha512-loflwVEhMY4oqTTASFR+xNqKi7zod+5flBE/bdd/sEwgSAie4Hdx+arYPnqVxlzHhApVtXUfrwiZBRoXI3Avlw==
 
-"@nx/nx-freebsd-x64@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-freebsd-x64/-/nx-freebsd-x64-21.3.7.tgz#863c41ac943df4b30736ada578ddc17a1d12a9b8"
-  integrity sha512-JJq4t8mcR1t5WyX8RvAthGlkun+Uyx3c4WA8hemLbqNCHnR/oQ5tIapRldp1FPBYJEzRzTgtk8Ov+rAjLuXqqQ==
+"@nx/nx-freebsd-x64@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-freebsd-x64/-/nx-freebsd-x64-21.3.8.tgz#e65fccf3d7e58b37dd863a2c5a79f4fce2c14062"
+  integrity sha512-Bv9tAyPiL2a/PwQlXueKlzgFLFuUkBjJRcKUHlHzK+YvFqUn+Cfd2kcL3SjoM+dENZ9SZOzyZP3yx+Az71O0gQ==
 
-"@nx/nx-linux-arm-gnueabihf@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-linux-arm-gnueabihf/-/nx-linux-arm-gnueabihf-21.3.7.tgz#c83e3370a58a2d3e289bd50d8d7ff6981f1ce2da"
-  integrity sha512-9F5YVjJH/N8bqfVySTL8UY8PwdEGv4tjax6LSz5wByM6ThQtGqZreDqBectmgz4Uj1q1P+7zu5ra9hrBAr3Mww==
+"@nx/nx-linux-arm-gnueabihf@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-linux-arm-gnueabihf/-/nx-linux-arm-gnueabihf-21.3.8.tgz#de5f2b0551fb25cdb59b4d2ecd1f17c46f34425c"
+  integrity sha512-zOQNnHeKrFiocGVBK1rDSahvPi1YhIjfvujXs9GXTdLPXo9tjmcmMo31HWko8sBzy5U3VSniKw3+oOe2JOmh9A==
 
-"@nx/nx-linux-arm64-gnu@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-linux-arm64-gnu/-/nx-linux-arm64-gnu-21.3.7.tgz#035ee5a6a49de6268638aea27dab8d27b530c99b"
-  integrity sha512-+YnuF9lwffzCsLrP0sCuDZKhbb5nFSV6hSwd8rCCZmzU35mqs0X4Mo8vjwHDZTCzIuDxzLK7Nl7ZeWQuAMxcJQ==
+"@nx/nx-linux-arm64-gnu@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-linux-arm64-gnu/-/nx-linux-arm64-gnu-21.3.8.tgz#6f589755b0d6527069d6d297c5ecaa1c9144891d"
+  integrity sha512-8QPj/W6rF1ItKDaatNdE8jGpYlaJnqR5p1+Jc8KJeyqM8XqJ3kH48/gNxCfb2qIEPRlaztfj7LnZGs2wHh2fyQ==
 
-"@nx/nx-linux-arm64-musl@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-linux-arm64-musl/-/nx-linux-arm64-musl-21.3.7.tgz#18d7bda29083ab8de3a38e7e9bf3671782352f0c"
-  integrity sha512-g1SmaC4uHkaLS58FMYnxLKkecASdM+B/G3GH3vPS9LDYdHuFukqwLBvVlvueno6CuIAHc+7bW+TH3xVadnUOvw==
+"@nx/nx-linux-arm64-musl@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-linux-arm64-musl/-/nx-linux-arm64-musl-21.3.8.tgz#71b0c7e30e3040ea10fe8e3c4df227e2cdf053b9"
+  integrity sha512-s/JCpVpkpna8pcw2nMaHBz1Vjxz7/R1LhGEY3K7ozknd65dxMKOqoMXGpfLGY96vXYWxEs5GDu9qSJZyoRVAXw==
 
-"@nx/nx-linux-x64-gnu@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-linux-x64-gnu/-/nx-linux-x64-gnu-21.3.7.tgz#8c28fbbf99d9c1fbd0d04f95664b5255bc0fcaec"
-  integrity sha512-zupCkCiH2KKqdy/XcFwwQdyck2foX8H6W1mXfTPV94LqEOjfz8j0nfVuTT4WlZAaWcfwzszzdgKy6Rls65i9HA==
+"@nx/nx-linux-x64-gnu@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-linux-x64-gnu/-/nx-linux-x64-gnu-21.3.8.tgz#cf46b95b4468ad61681d04d94fee422c299d19e8"
+  integrity sha512-fRkpjfwIoSxX0udddIA5CRSrhsQCfhULQX5HXsQvR6CWipb0hQIHZyZe4AAXV2MieqxCKgLfgNmZVf4fHdH6TA==
 
-"@nx/nx-linux-x64-musl@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-linux-x64-musl/-/nx-linux-x64-musl-21.3.7.tgz#e37d883cd6a59506456fdde9a2b9ce932ae8419d"
-  integrity sha512-Lhk/q/qb4HFaESR5KLCDPfGWh3Vp0x4bYTILIQ1mBTyqe3zJl1CMtAZp2L43gT7Zt41mz4ZiohavdDyFhIaUgA==
+"@nx/nx-linux-x64-musl@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-linux-x64-musl/-/nx-linux-x64-musl-21.3.8.tgz#d27a4080c788806357fae4c5658857efc10fdc28"
+  integrity sha512-kaaZP9Ts2pOi7lzGD2SYVCI6lhPs8CEYinnnT6vAQt45inXk5pRvaZzX3pEjtw/pjqCMxs1H/ubXMtdW0JYAbg==
 
-"@nx/nx-win32-arm64-msvc@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-win32-arm64-msvc/-/nx-win32-arm64-msvc-21.3.7.tgz#6e8d3116141ae0d03061dc0670091397c2de9f2f"
-  integrity sha512-fk1edw6PNfUiKHDCHqe0WHVJgWiDUU1DoWDhJji5ZY0w8nT89AfTDDxt4YZptcFwAuuwPA/98K0fjQYcenlgTg==
+"@nx/nx-win32-arm64-msvc@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-win32-arm64-msvc/-/nx-win32-arm64-msvc-21.3.8.tgz#19239229c503196169edbd7b0773824531448e89"
+  integrity sha512-ujnEDya6VvjBnaa/ke7xbRm2t4R2qC4bHM2JgW31efsmHKWXLzSc8uRJUgiUY5yOVb4ZDOQV8PBK+9PIcugiOQ==
 
-"@nx/nx-win32-x64-msvc@21.3.7":
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/@nx/nx-win32-x64-msvc/-/nx-win32-x64-msvc-21.3.7.tgz#43845727995f18beb430dc099fa85fedbaeabc28"
-  integrity sha512-riVFPTcYseYpzONDvlO/RbdYp/q8R0NGD9J2f/N8/ucqmZcoa3ABx6BvGIStMgmUVxNnIkHNPNnm8Hor+BHFYA==
+"@nx/nx-win32-x64-msvc@21.3.8":
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/@nx/nx-win32-x64-msvc/-/nx-win32-x64-msvc-21.3.8.tgz#e9260cd129990e2964af201902e2d3342d645b15"
+  integrity sha512-26Gt1chSA1i4zMZL9ijdPpKBt8VoHwZwGeqKcTm3RJGtloM5n/T/jDThVuH/cUeq/DcuEMWEPcIdz/fp/TVhbQ==
 
 "@one-ini/wasm@0.1.1":
   version "0.1.1"
@@ -3386,10 +3386,10 @@ nwsapi@^2.2.16:
   resolved "https://registry.yarnpkg.com/nwsapi/-/nwsapi-2.2.18.tgz#3c4d7927e1ef4d042d319438ecfda6cd81b7ee41"
   integrity sha512-p1TRH/edngVEHVbwqWnxUViEmq5znDvyB+Sik5cmuLpGOIfDf/39zLiq3swPF8Vakqn+gvNiOQAZu8djYlQILA==
 
-nx@21.3.7:
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/nx/-/nx-21.3.7.tgz#5db66fcc2eb66e817da7de94fa41e17fab8b3e9a"
-  integrity sha512-/PwRGg6wH10V8pJHe3RJnizbxjNL0owLARCegup39sk0+m/G/qOfot5KqReWQR4YrtDpreSE7+tRWGCCovyE1A==
+nx@21.3.8:
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/nx/-/nx-21.3.8.tgz#0ebdab2d3b173ba96b63d7cf95e9eda6f0a52eb1"
+  integrity sha512-tQJ9aQwYLqN8Zc5sq+3i97jyFfJ1usBEl/sJsqsI8Bl62NKkN0scEY+BAz9wT81bEQ5YKSlvAF4d4CpVDH0oyA==
   dependencies:
     "@napi-rs/wasm-runtime" "0.2.4"
     "@yarnpkg/lockfile" "^1.1.0"
@@ -3427,16 +3427,16 @@ nx@21.3.7:
     yargs "^17.6.2"
     yargs-parser "21.1.1"
   optionalDependencies:
-    "@nx/nx-darwin-arm64" "21.3.7"
-    "@nx/nx-darwin-x64" "21.3.7"
-    "@nx/nx-freebsd-x64" "21.3.7"
-    "@nx/nx-linux-arm-gnueabihf" "21.3.7"
-    "@nx/nx-linux-arm64-gnu" "21.3.7"
-    "@nx/nx-linux-arm64-musl" "21.3.7"
-    "@nx/nx-linux-x64-gnu" "21.3.7"
-    "@nx/nx-linux-x64-musl" "21.3.7"
-    "@nx/nx-win32-arm64-msvc" "21.3.7"
-    "@nx/nx-win32-x64-msvc" "21.3.7"
+    "@nx/nx-darwin-arm64" "21.3.8"
+    "@nx/nx-darwin-x64" "21.3.8"
+    "@nx/nx-freebsd-x64" "21.3.8"
+    "@nx/nx-linux-arm-gnueabihf" "21.3.8"
+    "@nx/nx-linux-arm64-gnu" "21.3.8"
+    "@nx/nx-linux-arm64-musl" "21.3.8"
+    "@nx/nx-linux-x64-gnu" "21.3.8"
+    "@nx/nx-linux-x64-musl" "21.3.8"
+    "@nx/nx-win32-arm64-msvc" "21.3.8"
+    "@nx/nx-win32-x64-msvc" "21.3.8"
 
 object-inspect@^1.13.3:
   version "1.13.4"
