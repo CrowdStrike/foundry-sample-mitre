@@ -47,10 +47,10 @@
     "patch-package": "8.0.0",
     "prettier": "^3.6.2",
     "sinon": "^21.0.0",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "vite": "^7.0.6",
     "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.4"
+    "vue-tsc": "^3.0.5"
   },
   "engines": {
     "node": ">=22"
