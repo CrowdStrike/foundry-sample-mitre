@@ -58,35 +58,11 @@ test.describe('Foundry App Installation and Verification', () => {
     });
   });
 
-  test.describe('UI Extension Verification', () => {
-    test('should navigate to Endpoint detections page', async ({ endpointDetectionsPage }) => {
-      await endpointDetectionsPage.navigateToEndpointDetections();
-      // Page object already logs technical success - this test verifies the business requirement
-    });
-
-    test('should verify Hello Falcon Foundry text in UI extension', async ({ 
-      endpointDetectionsPage 
-    }) => {
-      // Take screenshot for debugging
-      await endpointDetectionsPage.takeScreenshot('endpoint-detections-page.png');
-      
-      // Page object logs the technical search process
-      const textFound = await endpointDetectionsPage.verifyUIExtensionText('Hello, Falcon Foundry!');
-      
-      if (textFound) {
-        console.log("🎉 UI extension verification successful - Foundry app is working correctly!");
-        await endpointDetectionsPage.takeScreenshot('hello-foundry-success.png');
-      } else {
-        console.log("📊 Test results summary:");
-        console.log("  ✅ App installation/uninstall cycle works");
-        console.log("  ✅ Navigation to endpoint detections works");
-        console.log("  ✅ User has proper permissions");
-        console.log("  ℹ️ UI extension text requires specific detection data to appear");
-        
-        await endpointDetectionsPage.takeScreenshot('endpoint-detections-final.png');
-        
-        // Core functionality is verified - UI extension text is data-dependent
-      }
+  test.describe('App Verification', () => {
+    test('should verify app is properly deployed and accessible', async ({ foundryHomePage, appName }) => {
+      await foundryHomePage.goto();
+      await foundryHomePage.verifyAppInstalled();
+      console.log('✅ MITRE app deployment verified successfully');
     });
   });
 

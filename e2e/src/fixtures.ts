@@ -2,7 +2,6 @@ import { test as baseTest } from '@playwright/test';
 import { FoundryHomePage } from './pages/FoundryHomePage';
 import { AppManagerPage } from './pages/AppManagerPage';
 import { AppCatalogPage } from './pages/AppCatalogPage';
-import { EndpointDetectionsPage } from './pages/EndpointDetectionsPage';
 import { config } from './config/TestConfig';
 import { logger } from './utils/Logger';
 
@@ -10,7 +9,6 @@ type FoundryFixtures = {
   foundryHomePage: FoundryHomePage;
   appManagerPage: AppManagerPage;
   appCatalogPage: AppCatalogPage;
-  endpointDetectionsPage: EndpointDetectionsPage;
   appName: string;
 };
 
@@ -42,9 +40,6 @@ export const test = baseTest.extend<FoundryFixtures>({
     await use(new AppCatalogPage(page));
   },
 
-  endpointDetectionsPage: async ({ page }, use) => {
-    await use(new EndpointDetectionsPage(page));
-  },
 
   // App name from centralized config
   appName: async ({}, use) => {
