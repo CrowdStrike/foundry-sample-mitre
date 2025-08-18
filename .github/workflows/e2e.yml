@@ -93,6 +93,7 @@ jobs:
           envkey_FALCON_USERNAME: ${{ secrets.FALCON_USERNAME }}
           envkey_FALCON_PASSWORD: ${{ secrets.FALCON_PASSWORD }}
           envkey_FALCON_AUTH_SECRET: ${{ secrets.FALCON_AUTH_SECRET }}
+          envkey_FALCON_BASE_URL: ${{ secrets.FALCON_BASE_URL }}
           envkey_APP_NAME: $APP_NAME
           directory: e2e
 

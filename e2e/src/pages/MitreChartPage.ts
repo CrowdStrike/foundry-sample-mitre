@@ -14,85 +14,145 @@ export class MitreChartPage extends BasePage {
   }
 
   protected async verifyPageLoaded(): Promise<void> {
-    // Wait for the page to navigate away from Foundry home/app-manager
-    await this.waiter.waitForCondition(
-      async () => {
-        const currentUrl = this.page.url();
-        return !currentUrl.includes('/foundry/home') && !currentUrl.includes('/foundry/app-manager');
-      },
-      'Page to navigate away from Foundry home/app-manager',
-      { timeout: 15000 }
-    );
+    // For now, just verify we successfully clicked the app link and wait a reasonable time
+    // Let's see what URL we actually end up at
+    await this.page.waitForTimeout(8000); // Give it more time to navigate after launch button
     
-    // Wait for basic page content to load - look for any content that indicates the app loaded
-    const appContentIndicators = [
-      // Look for common page elements
-      this.page.locator('main, .main-content, .app-content, .page-content'),
-      this.page.locator('h1, h2, h3, .title, .page-title'),
-      this.page.locator('.chart, .matrix, .grid, .table'),
-      this.page.locator('[class*="app"], [class*="mitre"], [class*="chart"]'),
-      // Look for Vue.js app root
-      this.page.locator('#app, .vue-app, [data-v-]')
-    ];
+    let currentUrl = this.page.url();
+    this.logger.info(`Current URL after navigation attempt: ${currentUrl}`);
     
-    let contentFound = false;
-    for (const indicator of appContentIndicators) {
-      if (await this.elementExists(indicator.first(), 3000)) {
-        this.logger.success('App content loaded successfully');
-        contentFound = true;
-        break;
+    // Check if we're still on app manager or home - might need to check for new tabs
+    if (currentUrl.includes('/foundry/app-manager') || currentUrl.includes('/foundry/home')) {
+      // The app might have opened in a new tab - check for that
+      const context = this.page.context();
+      const pages = context.pages();
+      
+      if (pages.length > 1) {
+        this.logger.step(`Found ${pages.length} tabs, checking if app opened in new tab`);
+        
+        // Switch to the newest tab (likely the app)
+        const newPage = pages[pages.length - 1];
+        await newPage.bringToFront();
+        
+        // Update our page reference for the rest of the test
+        const mitreChartPage = this as any;
+        mitreChartPage.page = newPage;
+        
+        await newPage.waitForTimeout(3000); // Let it load
+        currentUrl = newPage.url();
+        this.logger.info(`New tab URL: ${currentUrl}`);
+        
+        if (currentUrl.includes('/foundry/app-manager') || currentUrl.includes('/foundry/home')) {
+          throw new Error(`Navigation failed - app opened in new tab but still shows: ${currentUrl}`);
+        }
+      } else {
+        throw new Error(`Navigation failed - still on ${currentUrl}. App may not be properly deployed or accessible.`);
       }
     }
     
-    if (!contentFound) {
-      this.logger.warn('No clear app content indicators found, but page navigation succeeded');
+    // If we got somewhere else, that's probably the app
+    this.logger.success(`Successfully navigated to: ${currentUrl}`);
+    
+    // Give the app more time to load
+    await this.page.waitForTimeout(3000);
+    
+    // Just verify there's some content on the page
+    const hasContent = await this.elementExists(this.page.locator('body *').first(), 5000);
+    if (hasContent) {
+      this.logger.success('Page has content - app appears to have loaded');
+    } else {
+      this.logger.warn('Page appears empty but navigation succeeded');
     }
   }
 
   /**
    * Navigate to MITRE Chart page from Foundry home
+   * Pages appear under "Custom Apps" section after proper installation
    */
   async navigateToMitreChart(): Promise<void> {
     return this.withTiming(
       async () => {
         await this.navigateToPath('/foundry/home', 'Foundry home page');
         
-        // Get the app name from config (set by CI environment)
-        const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+        // Try to find the app under "Custom Apps" in navigation menu (if properly installed)
+        const menuButton = this.page.getByRole('button', { name: 'Menu', exact: true });
+        if (await this.elementExists(menuButton, 3000)) {
+          await this.smartClick(menuButton, 'Menu button');
+          await this.page.waitForTimeout(1000); // Let menu expand
+          
+          // Look for "Custom Apps" section
+          const customAppsButton = this.page.getByRole('button', { name: /Custom Apps/i });
+          if (await this.elementExists(customAppsButton, 3000)) {
+            await this.smartClick(customAppsButton, 'Custom Apps section');
+            await this.page.waitForTimeout(500); // Let submenu expand
+            
+            // Look for "Mitre Chart" under Custom Apps (from manifest navigation links)
+            const mitreChartLink = this.page.getByRole('link', { name: 'Mitre Chart' });
+            if (await this.elementExists(mitreChartLink, 3000)) {
+              this.logger.step('Found "Mitre Chart" under Custom Apps');
+              await this.smartClick(mitreChartLink, 'Mitre Chart navigation link');
+              await this.verifyPageLoaded();
+              return;
+            }
+          }
+        }
         
-        // First try to find the deployed app in Recent Apps section
+        // If not in Custom Apps menu, try Recent Apps section
+        const appName = process.env.APP_NAME || 'foundry-sample-mitre';
         const recentAppLink = this.page.getByRole('link', { name: appName });
         
         if (await this.elementExists(recentAppLink, 5000)) {
           this.logger.step(`Found app '${appName}' in Recent Apps section`);
           await this.smartClick(recentAppLink, `${appName} app link in Recent Apps`);
-        } else {
-          // If not in recent apps, try App Manager
-          this.logger.step(`App '${appName}' not in Recent Apps, trying App Manager`);
-          await this.smartClick(
-            this.page.getByRole('link', { name: 'App manager' }),
-            'App manager link'
-          );
-          
-          // Wait for App Manager to load
-          await expect(this.page).toHaveTitle('App manager | Foundry | Falcon');
-          
-          // Look for the deployed app in App Manager
-          const appManagerLink = this.page.getByRole('link', { name: appName });
-          
-          if (await this.elementExists(appManagerLink, 5000)) {
-            await this.smartClick(appManagerLink, `${appName} app link in App Manager`);
-          } else {
-            const errorMsg = `App '${appName}' not found in Recent Apps or App Manager. ` +
-              `In CI, the app should be deployed by Foundry CLI. ` +
-              `For local testing, please deploy the app first: foundry apps deploy --change-type=major`;
-            
-            this.logger.error(errorMsg);
-            throw new Error(errorMsg);
-          }
+          await this.verifyPageLoaded();
+          return;
         }
         
-        await this.verifyPageLoaded();
+        // If not in recent apps, try App Manager approach
+        this.logger.step(`App '${appName}' not in Custom Apps or Recent Apps, trying App Manager`);
+        await this.smartClick(
+          this.page.getByRole('link', { name: 'App manager' }),
+          'App manager link'
+        );
+        
+        // Wait for App Manager to load
+        await expect(this.page).toHaveTitle('App manager | Foundry | Falcon');
+        
+        // Look for the deployed app in App Manager
+        const appManagerLink = this.page.getByRole('link', { name: appName });
+        
+        if (await this.elementExists(appManagerLink, 5000)) {
+          await this.smartClick(appManagerLink, `${appName} app link in App Manager`);
+          
+          // From app details page, try "View in catalog" to launch the app
+          await this.page.waitForTimeout(2000);
+          const viewInCatalogLink = this.page.getByRole('link', { name: 'View in catalog' });
+          
+          if (await this.elementExists(viewInCatalogLink, 5000)) {
+            await this.smartClick(viewInCatalogLink, 'View in catalog link');
+            await this.page.waitForTimeout(3000);
+            
+            // Look for launch button in catalog
+            const launchButton = this.page.getByRole('button', { name: /launch|open|start/i }).first();
+            if (await this.elementExists(launchButton, 5000)) {
+              await this.smartClick(launchButton, 'App launch button');
+              await this.verifyPageLoaded();
+              return;
+            }
+          }
+          
+          const errorMsg = `Unable to launch app '${appName}' through UI. ` +
+            `App may not be properly released or accessible.`;
+          this.logger.error(errorMsg);
+          throw new Error(errorMsg);
+        } else {
+          const errorMsg = `App '${appName}' not found in Custom Apps, Recent Apps, or App Manager. ` +
+            `In CI, the app should be deployed and released by Foundry CLI. ` +
+            `For local testing, please deploy the app first: foundry apps deploy --change-type=major`;
+          
+          this.logger.error(errorMsg);
+          throw new Error(errorMsg);
+        }
       },
       'Navigate to MITRE Chart'
     );
