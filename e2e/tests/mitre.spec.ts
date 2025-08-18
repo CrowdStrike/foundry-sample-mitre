@@ -31,7 +31,7 @@ test.describe('MITRE Attack App E2E Tests', () => {
     }
 
     await foundryHomePage.goto();
-    await foundryHomePage.verifyAppInstalled();
+    await foundryHomePage.verifyLoaded();
   });
 
   test('should navigate to MITRE chart and verify matrix elements', async () => {

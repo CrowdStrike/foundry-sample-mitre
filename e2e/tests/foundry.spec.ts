@@ -61,7 +61,7 @@ test.describe('Foundry App Installation and Verification', () => {
   test.describe('App Verification', () => {
     test('should verify app is properly deployed and accessible', async ({ foundryHomePage, appName }) => {
       await foundryHomePage.goto();
-      await foundryHomePage.verifyAppInstalled();
+      await foundryHomePage.verifyLoaded();
       console.log('✅ MITRE app deployment verified successfully');
     });
   });
