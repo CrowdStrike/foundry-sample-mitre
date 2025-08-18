@@ -30,19 +30,19 @@ test.describe('MITRE Attack App E2E Tests', () => {
       logger.info('To deploy locally: foundry apps deploy --change-type=major');
     }
 
-    await foundryHomePage.login();
+    await foundryHomePage.goto();
     await foundryHomePage.verifyAppInstalled();
   });
 
   test('should navigate to MITRE chart and verify matrix elements', async () => {
-    await foundryHomePage.login();
+    await foundryHomePage.goto();
     await mitreChartPage.navigateToMitreChart();
     await mitreChartPage.verifyMitreMatrixElements();
     await mitreChartPage.verifyDetectionData();
   });
 
   test('should interact with MITRE techniques', async () => {
-    await foundryHomePage.login();
+    await foundryHomePage.goto();
     await mitreChartPage.navigateToMitreChart();
     await mitreChartPage.clickMitreTechnique();
     
@@ -56,7 +56,7 @@ test.describe('MITRE Attack App E2E Tests', () => {
   });
 
   test('should access MITRE wizard configuration', async () => {
-    await foundryHomePage.login();
+    await foundryHomePage.goto();
     await mitreChartPage.navigateToWizard();
     
     // Verify wizard form elements are present
@@ -69,7 +69,7 @@ test.describe('MITRE Attack App E2E Tests', () => {
   });
 
   test('should verify MITRE remediation extension in detection context', async () => {
-    await foundryHomePage.login();
+    await foundryHomePage.goto();
     
     try {
       await mitreRemediationPage.navigateToDetectionWithRemediation();
@@ -90,7 +90,7 @@ test.describe('MITRE Attack App E2E Tests', () => {
   });
 
   test('should verify MITRE app UI components render correctly', async () => {
-    await foundryHomePage.login();
+    await foundryHomePage.goto();
     await mitreChartPage.navigateToMitreChart();
     
     // Take screenshot for visual verification
