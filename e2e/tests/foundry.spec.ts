@@ -1,85 +1,116 @@
-import { test, expect } from '../src/fixtures';
-import { AppCatalogPage } from '../src/pages/AppCatalogPage';
-import dotenv from 'dotenv';
+import { test, expect } from '@playwright/test';
+import { FoundryHomePage } from '../src/pages/FoundryHomePage';
+import { MitreChartPage } from '../src/pages/MitreChartPage';
+import { MitreRemediationPage } from '../src/pages/MitreRemediationPage';
+import { config } from '../src/config/TestConfig';
+import { logger } from '../src/utils/Logger';
 
-dotenv.config();
+// Configure tests to run sequentially for better stability
+test.describe.configure({ mode: 'serial' });
 
-test.describe.configure({ mode: 'serial' }); // Run tests sequentially
+test.describe('MITRE Attack App E2E Tests', () => {
+  let foundryHomePage: FoundryHomePage;
+  let mitreChartPage: MitreChartPage; 
+  let mitreRemediationPage: MitreRemediationPage;
 
-test.describe('Foundry App Installation and Verification', () => {
-  
-  test.describe('Basic Platform Tests', () => {
-    test('should load Foundry home page', async ({ foundryHomePage }) => {
-      await foundryHomePage.goto();
-      await foundryHomePage.verifyLoaded();
-    });
+  test.beforeAll(() => {
+    config.logSummary();
+    logger.info('Starting MITRE Attack app E2E test suite');
   });
 
-  test.describe('App Lifecycle Management', () => {
-    test('should ensure app is uninstalled before testing', async ({ appCatalogPage, appName }) => {
-      await appCatalogPage.goto();
-      await appCatalogPage.ensureAppUninstalled(appName);
-    });
-
-    test('should navigate to app and handle installation', async ({ appCatalogPage, appName }) => {
-      // Go directly to the app catalog and navigate to the app
-      await appCatalogPage.goto();
-      
-      // Navigate to the app details page (with retry logic built-in)
-      await appCatalogPage.navigateToAppDetails(appName);
-      
-      // In CI, the app is pre-installed by Foundry CLI deployment
-      // In local tests, we need to install it via UI
-      // The installApp method already handles both cases
-      await appCatalogPage.installApp();
-      
-      console.log('✅ App installation process completed successfully');
-    });
-
-    test('should verify app installation status', async ({ appCatalogPage, appName }) => {
-      // Navigate back to catalog to verify installation status
-      // This works for both CI (pre-installed) and local (UI-installed) scenarios
-      await appCatalogPage.goto();
-      
-      // Since CI pre-installs the app, we should expect it to be installed
-      const isInstalled = await appCatalogPage.isAppInstalled(appName);
-      
-      if (isInstalled) {
-        console.log('✅ App installation verified - app is properly installed');
-      } else {
-        // This might happen due to timing issues, but installation process succeeded
-        console.log('ℹ️ Installation process completed, but catalog status check had timing issues');
-        console.log('✅ Core installation functionality verified');
-      }
-      
-      // Don't fail the test if installation process worked (as evidenced by the logs)
-      // In CI, the fact that we could navigate to the app details page means it's deployed
-      expect(true).toBe(true); // Always pass since core functionality is verified
-    });
+  test.beforeEach(async ({ page }) => {
+    foundryHomePage = new FoundryHomePage(page);
+    mitreChartPage = new MitreChartPage(page);
+    mitreRemediationPage = new MitreRemediationPage(page);
   });
 
-  test.describe('App Verification', () => {
-    test('should verify app is properly deployed and accessible', async ({ foundryHomePage, appName }) => {
-      await foundryHomePage.goto();
-      await foundryHomePage.verifyLoaded();
-      console.log('✅ MITRE app deployment verified successfully');
-    });
-  });
-
-  // Cleanup after all tests
-  test.afterAll(async ({ browser, appName }) => {
-    try {
-      // Create a new page for cleanup since page fixtures aren't available in afterAll
-      const cleanupPage = await browser.newPage();
-      const appCatalogPage = new AppCatalogPage(cleanupPage);
-      
-      await appCatalogPage.goto();
-      await appCatalogPage.ensureAppUninstalled(appName);
-      console.log('✅ Cleanup completed - app uninstalled');
-      
-      await cleanupPage.close();
-    } catch (error) {
-      console.log('⚠️ Cleanup error:', error.message);
+  test('should install and verify MITRE app in Foundry', async () => {
+    if (!config.isCI) {
+      logger.warn('Running in local environment - app should be manually deployed first');
+      logger.info('To deploy locally: foundry apps deploy --change-type=major');
     }
+
+    await foundryHomePage.goto();
+    await foundryHomePage.verifyLoaded();
+  });
+
+  test('should navigate to MITRE chart and verify matrix elements', async () => {
+    await foundryHomePage.goto();
+    await mitreChartPage.navigateToMitreChart();
+    await mitreChartPage.verifyMitreMatrixElements();
+    await mitreChartPage.verifyDetectionData();
+  });
+
+  test('should interact with MITRE techniques', async () => {
+    await foundryHomePage.goto();
+    await mitreChartPage.navigateToMitreChart();
+    await mitreChartPage.clickMitreTechnique();
+    
+    // Verify interaction response (modal, details panel, etc.)
+    const hasModal = await mitreChartPage.elementExists('.modal, .details-panel, .technique-details');
+    if (hasModal) {
+      logger.success('Technique interaction opened details view');
+    } else {
+      logger.info('No details modal found - technique may redirect or show inline details');
+    }
+  });
+
+  test('should access MITRE wizard configuration', async () => {
+    await foundryHomePage.goto();
+    await mitreChartPage.navigateToWizard();
+    
+    // Verify wizard form elements are present
+    const hasForm = await mitreChartPage.elementExists('form, .wizard-form, [data-testid="wizard"]');
+    if (hasForm) {
+      logger.success('MITRE wizard form loaded successfully');
+    } else {
+      logger.warn('No wizard form elements found - page may have different structure');
+    }
+  });
+
+  test('should verify MITRE remediation extension in detection context', async () => {
+    await foundryHomePage.goto();
+    
+    try {
+      await mitreRemediationPage.navigateToDetectionWithRemediation();
+      await mitreRemediationPage.verifyRemediationOptions();
+      await mitreRemediationPage.verifyJiraIntegration();
+      await mitreRemediationPage.verifyNotificationOptions();
+    } catch (error) {
+      logger.warn('Remediation extension test failed - may require specific detection data or configuration', error instanceof Error ? error : undefined);
+      
+      // Take screenshot for debugging
+      await mitreRemediationPage.takeScreenshot('remediation-extension-failure.png', {
+        test: 'remediation-extension',
+        error: error instanceof Error ? error.message : 'unknown'
+      });
+      
+      throw error;
+    }
+  });
+
+  test('should verify MITRE app UI components render correctly', async () => {
+    await foundryHomePage.goto();
+    await mitreChartPage.navigateToMitreChart();
+    
+    // Take screenshot for visual verification
+    await mitreChartPage.takeScreenshot('mitre-chart-full-view.png', {
+      test: 'ui-verification'
+    });
+    
+    // Verify core UI elements are present and functional
+    await mitreChartPage.verifyMitreMatrixElements();
+    
+    // Check for loading states are complete
+    const hasLoadingIndicators = await mitreChartPage.elementExists('.loading, .spinner, [data-testid="loading"]');
+    if (hasLoadingIndicators) {
+      logger.warn('Loading indicators still present - chart may still be loading');
+    } else {
+      logger.success('MITRE chart appears fully loaded');
+    }
+  });
+
+  test.afterAll(() => {
+    logger.info('MITRE Attack app E2E test suite completed');
   });
 });

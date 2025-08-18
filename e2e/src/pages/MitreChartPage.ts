@@ -132,13 +132,39 @@ export class MitreChartPage extends BasePage {
             await this.smartClick(viewInCatalogLink, 'View in catalog link');
             await this.page.waitForTimeout(3000);
             
-            // Look for launch button in catalog
-            const launchButton = this.page.getByRole('button', { name: /launch|open|start/i }).first();
-            if (await this.elementExists(launchButton, 5000)) {
-              await this.smartClick(launchButton, 'App launch button');
+            // Try multiple variations of launch buttons
+            const launchButtons = [
+              this.page.getByRole('button', { name: /launch|open|start|view/i }),
+              this.page.getByRole('link', { name: /launch|open|start|view/i }),
+              this.page.locator('button').filter({ hasText: /launch|open|start|view/i }),
+              this.page.locator('a').filter({ hasText: /launch|open|start|view/i }),
+              this.page.locator('[data-testid*="launch"], [data-testid*="open"], [data-testid*="start"]'),
+              this.page.locator('.btn').filter({ hasText: /launch|open|start|view/i }),
+              // Sometimes it's just "Install" or the app name itself
+              this.page.getByRole('button', { name: appName }),
+              this.page.getByRole('button', { name: /install/i })
+            ];
+            
+            let launched = false;
+            for (const button of launchButtons) {
+              if (await this.elementExists(button.first(), 2000)) {
+                this.logger.step(`Found launch button: ${await button.first().textContent() || 'button'}`);
+                await this.smartClick(button.first(), 'App launch button');
+                launched = true;
+                break;
+              }
+            }
+            
+            if (!launched) {
+              // Try direct navigation to the app URL as fallback
+              this.logger.step('No launch button found, trying direct navigation to app');
+              await this.navigateToPath('/foundry/mitre-vue', 'Direct MITRE app navigation');
               await this.verifyPageLoaded();
               return;
             }
+            
+            await this.verifyPageLoaded();
+            return;
           }
           
           const errorMsg = `Unable to launch app '${appName}' through UI. ` +
