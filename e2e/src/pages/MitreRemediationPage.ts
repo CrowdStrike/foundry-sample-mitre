@@ -67,7 +67,28 @@ export class MitreRemediationPage extends BasePage {
         this.logger.step('Waiting for detections to load');
         await this.page.waitForTimeout(5000); // Give detections time to load
         
-        // Look for detection rows with a more generous timeout
+        // Look for detection rows using semantic locators first
+        const detectionTable = this.page.getByRole('table').or(
+          this.page.getByRole('grid')
+        );
+        
+        if (await this.elementExists(detectionTable, 5000)) {
+          // Try to find clickable rows in the table
+          const tableRows = detectionTable.getByRole('row').filter({ hasNotText: /column|header/i });
+          const firstDataRow = tableRows.first();
+          
+          if (await this.elementExists(firstDataRow, 3000)) {
+            this.logger.step('Found detection table rows');
+            await this.smartClick(firstDataRow, 'First detection row');
+            
+            // Wait for detection details page to load
+            await this.waiter.waitForPageLoad('Detection details loaded');
+            await this.page.waitForTimeout(3000); // Give extensions time to load
+            return;
+          }
+        }
+        
+        // Fallback: look for detection rows with CSS selectors
         const detectionRowSelectors = [
           '.detection-row',
           '[data-testid="detection-item"]', 
@@ -90,7 +111,12 @@ export class MitreRemediationPage extends BasePage {
         
         if (!detectionFound) {
           // Try clicking on any clickable cell in the detection table
-          const clickableCells = this.page.locator('gridcell[cursor="pointer"], td[cursor="pointer"], button').filter({ hasText: /bad-rabbit|explorer|cmd/ });
+          const clickableCells = this.page.getByRole('gridcell', { name: /bad-rabbit|explorer|cmd/i }).or(
+            this.page.getByRole('cell', { name: /bad-rabbit|explorer|cmd/i })
+          ).or(
+            this.page.locator('gridcell[cursor="pointer"], td[cursor="pointer"], button').filter({ hasText: /bad-rabbit|explorer|cmd/ })
+          );
+          
           if (await this.elementExists(clickableCells.first(), 3000)) {
             this.logger.step('Found clickable detection cell');
             await this.smartClick(clickableCells.first(), 'Detection cell');
@@ -117,12 +143,13 @@ export class MitreRemediationPage extends BasePage {
     this.logger.step('Verify MITRE remediation options');
     
     const remediationElements = [
+      this.page.getByRole('button', { name: /remediat/i }),
+      this.page.getByRole('button', { name: /mitiga/i }),
       this.page.getByText(/remediat/i),
       this.page.getByText(/mitiga/i),
-      this.page.getByRole('button', { name: /remediate/i }),
-      this.page.getByRole('button', { name: /mitigate/i }),
+      this.page.getByRole('tab', { name: /remediation/i }),
       this.page.locator('.remediation-action'),
-      this.page.locator('[data-testid*="remediation"]')
+      this.page.getByTestId(/remediation/)
     ];
 
     let foundRemediation = false;
@@ -143,10 +170,8 @@ export class MitreRemediationPage extends BasePage {
    * Click on remediation action
    */
   async clickRemediationAction(): Promise<void> {
-    await this.smartClick(
-      this.page.getByRole('button', { name: /remediate|mitigate/i }).first(),
-      'Remediation action button'
-    );
+    const remediationButton = this.page.getByRole('button', { name: /remediate|mitigate/i }).first();
+    await this.smartClick(remediationButton, 'Remediation action button');
   }
 
   /**
@@ -156,11 +181,12 @@ export class MitreRemediationPage extends BasePage {
     this.logger.step('Verify Jira integration elements');
     
     const jiraElements = [
+      this.page.getByRole('button', { name: /create.*ticket/i }),
+      this.page.getByRole('button', { name: /jira/i }),
       this.page.getByText(/jira/i),
       this.page.getByText(/ticket/i),
       this.page.getByText(/issue/i),
-      this.page.locator('[data-testid*="jira"]'),
-      this.page.getByRole('button', { name: /create.*ticket/i })
+      this.page.getByTestId(/jira/)
     ];
 
     let foundJira = false;
@@ -184,11 +210,13 @@ export class MitreRemediationPage extends BasePage {
     this.logger.step('Verify notification options');
     
     const notificationElements = [
+      this.page.getByRole('button', { name: /notify/i }),
+      this.page.getByRole('button', { name: /notify.*it/i }),
+      this.page.getByRole('button', { name: /notify.*ir/i }),
       this.page.getByText(/notify.*it/i),
       this.page.getByText(/notify.*ir/i),
       this.page.getByText(/incident response/i),
-      this.page.getByRole('button', { name: /notify/i }),
-      this.page.locator('[data-testid*="notify"]')
+      this.page.getByTestId(/notify/)
     ];
 
     let foundNotifications = false;

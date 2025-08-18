@@ -55,20 +55,24 @@ export abstract class BasePage {
   protected async smartClick(
     locator: Locator | string, 
     description: string,
-    options: { timeout?: number } = {}
+    options: { timeout?: number; force?: boolean } = {}
   ): Promise<void> {
+    const defaultTimeout = config.getPlaywrightTimeouts().actionTimeout;
+    const actualTimeout = options.timeout || defaultTimeout;
+    
     this.logger.step(`Click ${description}`, { 
       element: typeof locator === 'string' ? locator : 'locator',
-      timeout: options.timeout 
+      timeout: actualTimeout,
+      force: options.force
     });
 
     await RetryHandler.withPlaywrightRetry(
       async () => {
         const element = await this.waiter.waitForVisible(locator, {
-          timeout: options.timeout,
+          timeout: actualTimeout,
           description
         });
-        await element.click();
+        await element.click({ force: options.force, timeout: actualTimeout });
       },
       `Click ${description}`
     );
@@ -81,16 +85,26 @@ export abstract class BasePage {
     locator: Locator | string,
     action: (element: Locator) => Promise<T>,
     description: string,
-    options: { timeout?: number } = {}
+    options: { timeout?: number; state?: 'visible' | 'attached' } = {}
   ): Promise<T> {
-    this.logger.debug(`Wait and act: ${description}`);
+    const defaultTimeout = config.getPlaywrightTimeouts().actionTimeout;
+    const actualTimeout = options.timeout || defaultTimeout;
+    const state = options.state || 'visible';
+    
+    this.logger.debug(`Wait and act: ${description}`, { timeout: actualTimeout, state });
     
     return RetryHandler.withPlaywrightRetry(
       async () => {
-        const element = await this.waiter.waitForVisible(locator, {
-          timeout: options.timeout,
-          description
-        });
+        const element = state === 'visible' 
+          ? await this.waiter.waitForVisible(locator, { timeout: actualTimeout, description })
+          : typeof locator === 'string' 
+            ? this.page.locator(locator) 
+            : locator;
+            
+        if (state === 'attached') {
+          await element.waitFor({ state: 'attached', timeout: actualTimeout });
+        }
+        
         return await action(element);
       },
       description
@@ -146,12 +160,17 @@ export abstract class BasePage {
   /**
    * Check if element exists without throwing
    */
-  protected async elementExists(locator: Locator | string, timeout: number = 3000): Promise<boolean> {
+  protected async elementExists(
+    locator: Locator | string, 
+    timeout: number = 3000,
+    state: 'visible' | 'attached' | 'detached' | 'hidden' = 'visible'
+  ): Promise<boolean> {
     try {
       const element = typeof locator === 'string' ? this.page.locator(locator) : locator;
-      await element.waitFor({ state: 'visible', timeout });
+      await element.waitFor({ state, timeout });
       return true;
-    } catch {
+    } catch (error) {
+      this.logger.debug(`Element not found in expected state '${state}': ${typeof locator === 'string' ? locator : 'locator'}`, error instanceof Error ? error : undefined);
       return false;
     }
   }

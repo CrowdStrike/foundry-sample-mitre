@@ -64,7 +64,7 @@ export class MitreChartPage extends BasePage {
           await this.smartClick(menuButton, 'Menu button');
           await this.page.waitForTimeout(1000); // Let menu expand
           
-          // Look for "Custom Apps" section
+          // Look for "Custom Apps" section using semantic locator
           const customAppsButton = this.page.getByRole('button', { name: /Custom Apps/i });
           if (await this.elementExists(customAppsButton, 3000)) {
             await this.smartClick(customAppsButton, 'Custom Apps section');
@@ -141,24 +141,32 @@ export class MitreChartPage extends BasePage {
       throw new Error(`Not on MITRE app page. Current URL: ${currentUrl}`);
     }
     
-    // Check for basic page structure (iframe for app content)
-    const hasIframe = await this.elementExists(this.page.locator('iframe'), 3000);
-    if (hasIframe) {
+    // Check for basic page structure using semantic locators where possible
+    const contentFrame = this.page.frameLocator('iframe');
+    if (await this.elementExists(this.page.locator('iframe'), 3000)) {
       this.logger.success('MITRE app page loaded successfully with iframe content');
       return;
     }
     
-    // Fallback: check for breadcrumb indicating we're in the right place
-    const breadcrumbText = await this.page.locator('nav[aria-label="Breadcrumb"] *').textContent();
-    if (breadcrumbText && breadcrumbText.includes('Mitre')) {
-      this.logger.success('MITRE app page loaded successfully (breadcrumb verification)');
-      return;
+    // Fallback: check for breadcrumb using ARIA navigation landmark
+    const breadcrumbNav = this.page.getByRole('navigation', { name: /breadcrumb/i });
+    if (await this.elementExists(breadcrumbNav, 2000)) {
+      const breadcrumbText = await breadcrumbNav.textContent();
+      if (breadcrumbText && breadcrumbText.includes('Mitre')) {
+        this.logger.success('MITRE app page loaded successfully (breadcrumb verification)');
+        return;
+      }
     }
     
-    // Final fallback: just verify we have some content structure
-    const hasMainContent = await this.elementExists(this.page.locator('main, [role="main"], body > *'), 2000);
-    if (hasMainContent) {
-      this.logger.success('MITRE app page loaded with basic content structure');
+    // Final fallback: check for main content using semantic locators
+    const mainContent = this.page.getByRole('main').or(
+      this.page.locator('[role="main"]')
+    ).or(
+      this.page.locator('main')
+    );
+    
+    if (await this.elementExists(mainContent, 2000)) {
+      this.logger.success('MITRE app page loaded with main content structure');
     } else {
       throw new Error('MITRE app page appears to be empty or failed to load');
     }
@@ -172,29 +180,29 @@ export class MitreChartPage extends BasePage {
     
     // For basic e2e testing, just verify the app is interactive
     // Check if there's an iframe (where the actual app content is)
-    const iframe = this.page.locator('iframe');
-    if (await this.elementExists(iframe, 3000)) {
+    const appFrame = this.page.locator('iframe');
+    if (await this.elementExists(appFrame, 3000)) {
       this.logger.success('App iframe present - interaction capability confirmed');
       // We don't need to actually click elements for basic e2e verification
       return;
     }
     
-    // Fallback: look for any clickable elements on the page
-    const clickableElements = [
-      this.page.locator('button'),
-      this.page.locator('a'),
-      this.page.locator('[role="button"]'),
-      this.page.locator('[onclick]')
+    // Fallback: look for interactive elements using semantic locators
+    const interactiveElements = [
+      this.page.getByRole('button'),
+      this.page.getByRole('link'),
+      this.page.getByRole('tab'),
+      this.page.getByRole('menuitem')
     ];
     
-    for (const elementType of clickableElements) {
+    for (const elementType of interactiveElements) {
       if (await this.elementExists(elementType.first(), 1000)) {
-        this.logger.success('Clickable elements found - app appears interactive');
+        this.logger.success('Interactive elements found - app appears functional');
         return;
       }
     }
     
-    this.logger.info('No specific clickable elements found, but page loaded successfully');
+    this.logger.info('No specific interactive elements found, but page loaded successfully');
   }
 
   /**
@@ -204,8 +212,8 @@ export class MitreChartPage extends BasePage {
     this.logger.step('Verify app content is accessible');
     
     // Simplified verification - just check the app loaded properly
-    const hasIframe = await this.elementExists(this.page.locator('iframe'), 2000);
-    if (hasIframe) {
+    const appFrame = this.page.locator('iframe');
+    if (await this.elementExists(appFrame, 2000)) {
       this.logger.success('App iframe loaded - content should be accessible');
     } else {
       this.logger.info('No iframe found - app may use direct content rendering');
