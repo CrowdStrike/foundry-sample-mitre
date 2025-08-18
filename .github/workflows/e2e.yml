@@ -1,0 +1,116 @@
+name: MITRE App E2E Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      FOUNDRY_API_CLIENT_ID: ${{ secrets.FOUNDRY_API_CLIENT_ID }}
+      FOUNDRY_API_CLIENT_SECRET: ${{ secrets.FOUNDRY_API_CLIENT_SECRET }}
+      FOUNDRY_CID: ${{ secrets.FOUNDRY_CID }}
+      FOUNDRY_CLOUD_REGION: ${{ secrets.FOUNDRY_CLOUD_REGION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Install required tools
+        run: |
+          brew tap crowdstrike/foundry-cli
+          brew install crowdstrike/foundry-cli/foundry yq
+
+      - name: Create directory for Foundry CLI
+        run: mkdir -p ~/.config/foundry
+
+      - name: Prepare app manifest
+        run: |
+          # Remove IDs from manifest
+          yq -i 'del(.. | select(has("id")).id) | del(.. | select(has("app_id")).app_id)' manifest.yml
+          
+          # Generate unique app name
+          yq -i '.name = .name + "-${{ github.actor }}-" + "'$(date +"%Y%m%d%H%M")'"' manifest.yml
+          
+          # Set app name as environment variable
+          APP_NAME=$(yq '.name' manifest.yml)
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          
+          echo "Prepared manifest with app name: $APP_NAME"
+
+      - name: Deploy app to Falcon
+        run: |
+          foundry apps deploy --change-type=major --change-log="e2e deploy"
+          echo "App deployment initiated"
+
+      - name: Wait for deployment and release app
+        run: |
+          echo "Waiting for deployment to complete..."
+          timeout=300  # 5 minute timeout
+          elapsed=0
+          
+          while [ $elapsed -lt $timeout ]; do
+            if foundry apps list-deployments | grep -i "successful"; then
+              echo "Deployment successful, releasing app..."
+              foundry apps release --change-type=major --notes="e2e release"
+              echo "App released successfully"
+              exit 0
+            fi
+          
+            if foundry apps list-deployments | grep -i "failed"; then
+              echo "Deployment failed"
+              exit 1
+            fi
+          
+            sleep 5
+            elapsed=$((elapsed + 5))
+          done
+          
+          echo "Deployment timeout after ${timeout} seconds"
+          exit 1
+
+      - name: Install Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright dependencies
+        run: npm ci
+        working-directory: e2e
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+        working-directory: e2e
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v2
+        with:
+          envkey_FALCON_USERNAME: ${{ secrets.FALCON_USERNAME }}
+          envkey_FALCON_PASSWORD: ${{ secrets.FALCON_PASSWORD }}
+          envkey_FALCON_AUTH_SECRET: ${{ secrets.FALCON_AUTH_SECRET }}
+          envkey_APP_NAME: $APP_NAME
+          directory: e2e
+
+      - name: Run Playwright tests
+        run: npx dotenvx run -- npx playwright test
+        working-directory: e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-${{ env.APP_NAME }}
+          path: e2e/playwright-report/
+          retention-days: 30
+
+      - name: Delete app from Falcon
+        if: always()
+        run: |
+          echo "Deleting app: $APP_NAME"
+          foundry apps delete -f
+          echo "App deleted successfully"
