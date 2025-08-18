@@ -29,9 +29,9 @@ jobs:
       - name: Create directory for Foundry CLI
         run: mkdir -p ~/.config/foundry
 
-      - name: Authenticate with Foundry CLI
+      - name: Authenticate with Foundry CLI  
         run: |
-          foundry config set --client-id "$FOUNDRY_API_CLIENT_ID" --client-secret "$FOUNDRY_API_CLIENT_SECRET" --cid "$FOUNDRY_CID" --cloud "$FOUNDRY_CLOUD_REGION"
+          foundry login --client-id "$FOUNDRY_API_CLIENT_ID" --client-secret "$FOUNDRY_API_CLIENT_SECRET" --cid "$FOUNDRY_CID" --cloud "$FOUNDRY_CLOUD_REGION"
           echo "Foundry CLI authenticated successfully"
 
       - name: Prepare app manifest
