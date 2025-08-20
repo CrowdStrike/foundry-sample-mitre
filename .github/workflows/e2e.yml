@@ -65,9 +65,11 @@ jobs:
               echo "Waiting for app to appear in catalog..."
               sleep 30
               
-              # Verify app is accessible
-              echo "Verifying app release status..."
-              foundry apps list-releases
+              # Verify deployment status and get app details
+              echo "Verifying final deployment status..."
+              foundry apps list-deployments
+              
+              echo "Final deployed app name: $APP_NAME"
               
               exit 0
             fi

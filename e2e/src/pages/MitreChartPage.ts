@@ -78,6 +78,20 @@ export class MitreChartPage extends BasePage {
     await searchBox.fill(appName);
     await this.page.keyboard.press('Enter');
     
+    this.logger.info(`Searching for app: "${appName}"`);
+    
+    // Wait a moment for search results
+    await this.page.waitForTimeout(3000);
+    
+    // Check if any results are found
+    const noResultsMessage = this.page.getByText('None Found');
+    const hasNoResults = await noResultsMessage.isVisible({ timeout: 2000 });
+    
+    if (hasNoResults) {
+      this.logger.error(`No search results found for app: "${appName}"`);
+      throw new Error(`App "${appName}" not found in App Catalog. Ensure CLI deployed and released the app correctly.`);
+    }
+    
     // Look for the app in search results
     const appLink = this.page.getByRole('link', { name: appName, exact: true });
     
@@ -86,6 +100,7 @@ export class MitreChartPage extends BasePage {
       this.logger.success(`Found app in catalog: ${appName}`);
       await appLink.click();
     } catch (error) {
+      this.logger.error(`App link not found for exact name: "${appName}"`);
       throw new Error(`App "${appName}" not found in App Catalog. Ensure CLI deployed and released the app correctly.`);
     }
     
