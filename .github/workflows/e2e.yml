@@ -10,6 +10,7 @@ on:
 jobs:
   e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       FOUNDRY_API_CLIENT_ID: ${{ secrets.FOUNDRY_API_CLIENT_ID }}
       FOUNDRY_API_CLIENT_SECRET: ${{ secrets.FOUNDRY_API_CLIENT_SECRET }}
@@ -74,17 +75,20 @@ jobs:
           echo "Deployment timeout after ${timeout} seconds"
           exit 1
 
+      # Parallelize Node setup while deployment happens
       - name: Install Node LTS
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
+          cache-dependency-path: e2e/package-lock.json
 
-      - name: Install Playwright dependencies
-        run: npm ci
-        working-directory: e2e
-
-      - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
+      - name: Install dependencies in parallel
+        run: |
+          # Install npm dependencies and Playwright browsers in parallel
+          npm ci &
+          npx playwright install chromium --with-deps &
+          wait
         working-directory: e2e
 
       - name: Make envfile
@@ -97,20 +101,21 @@ jobs:
           directory: e2e
 
       - name: Run Playwright tests
-        run: npx dotenvx run -- npx playwright test
+        run: npx dotenvx run -- npx playwright test --reporter=list
         working-directory: e2e
+        env:
+          CI: true
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-${{ env.APP_NAME }}
+          name: playwright-report-${{ github.run_number }}
           path: e2e/playwright-report/
-          retention-days: 30
+          retention-days: 7
 
       - name: Delete app from Falcon
         if: always()
         run: |
           echo "Deleting app: $APP_NAME"
-          foundry apps delete -f
-          echo "App deleted successfully"
+          foundry apps delete -f || echo "App deletion failed, may already be deleted"

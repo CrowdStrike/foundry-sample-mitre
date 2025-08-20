@@ -21,7 +21,7 @@ test.describe('MITRE Attack App E2E Tests', () => {
     if (!config.isCI) {
       logger.info('Starting MITRE Attack app E2E test suite');
       
-      // Log test environment info (only in local dev to avoid showing masked URLs)
+      // Log test environment info (only in local dev)
       logger.info('Test Environment', {
         isCI: config.isCI,
         baseUrl: config.falconBaseUrl,

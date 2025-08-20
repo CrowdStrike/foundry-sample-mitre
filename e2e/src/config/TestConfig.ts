@@ -128,8 +128,8 @@ export class TestConfig {
    */
   public logSummary(): void {
     if (this.isCI) {
-      // Very minimal logging in CI - don't show URLs since they get masked
-      console.log(`E2E Test Config: ${this.isCI ? 'CI' : 'Local'} | ${this.appName}`);
+      // Very minimal logging in CI
+      console.log(`E2E Test Config: ${this.isCI ? 'CI' : 'Local'} | ${this.appName} | ${this.falconBaseUrl}`);
     } else {
       // Detailed logging for local development
       console.log('🔧 Test Configuration:');
