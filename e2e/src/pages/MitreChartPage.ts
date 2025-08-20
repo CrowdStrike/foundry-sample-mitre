@@ -47,53 +47,17 @@ export class MitreChartPage extends BasePage {
   async navigateToMitreChart(): Promise<void> {
     return this.withTiming(
       async () => {
-        await this.navigateToPath('/foundry/home', 'Foundry home page');
-        
-        // Navigate to App Manager to find the deployed app
-        await this.navigateToPath('/foundry/app-manager', 'App Manager page');
-        
-        // Look for the app by exact name in the manager
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
-        this.logger.info(`Looking for app: ${appName}`);
+        const isCI = !!process.env.CI;
         
-        const appLink = this.page.getByRole('link', { name: appName, exact: true });
-        
-        await expect(appLink).toBeVisible({ timeout: 15000 });
-        this.logger.success(`Found app in manager: ${appName}`);
-        
-        // Click the app link to go to its detail page
-        await appLink.click();
-        
-        // Now click "View in catalog" to access the app properly
-        const viewCatalogLink = this.page.getByRole('link', { name: 'View in catalog' });
-        await expect(viewCatalogLink).toBeVisible({ timeout: 10000 });
-        await viewCatalogLink.click();
-        
-        // Wait for app catalog page and look for install/open button
-        // The button might be "Install now", "Open app", or "Launch" depending on app state
-        const installButton = this.page.getByRole('button', { name: /install now|open app|launch/i });
-        
-        await expect(installButton).toBeVisible({ timeout: 15000 });
-        const buttonText = await installButton.textContent();
-        this.logger.success(`Found app action button: ${buttonText}`);
-        
-        // Click the button (install or open)
-        await installButton.click();
-        
-        // If we installed the app, we need to wait and then find the "Open app" button
-        if (buttonText?.toLowerCase().includes('install')) {
-          this.logger.info('App was installed, now looking for Open app button');
-          
-          // Wait for installation to complete and page to refresh
-          await this.page.waitForTimeout(3000);
-          
-          // Look for "Open app" button after installation
-          const openAppButton = this.page.getByRole('button', { name: 'Open app' });
-          await expect(openAppButton).toBeVisible({ timeout: 15000 });
-          await openAppButton.click();
-          this.logger.success('Clicked Open app button after installation');
+        if (isCI) {
+          // CI Flow: App was deployed and released, should be in App Catalog for installation
+          this.logger.info(`CI mode: Installing app "${appName}" from App Catalog`);
+          await this.installAppFromCatalog(appName);
         } else {
-          this.logger.success(`Clicked ${buttonText} button`);
+          // Local Flow: App should already be installed and accessible via App Manager
+          this.logger.info(`Local mode: Accessing existing app "${appName}" via App Manager`);
+          await this.accessExistingApp(appName);
         }
         
         // Verify the app loaded
@@ -101,6 +65,176 @@ export class MitreChartPage extends BasePage {
       },
       'Navigate to MITRE Chart'
     );
+  }
+
+  /**
+   * Install app from App Catalog (used in CI after CLI deploy/release)
+   */
+  private async installAppFromCatalog(appName: string): Promise<void> {
+    await this.navigateToPath('/foundry/app-catalog', 'App Catalog page');
+    
+    // Search for the app
+    const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
+    await searchBox.fill(appName);
+    await this.page.keyboard.press('Enter');
+    
+    // Look for the app in search results
+    const appLink = this.page.getByRole('link', { name: appName, exact: true });
+    
+    try {
+      await expect(appLink).toBeVisible({ timeout: 10000 });
+      this.logger.success(`Found app in catalog: ${appName}`);
+      await appLink.click();
+    } catch (error) {
+      throw new Error(`App "${appName}" not found in App Catalog. Ensure CLI deployed and released the app correctly.`);
+    }
+    
+    // Install the app
+    const installButton = this.page.getByRole('button', { name: /install now/i });
+    await expect(installButton).toBeVisible({ timeout: 10000 });
+    await installButton.click();
+    this.logger.info('Installing app from catalog...');
+    
+    // Wait for installation and click "Open app"
+    await this.page.waitForTimeout(3000);
+    const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+    await expect(openAppButton).toBeVisible({ timeout: 15000 });
+    await openAppButton.click();
+    this.logger.success('App installed and opened successfully');
+  }
+
+  /**
+   * Access existing installed app via App Manager (used locally)
+   */
+  private async accessExistingApp(appName: string): Promise<void> {
+    // Try Custom Apps navigation first (most likely path for installed apps)
+    try {
+      await this.navigateViaCustomApps();
+      return;
+    } catch (error) {
+      this.logger.warn('Custom apps navigation failed, trying App Manager approach');
+    }
+    
+    // Fallback: Try App Manager approach
+    await this.navigateToPath('/foundry/app-manager', 'App Manager page');
+    
+    const appLink = this.page.getByRole('link', { name: appName, exact: true });
+    
+    try {
+      await expect(appLink).toBeVisible({ timeout: 10000 });
+      this.logger.success(`Found app in manager: ${appName}`);
+      await appLink.click();
+      
+      // Click "View in catalog" to access the installed app
+      const viewCatalogLink = this.page.getByRole('link', { name: 'View in catalog' });
+      await expect(viewCatalogLink).toBeVisible({ timeout: 10000 });
+      await viewCatalogLink.click();
+      
+      // For installed apps, should have "Open app" button
+      const openButton = this.page.getByRole('button', { name: 'Open app' });
+      await expect(openButton).toBeVisible({ timeout: 10000 });
+      await openButton.click();
+      this.logger.success('Accessed existing app successfully');
+      
+    } catch (error) {
+      const availableApps = await this.page.locator('table tbody tr').allTextContents();
+      this.logger.error(`Could not find app "${appName}" in App Manager`);
+      this.logger.info(`Available apps: ${availableApps.slice(0, 3).join(', ')}...`);
+      throw new Error(`App "${appName}" not found. For local testing, please install the app manually first.`);
+    }
+  }
+
+  /**
+   * Fallback navigation method via Custom apps menu
+   */
+  private async navigateViaCustomApps(): Promise<void> {
+    this.logger.step('Attempting navigation via Custom apps menu');
+    
+    // Navigate to home first
+    await this.navigateToPath('/foundry/home', 'Foundry home page');
+    
+    // Open hamburger menu
+    const menuButton = this.page.getByRole('button', { name: 'Menu' });
+    await expect(menuButton).toBeVisible({ timeout: 10000 });
+    await menuButton.click();
+    
+    // Click Custom apps
+    const customAppsButton = this.page.getByRole('button', { name: 'Custom apps' });
+    await expect(customAppsButton).toBeVisible({ timeout: 10000 });
+    await customAppsButton.click();
+    
+    // Look for the app in the Custom apps menu (try both exact and partial matches)
+    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+    let appButton = this.page.getByRole('button', { name: appName, exact: true });
+    
+    try {
+      await expect(appButton).toBeVisible({ timeout: 5000 });
+    } catch {
+      // Try partial match with base name
+      const baseName = appName.includes('MITRE') ? 'Triage with MITRE ATTACK' : 'foundry-sample-mitre';
+      appButton = this.page.getByRole('button', { name: new RegExp(baseName, 'i') }).first();
+      await expect(appButton).toBeVisible({ timeout: 5000 });
+    }
+    
+    // Expand the app menu if needed
+    if (!await appButton.getAttribute('aria-expanded')) {
+      await appButton.click();
+    }
+    
+    // Click the main chart/app link
+    const chartLink = this.page.getByRole('link', { name: /mitre.*chart|mitre.*app/i }).first();
+    await expect(chartLink).toBeVisible({ timeout: 5000 });
+    await chartLink.click();
+    
+    this.logger.success('Successfully navigated via Custom apps menu');
+  }
+
+  /**
+   * Fallback navigation method via direct URL
+   */
+  private async navigateViaDirectUrl(): Promise<void> {
+    this.logger.step('Attempting navigation via direct URL');
+    
+    // Try to construct URL based on common patterns
+    // Pattern: /foundry/page/{page-id}?path=/
+    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+    
+    // First, try to get the page ID from App Manager API or current app context
+    try {
+      await this.navigateToPath('/foundry/app-manager', 'App Manager for URL discovery');
+      
+      // Look for our app and extract the app ID
+      const appLink = this.page.getByRole('link', { name: appName, exact: true });
+      await expect(appLink).toBeVisible({ timeout: 10000 });
+      
+      // Get the href to extract app ID
+      const href = await appLink.getAttribute('href');
+      const appId = href?.split('/').pop();
+      
+      if (appId) {
+        // Navigate to App Manager details to get the page URL
+        await appLink.click();
+        
+        // Look for "View in catalog" to get to the app page structure
+        const viewCatalogLink = this.page.getByRole('link', { name: 'View in catalog' });
+        await expect(viewCatalogLink).toBeVisible({ timeout: 10000 });
+        const catalogHref = await viewCatalogLink.getAttribute('href');
+        
+        if (catalogHref) {
+          // Extract the actual app ID from catalog URL and construct page URL
+          const catalogAppId = catalogHref.split('/').pop();
+          const directUrl = `/foundry/page/${catalogAppId}?path=/`;
+          
+          await this.page.goto(`${this.page.url().split('/foundry')[0]}${directUrl}`);
+          this.logger.success(`Successfully navigated via direct URL: ${directUrl}`);
+          return;
+        }
+      }
+    } catch (error) {
+      this.logger.warn(`Direct URL discovery failed: ${error}`);
+    }
+    
+    throw new Error('Could not determine direct URL for app navigation');
   }
 
   /**
