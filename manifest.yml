@@ -17,8 +17,6 @@ ignored:
     - node_modules
     - yarn.lock
     - package.json
-    - ui/node_modules
-    - ui/shared/node_modules
     - ui/(extensions|pages)/[^\/]*?/public
     - ui/(extensions|pages)/[^\/]*?/index.html
     - ui/(extensions|pages)/[^\/]*?/favicon.ico

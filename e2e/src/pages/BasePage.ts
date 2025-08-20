@@ -176,6 +176,22 @@ export abstract class BasePage {
   }
 
   /**
+   * Clean up any lingering modals or dialogs using semantic locators
+   */
+  async cleanupModals(): Promise<void> {
+    try {
+      const modalCloseButton = this.page.getByRole('button', { name: /close|dismiss|cancel/i });
+      if (await this.elementExists(modalCloseButton, 1000)) {
+        await this.smartClick(modalCloseButton, 'Close modal dialog');
+        this.logger.debug('Cleaned up lingering modal');
+      }
+    } catch (error) {
+      // Ignore cleanup errors - they're not critical
+      this.logger.debug('Modal cleanup completed (no modals found)');
+    }
+  }
+
+  /**
    * Execute operation with performance timing
    */
   protected async withTiming<T>(

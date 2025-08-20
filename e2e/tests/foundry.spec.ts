@@ -57,15 +57,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
       logger.success(`Test passed: ${testInfo.title}`, { duration: testInfo.duration });
     }
     
-    // Clear any lingering modals or dialogs
-    try {
-      const modalCloseButton = page.getByRole('button', { name: /close|dismiss|cancel/i });
-      if (await modalCloseButton.isVisible({ timeout: 1000 })) {
-        await modalCloseButton.click({ timeout: 2000 });
-      }
-    } catch {
-      // Ignore if no modals to close
-    }
+    // Clear any lingering modals or dialogs using page object method
+    await mitreChartPage.cleanupModals();
   });
 
   test.describe('App Installation and Basic Navigation', () => {
@@ -109,20 +102,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
       await mitreChartPage.navigateToMitreChart();
       await mitreChartPage.clickMitreTechnique();
       
-      // Verify interaction response using semantic locators
-      const hasModal = await mitreChartPage.elementExists(
-        mitreChartPage.page.getByRole('dialog').or(
-          mitreChartPage.page.getByRole('complementary')
-        ).or(
-          mitreChartPage.page.locator('[data-testid*="modal"], [data-testid*="details"]')
-        ),
-        2000
-      );
-      if (hasModal) {
-        logger.success('Technique interaction opened details view');
-      } else {
-        logger.info('No details modal found - technique may redirect or show inline details');
-      }
+      // Verify interaction response using page object method
+      await mitreChartPage.verifyInteractionResponse();
     });
   });
 
@@ -135,18 +116,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
       await foundryHomePage.goto();
       await mitreChartPage.navigateToWizard();
       
-      // Verify wizard form elements are present
-      const hasForm = await mitreChartPage.elementExists(
-        mitreChartPage.page.getByRole('form').or(
-          mitreChartPage.page.locator('[data-testid*="wizard"]')
-        ),
-        3000
-      );
-      if (hasForm) {
-        logger.success('MITRE wizard form loaded successfully');
-      } else {
-        logger.warn('No wizard form elements found - page may have different structure');
-      }
+      // Verify wizard form elements are present using page object method
+      await mitreChartPage.verifyWizardForm();
     });
 
     test('should verify MITRE remediation extension configuration', async () => {
@@ -166,39 +137,22 @@ test.describe('MITRE Attack App E2E Tests', () => {
         const notifyItUrl = currentUrl.replace(/\?path=.*$/, '') + '?path=/notify-it';
         
         await mitreChartPage.page.goto(notifyItUrl);
-        await mitreChartPage.page.waitForTimeout(3000);
         
         // Verify we can access the configuration page
-        const configUrl = mitreChartPage.page.url();
-        if (configUrl.includes('/notify-it')) {
-          logger.success('MITRE remediation extension configuration is accessible');
-        } else {
-          logger.info('Configuration page may have different routing');
-        }
+        await expect(mitreChartPage.page).toHaveURL(/\/notify-it/);
         
         // Check for basic page structure indicating the extension loaded
-        const hasContent = await mitreChartPage.elementExists(
+        await expect(
           mitreChartPage.page.locator('iframe').or(
             mitreChartPage.page.getByRole('main')
-          ),
-          5000
-        );
-        
-        if (hasContent) {
-          logger.success('MITRE remediation extension configuration page loaded successfully');
-        } else {
-          logger.warn('Extension configuration page appears empty but navigation succeeded');
-        }
+          )
+        ).toBeVisible({ timeout: 5000 });
         
       } catch (error) {
         logger.warn('Extension configuration test encountered issues - this may require specific detection context', error instanceof Error ? error : undefined);
         
-        // For basic e2e verification, just confirm the app navigation works
-        // The extension is defined in manifest.yml and should be deployable
-        const hasIframe = await mitreChartPage.elementExists(mitreChartPage.page.locator('iframe'), 2000);
-        if (hasIframe) {
-          logger.success('MITRE app infrastructure supports extensions (iframe present)');
-        }
+        // For basic e2e verification, confirm the app navigation works
+        await expect(mitreChartPage.page.locator('iframe')).toBeVisible({ timeout: 2000 });
       }
     });
   });
@@ -222,23 +176,10 @@ test.describe('MITRE Attack App E2E Tests', () => {
       // Verify core UI elements are present and functional
       await mitreChartPage.verifyMitreMatrixElements();
       
-      // Check for loading states are complete
-      const loadingIndicators = page.locator('.loading, .spinner, [data-testid="loading"], [aria-label*="loading"]');
-      const hasLoadingIndicators = await mitreChartPage.elementExists(loadingIndicators.first(), 1000);
-      
-      if (hasLoadingIndicators) {
-        logger.warn('Loading indicators still present - chart may still be loading');
-        // Wait a bit more for loading to complete
-        await page.waitForTimeout(3000);
-        
-        // Check again after waiting
-        const stillLoading = await mitreChartPage.elementExists(loadingIndicators.first(), 500);
-        if (!stillLoading) {
-          logger.success('Loading completed after additional wait');
-        }
-      } else {
-        logger.success('MITRE chart appears fully loaded');
-      }
+      // Verify loading is complete using expect
+      await expect(
+        page.locator('.loading, .spinner, [data-testid="loading"], [aria-label*="loading"]')
+      ).toHaveCount(0, { timeout: 5000 });
     });
   });
 
