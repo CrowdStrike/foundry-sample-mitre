@@ -12,7 +12,6 @@ test.describe('MITRE Attack App E2E Tests', () => {
   let foundryHomePage: FoundryHomePage;
   let mitreChartPage: MitreChartPage; 
   let mitreRemediationPage: MitreRemediationPage;
-  let sharedAppId: string; // Cache app ID across tests
 
   // Global setup for the entire test suite
   test.beforeAll(async () => {
@@ -74,14 +73,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
         description: 'Requires app to be deployed via Foundry CLI in CI or manually locally'
       });
       
-      if (!config.isCI) {
-        logger.warn('Running in local environment - app should be manually deployed first');
-        logger.info('To deploy locally: foundry apps deploy --change-type=major');
-      }
-
       await foundryHomePage.goto();
       await foundryHomePage.verifyLoaded();
-      // Install app and cache the successful installation
       await mitreChartPage.navigateToMitreChart();
     });
 
@@ -91,7 +84,6 @@ test.describe('MITRE Attack App E2E Tests', () => {
         description: 'Tests core app navigation and page loading'
       });
       
-      // App is already installed from previous test, navigate directly
       await mitreChartPage.navigateToInstalledApp();
       await mitreChartPage.verifyMitreMatrixElements();
       await mitreChartPage.verifyDetectionData();
@@ -99,18 +91,14 @@ test.describe('MITRE Attack App E2E Tests', () => {
   });
 
   test.describe('App Functionality', () => {
-
     test('should interact with MITRE techniques', async () => {
       test.info().annotations.push({
         type: 'interaction',
         description: 'Tests app interaction capabilities'
       });
       
-      // App is already installed, navigate directly to it
       await mitreChartPage.navigateToInstalledApp();
       await mitreChartPage.clickMitreTechnique();
-      
-      // Verify interaction response using page object method
       await mitreChartPage.verifyInteractionResponse();
     });
   });
@@ -121,11 +109,9 @@ test.describe('MITRE Attack App E2E Tests', () => {
         type: 'configuration',
         description: 'Tests app configuration pages accessibility'
       });
-      // App is already installed, navigate directly to it
+      
       await mitreChartPage.navigateToInstalledApp();
       await mitreChartPage.navigateToWizard();
-      
-      // Verify wizard form elements are present using page object method
       await mitreChartPage.verifyWizardForm();
     });
   });
@@ -137,18 +123,12 @@ test.describe('MITRE Attack App E2E Tests', () => {
         description: 'Tests UI rendering and visual elements'
       });
       
-      // App is already installed, navigate directly to it
       await mitreChartPage.navigateToInstalledApp();
-      
-      // Take screenshot for visual verification
       await mitreChartPage.takeScreenshot('mitre-chart-full-view.png', {
         test: 'ui-verification'
       });
-      
-      // Verify core UI elements are present and functional
       await mitreChartPage.verifyMitreMatrixElements();
       
-      // Verify loading is complete using expect
       await expect(
         page.locator('.loading, .spinner, [data-testid="loading"], [aria-label*="loading"]')
       ).toHaveCount(0, { timeout: 5000 });

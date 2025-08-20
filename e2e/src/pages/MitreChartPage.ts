@@ -5,6 +5,9 @@ import { BasePage } from './BasePage';
  * Page object for MITRE Attack chart/matrix view
  */
 export class MitreChartPage extends BasePage {
+  private static readonly BUTTON_TIMEOUT = 3000;
+  private static readonly APP_SEARCH_TIMEOUT = 10000;
+
   constructor(page: Page) {
     super(page, 'MITRE Chart');
   }
@@ -69,6 +72,13 @@ export class MitreChartPage extends BasePage {
 
   /**
    * Navigate directly to already installed app (used after first installation)
+   * 
+   * This method should be used by tests 2+ in a serial test suite where the app
+   * has already been installed by the first test. It bypasses the installation
+   * logic and navigates directly to the existing app, preventing "Open app button
+   * not found" errors that occur when trying to install an app multiple times.
+   * 
+   * @see navigateToMitreChart() - Use for initial app installation (test 1 only)
    */
   async navigateToInstalledApp(): Promise<void> {
     return this.withTiming(
@@ -92,34 +102,24 @@ export class MitreChartPage extends BasePage {
   private async installAppFromCatalog(appName: string): Promise<void> {
     await this.navigateToPath('/foundry/app-catalog', 'App Catalog page');
     
-    // Search for the app
     const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
     await searchBox.fill(appName);
     await this.page.keyboard.press('Enter');
-    
-    this.logger.info(`Searching for app: "${appName}"`);
-    
-    // Wait a moment for search results
     await this.page.waitForTimeout(3000);
     
-    // Check if any results are found
     const noResultsMessage = this.page.getByText('None Found');
     const hasNoResults = await noResultsMessage.isVisible({ timeout: 2000 });
     
     if (hasNoResults) {
-      this.logger.error(`No search results found for app: "${appName}"`);
       throw new Error(`App "${appName}" not found in App Catalog. Ensure CLI deployed and released the app correctly.`);
     }
     
-    // Look for the app in search results
     const appLink = this.page.getByRole('link', { name: appName, exact: true });
     
     try {
-      await expect(appLink).toBeVisible({ timeout: 10000 });
-      this.logger.success(`Found app in catalog: ${appName}`);
+      await expect(appLink).toBeVisible({ timeout: MitreChartPage.APP_SEARCH_TIMEOUT });
       await appLink.click();
     } catch (error) {
-      this.logger.error(`App link not found for exact name: "${appName}"`);
       throw new Error(`App "${appName}" not found in App Catalog. Ensure CLI deployed and released the app correctly.`);
     }
     
@@ -128,7 +128,7 @@ export class MitreChartPage extends BasePage {
     await this.page.waitForTimeout(2000); // Give page time to load
     
     const installedIndicator = this.page.getByText('Installed').first();
-    const isInstalled = await installedIndicator.isVisible({ timeout: 3000 });
+    const isInstalled = await installedIndicator.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
     
     this.logger.info(`App installation status check - Installed text visible: ${isInstalled}`);
     
@@ -144,50 +144,45 @@ export class MitreChartPage extends BasePage {
         // Click "Open App" button from the success dialog
         const dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' });
         await expect(dialogOpenButton).toBeVisible({ timeout: 5000 });
+        
+        // Wait for navigation after clicking the button
+        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
         await dialogOpenButton.click();
+        await navigationPromise;
+        
         this.logger.success('Opened app from success dialog');
       } else {
-        // Look for "Open app" button with multiple text variations
-        const openAppButton = this.page.getByRole('button', { name: /^(Open app|Launch|Use app|Open)$/i });
-        const hasOpenButton = await openAppButton.isVisible({ timeout: 3000 });
+        // Look for Open app button with multiple possible variations
+        const openButtons = [
+          this.page.getByRole('button', { name: /^(Open app|Launch|Use app|Open)$/i }),
+          this.page.getByTestId('app-details-page__use-app-button'),
+          this.page.getByRole('link', { name: /open/i }),
+          this.page.getByRole('button', { name: /launch/i }),
+          this.page.getByRole('button', { name: /use/i })
+        ];
         
-        if (hasOpenButton) {
-          await openAppButton.click();
-          this.logger.success('Opened already installed app');
-        } else {
-          // Try alternative button selectors and text patterns
-          const altButtons = [
-            this.page.getByTestId('app-details-page__use-app-button'),
-            this.page.getByRole('button', { name: /launch/i }),
-            this.page.getByRole('button', { name: /use/i }),
-            this.page.getByRole('link', { name: /open/i })
-          ];
-          
-          let buttonFound = false;
-          for (const button of altButtons) {
-            const isVisible = await button.isVisible({ timeout: 1000 });
-            if (isVisible) {
-              await button.click();
-              this.logger.success('Opened app using alternative button selector');
-              buttonFound = true;
-              break;
-            }
-          }
-          
-          if (!buttonFound) {
-            // Take a screenshot for debugging before failing
-            await this.page.screenshot({ 
-              path: 'test-results/app-install-debug.png',
-              fullPage: true 
-            });
-            this.logger.error('App appears installed but no Open app button found');
+        let buttonClicked = false;
+        for (const button of openButtons) {
+          try {
+            await expect(button).toBeVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
             
-            // Log page content for debugging
-            const pageContent = await this.page.content();
-            this.logger.debug('Page HTML content around failure:', pageContent.substring(0, 1000));
+            // Wait for navigation after clicking the button  
+            const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+            await button.click();
+            await navigationPromise;
             
-            throw new Error('App is installed but cannot find Open app button');
+            this.logger.success('Opened already installed app');
+            buttonClicked = true;
+            break;
+          } catch {
+            // Try next button variant
+            continue;
           }
+        }
+        
+        if (!buttonClicked) {
+          await this.page.screenshot({ path: 'test-results/app-install-debug.png', fullPage: true });
+          throw new Error('App is installed but cannot find working Open app button');
         }
       }
     } else {
@@ -208,7 +203,12 @@ export class MitreChartPage extends BasePage {
         const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
         const dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' });
         await expect(dialogOpenButton).toBeVisible({ timeout: 15000 });
+        
+        // Wait for navigation after clicking the button
+        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
         await dialogOpenButton.click();
+        await navigationPromise;
+        
         this.logger.success('App installed and opened successfully');
       } else {
         // Unable to determine app state clearly
