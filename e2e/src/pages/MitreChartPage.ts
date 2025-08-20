@@ -53,8 +53,9 @@ export class MitreChartPage extends BasePage {
         await this.navigateToPath('/foundry/home', 'Foundry home page');
         await this.ensureAppIsInstalled();
         
-        // Navigate directly to the app - more reliable than complex menu navigation
-        const directAppUrl = '/foundry/page/66a0f9abd7bc4f4b8baf476364491469?path=/';
+        // Get app ID dynamically and navigate directly
+        const appId = await this.getAppIdFromManager();
+        const directAppUrl = `/foundry/page/${appId}?path=/`;
         await this.navigateToPath(directAppUrl, 'Direct app navigation');
         await this.verifyPageLoaded();
       },
@@ -62,7 +63,32 @@ export class MitreChartPage extends BasePage {
     );
   }
 
+  /**
+   * Get the app ID dynamically from App Manager
+   */
+  private async getAppIdFromManager(): Promise<string> {
+    this.logger.step('Getting app ID from App Manager');
 
+    // Navigate to app manager
+    await this.navigateToPath('/foundry/app-manager', 'App Manager page');
+
+    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+    const appLink = this.page.getByRole('link', { name: appName, exact: true });
+
+    await expect(appLink).toBeVisible({ timeout: 10000 });
+    const href = await appLink.getAttribute('href');
+    
+    if (href) {
+      const appIdMatch = href.match(/\/([a-f0-9]{32})/);
+      if (appIdMatch) {
+        const appId = appIdMatch[1];
+        this.logger.success(`Found app ID from manager: ${appId}`);
+        return appId;
+      }
+    }
+
+    throw new Error(`Could not find app ID for '${appName}' in App Manager`);
+  }
 
   /**
    * Verify MITRE matrix elements using lenient approach
@@ -113,7 +139,7 @@ export class MitreChartPage extends BasePage {
         const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
         await searchBox.fill(appName);
         
-        const appLink = this.page.getByRole('link', { name: appName });
+        const appLink = this.page.getByRole('link', { name: appName, exact: true });
         await appLink.click();
 
         // Check installation status using expect with proper error handling
