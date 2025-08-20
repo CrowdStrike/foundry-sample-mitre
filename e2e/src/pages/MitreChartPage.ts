@@ -95,12 +95,28 @@ export class MitreChartPage extends BasePage {
     const isInstalled = await appCard.getByText('Installed').isVisible({ timeout: 2000 });
     
     if (isInstalled) {
-      // App is already installed, click "Open app" button
+      // App is already installed - check for success dialog first, then main page button
       this.logger.info('App is already installed, opening directly');
-      const openAppButton = this.page.getByRole('button', { name: 'Open app' });
-      await expect(openAppButton).toBeVisible({ timeout: 10000 });
-      await openAppButton.click();
-      this.logger.success('Opened already installed app');
+      
+      // First check if there's a success dialog (from previous install)
+      const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
+      const hasSuccessDialog = await successDialog.isVisible({ timeout: 2000 });
+      
+      if (hasSuccessDialog) {
+        // Click "Open App" button from the success dialog
+        const dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' });
+        await expect(dialogOpenButton).toBeVisible({ timeout: 5000 });
+        await dialogOpenButton.click();
+        this.logger.success('Opened app from success dialog');
+      } else {
+        // Click "Open app" button from main page
+        const openAppButton = this.page.getByTestId('app-details-page__use-app-button').or(
+          this.page.getByRole('button', { name: 'Open app' }).first()
+        );
+        await expect(openAppButton).toBeVisible({ timeout: 10000 });
+        await openAppButton.click();
+        this.logger.success('Opened already installed app');
+      }
     } else {
       // App needs installation, click "Install now" LINK
       this.logger.info('App not installed, installing from catalog...');
@@ -114,7 +130,8 @@ export class MitreChartPage extends BasePage {
       await saveInstallButton.click();
       
       // Wait for success dialog and click "Open App" from the dialog
-      const dialogOpenButton = this.page.getByRole('button', { name: 'Open App' });
+      const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
+      const dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' });
       await expect(dialogOpenButton).toBeVisible({ timeout: 15000 });
       await dialogOpenButton.click();
       this.logger.success('App installed and opened successfully');
