@@ -12,6 +12,7 @@ test.describe('MITRE Attack App E2E Tests', () => {
   let foundryHomePage: FoundryHomePage;
   let mitreChartPage: MitreChartPage; 
   let mitreRemediationPage: MitreRemediationPage;
+  let sharedAppId: string; // Cache app ID across tests
 
   // Global setup for the entire test suite
   test.beforeAll(async () => {

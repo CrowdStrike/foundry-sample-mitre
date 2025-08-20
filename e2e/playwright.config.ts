@@ -9,18 +9,18 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 1 : 0, // Reduce retries in CI
   workers: process.env.CI ? 1 : undefined,
-  timeout: 60 * 1000, // 60 seconds for entire test
+  timeout: process.env.CI ? 45 * 1000 : 60 * 1000, // Shorter timeout in CI
   expect: {
-    timeout: 10 * 1000, // 10 seconds for assertions
+    timeout: process.env.CI ? 8 * 1000 : 10 * 1000, // Shorter expectation timeout in CI
   },
   reporter: 'html',
   use: {
     testIdAttribute: 'data-test-selector',
     trace: 'on-first-retry',
-    actionTimeout: 15 * 1000, // 15 seconds for actions
-    navigationTimeout: 30 * 1000, // 30 seconds for navigation
+    actionTimeout: process.env.CI ? 12 * 1000 : 15 * 1000, // Shorter action timeout in CI
+    navigationTimeout: process.env.CI ? 20 * 1000 : 30 * 1000, // Shorter navigation timeout in CI
   },
 
   projects: [

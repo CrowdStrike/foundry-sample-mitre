@@ -155,11 +155,17 @@ export class Logger {
     
     // In CI, be much less verbose - only log errors and key milestones
     if (this.isCI) {
-      // Only log errors, warnings, and major success milestones in CI
-      if (level === 'error' || level === 'warn' || 
-          (level === 'info' && (message.includes('✅ Test passed') || message.includes('❌ Test failed')))) {
+      // Only log errors, warnings, and final test results in CI
+      if (level === 'error' || 
+          (level === 'warn' && !message.includes('App page loaded but no content detected')) ||
+          (level === 'info' && (
+            message.includes('✅ Test passed') || 
+            message.includes('❌ Test failed') ||
+            message.includes('E2E Test Config:')
+          ))) {
         console.log(JSON.stringify(logEntry));
       }
+      // Completely suppress 'step' level in CI
     } else {
       // In local development, use human-readable format
       console.log(message);
