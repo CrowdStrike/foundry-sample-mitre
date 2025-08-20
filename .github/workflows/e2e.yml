@@ -63,7 +63,7 @@ jobs:
               
               # Wait for app to appear in catalog (allow time for propagation)
               echo "Waiting for app to appear in catalog..."
-              sleep 30
+              sleep 90
               
               # Verify deployment status and get app details
               echo "Verifying final deployment status..."
