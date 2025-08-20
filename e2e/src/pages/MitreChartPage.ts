@@ -69,13 +69,32 @@ export class MitreChartPage extends BasePage {
         await expect(viewCatalogLink).toBeVisible({ timeout: 10000 });
         await viewCatalogLink.click();
         
-        // Wait for app detail page and find "Open app" button
-        const openAppButton = this.page.getByRole('button', { name: 'Open app' });
-        await expect(openAppButton).toBeVisible({ timeout: 10000 });
+        // Wait for app catalog page and look for install/open button
+        // The button might be "Install now", "Open app", or "Launch" depending on app state
+        const installButton = this.page.getByRole('button', { name: /install now|open app|launch/i });
         
-        // Click to open the app
-        await openAppButton.click();
-        this.logger.success('Clicked Open app button');
+        await expect(installButton).toBeVisible({ timeout: 15000 });
+        const buttonText = await installButton.textContent();
+        this.logger.success(`Found app action button: ${buttonText}`);
+        
+        // Click the button (install or open)
+        await installButton.click();
+        
+        // If we installed the app, we need to wait and then find the "Open app" button
+        if (buttonText?.toLowerCase().includes('install')) {
+          this.logger.info('App was installed, now looking for Open app button');
+          
+          // Wait for installation to complete and page to refresh
+          await this.page.waitForTimeout(3000);
+          
+          // Look for "Open app" button after installation
+          const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+          await expect(openAppButton).toBeVisible({ timeout: 15000 });
+          await openAppButton.click();
+          this.logger.success('Clicked Open app button after installation');
+        } else {
+          this.logger.success(`Clicked ${buttonText} button`);
+        }
         
         // Verify the app loaded
         await this.verifyPageLoaded();
