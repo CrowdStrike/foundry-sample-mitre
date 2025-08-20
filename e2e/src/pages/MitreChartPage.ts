@@ -90,7 +90,9 @@ export class MitreChartPage extends BasePage {
     }
     
     // Check if app is already installed or needs installation
-    const isInstalled = await this.page.getByText('Installed').isVisible({ timeout: 2000 });
+    // We need to be specific since there are multiple apps on the catalog page
+    const appCard = this.page.locator(`[data-testid="app-card"]`).filter({ hasText: appName });
+    const isInstalled = await appCard.getByText('Installed').isVisible({ timeout: 2000 });
     
     if (isInstalled) {
       // App is already installed, click "Open app" button
