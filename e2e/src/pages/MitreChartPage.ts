@@ -68,6 +68,25 @@ export class MitreChartPage extends BasePage {
   }
 
   /**
+   * Navigate directly to already installed app (used after first installation)
+   */
+  async navigateToInstalledApp(): Promise<void> {
+    return this.withTiming(
+      async () => {
+        const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+        
+        // Always use the "existing app" flow since app is already installed
+        this.logger.info(`Navigating to already installed app "${appName}"`);
+        await this.accessExistingApp(appName);
+        
+        // Verify the app loaded
+        await this.verifyPageLoaded();
+      },
+      'Navigate to Installed App'
+    );
+  }
+
+  /**
    * Install app from App Catalog (used in CI after CLI deploy/release)
    */
   private async installAppFromCatalog(appName: string): Promise<void> {
@@ -128,23 +147,45 @@ export class MitreChartPage extends BasePage {
         await dialogOpenButton.click();
         this.logger.success('Opened app from success dialog');
       } else {
-        // Look for "Open app" button on main page - re-locate it to avoid stale references
-        const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+        // Look for "Open app" button with multiple text variations
+        const openAppButton = this.page.getByRole('button', { name: /^(Open app|Launch|Use app|Open)$/i });
         const hasOpenButton = await openAppButton.isVisible({ timeout: 3000 });
         
         if (hasOpenButton) {
           await openAppButton.click();
           this.logger.success('Opened already installed app');
         } else {
-          // Try alternative button selectors
-          const altOpenButton = this.page.getByTestId('app-details-page__use-app-button');
-          const hasAltButton = await altOpenButton.isVisible({ timeout: 3000 });
+          // Try alternative button selectors and text patterns
+          const altButtons = [
+            this.page.getByTestId('app-details-page__use-app-button'),
+            this.page.getByRole('button', { name: /launch/i }),
+            this.page.getByRole('button', { name: /use/i }),
+            this.page.getByRole('link', { name: /open/i })
+          ];
           
-          if (hasAltButton) {
-            await altOpenButton.click();
-            this.logger.success('Opened app using alternative button selector');
-          } else {
+          let buttonFound = false;
+          for (const button of altButtons) {
+            const isVisible = await button.isVisible({ timeout: 1000 });
+            if (isVisible) {
+              await button.click();
+              this.logger.success('Opened app using alternative button selector');
+              buttonFound = true;
+              break;
+            }
+          }
+          
+          if (!buttonFound) {
+            // Take a screenshot for debugging before failing
+            await this.page.screenshot({ 
+              path: 'test-results/app-install-debug.png',
+              fullPage: true 
+            });
             this.logger.error('App appears installed but no Open app button found');
+            
+            // Log page content for debugging
+            const pageContent = await this.page.content();
+            this.logger.debug('Page HTML content around failure:', pageContent.substring(0, 1000));
+            
             throw new Error('App is installed but cannot find Open app button');
           }
         }

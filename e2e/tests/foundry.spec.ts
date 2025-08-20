@@ -81,6 +81,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
 
       await foundryHomePage.goto();
       await foundryHomePage.verifyLoaded();
+      // Install app and cache the successful installation
+      await mitreChartPage.navigateToMitreChart();
     });
 
     test('should navigate to MITRE chart and verify matrix elements', async () => {
@@ -89,8 +91,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
         description: 'Tests core app navigation and page loading'
       });
       
-      await foundryHomePage.goto();
-      await mitreChartPage.navigateToMitreChart();
+      // App is already installed from previous test, navigate directly
+      await mitreChartPage.navigateToInstalledApp();
       await mitreChartPage.verifyMitreMatrixElements();
       await mitreChartPage.verifyDetectionData();
     });
@@ -104,8 +106,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
         description: 'Tests app interaction capabilities'
       });
       
-      await foundryHomePage.goto();
-      await mitreChartPage.navigateToMitreChart();
+      // App is already installed, navigate directly to it
+      await mitreChartPage.navigateToInstalledApp();
       await mitreChartPage.clickMitreTechnique();
       
       // Verify interaction response using page object method
@@ -119,7 +121,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
         type: 'configuration',
         description: 'Tests app configuration pages accessibility'
       });
-      await foundryHomePage.goto();
+      // App is already installed, navigate directly to it
+      await mitreChartPage.navigateToInstalledApp();
       await mitreChartPage.navigateToWizard();
       
       // Verify wizard form elements are present using page object method
@@ -134,9 +137,8 @@ test.describe('MITRE Attack App E2E Tests', () => {
         description: 'Tests UI rendering and visual elements'
       });
       
-      // Navigate to app with fresh state
-      await foundryHomePage.goto();
-      await mitreChartPage.navigateToMitreChart();
+      // App is already installed, navigate directly to it
+      await mitreChartPage.navigateToInstalledApp();
       
       // Take screenshot for visual verification
       await mitreChartPage.takeScreenshot('mitre-chart-full-view.png', {
