@@ -150,6 +150,13 @@ export class MitreChartPage extends BasePage {
         await dialogOpenButton.click();
         await navigationPromise;
         
+        // Close the success dialog if it's still visible
+        const closeButton = successDialog.getByRole('button', { name: 'Close' });
+        const isCloseVisible = await closeButton.isVisible({ timeout: 2000 });
+        if (isCloseVisible) {
+          await closeButton.click();
+        }
+        
         this.logger.success('Opened app from success dialog');
       } else {
         // Look for Open app button with multiple possible variations
