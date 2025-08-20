@@ -118,5 +118,4 @@ jobs:
         if: always()
         run: |
           echo "Deleting app: $APP_NAME"
-          # Try to delete the app by name, with error handling
-          foundry apps delete "$APP_NAME" -f 2>/dev/null || foundry apps delete -f 2>/dev/null || echo "App deletion failed or app already deleted"
+          foundry apps delete -f || echo "App deletion failed, may already be deleted"
