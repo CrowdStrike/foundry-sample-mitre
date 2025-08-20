@@ -123,15 +123,29 @@ export class MitreChartPage extends BasePage {
       throw new Error(`App "${appName}" not found in App Catalog. Ensure CLI deployed and released the app correctly.`);
     }
     
-    // Check if app is already installed by looking for the specific status indicators
-    const installedStatus = this.page.locator('text=Installed').and(this.page.locator('img')).first();
-    const notInstalledStatus = this.page.locator('text=Not installed').and(this.page.locator('img')).first();
+    // Check if app is already installed by looking for status indicators on the app details page
+    // We're now on the individual app page, so look for the status near the app info section
+    const appInfoSection = this.page.locator(`h1:has-text("${appName}")`).locator('..').locator('..');
     
-    // Wait a moment and check which status is present
-    const isInstalled = await installedStatus.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
-    const isNotInstalled = await notInstalledStatus.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
+    // Look for installation status within the app info area
+    const installedStatus = appInfoSection.locator('text=Installed');  
+    const notInstalledStatus = appInfoSection.locator('text=Not installed');
     
-    this.logger.info(`App installation status - Installed: ${isInstalled}, Not Installed: ${isNotInstalled}`);
+    // Also try a more general approach if the container structure is different
+    const fallbackInstalledStatus = this.page.locator('text=Installed').first();
+    const fallbackNotInstalledStatus = this.page.locator('text=Not installed').first();
+    
+    // Check which status is present
+    let isInstalled = await installedStatus.isVisible({ timeout: 1000 });
+    let isNotInstalled = await notInstalledStatus.isVisible({ timeout: 1000 });
+    
+    // If not found in app section, try fallback (but this should be more targeted now)
+    if (!isInstalled && !isNotInstalled) {
+      isInstalled = await fallbackInstalledStatus.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
+      isNotInstalled = await fallbackNotInstalledStatus.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
+    }
+    
+    this.logger.info(`App "${appName}" installation status - Installed: ${isInstalled}, Not Installed: ${isNotInstalled}`);
     
     if (isInstalled) {
       // App is already installed - look for Open app button
