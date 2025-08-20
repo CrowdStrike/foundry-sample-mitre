@@ -123,14 +123,15 @@ export class MitreChartPage extends BasePage {
       throw new Error(`App "${appName}" not found in App Catalog. Ensure CLI deployed and released the app correctly.`);
     }
     
-    // Check if app is already installed or needs installation
-    // First wait for page to load and check for installation indicators
-    await this.page.waitForTimeout(2000); // Give page time to load
+    // Check if app is already installed by looking for the specific status indicators
+    const installedStatus = this.page.locator('text=Installed').and(this.page.locator('img')).first();
+    const notInstalledStatus = this.page.locator('text=Not installed').and(this.page.locator('img')).first();
     
-    const installedIndicator = this.page.getByText('Installed').first();
-    const isInstalled = await installedIndicator.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
+    // Wait a moment and check which status is present
+    const isInstalled = await installedStatus.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
+    const isNotInstalled = await notInstalledStatus.isVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
     
-    this.logger.info(`App installation status check - Installed text visible: ${isInstalled}`);
+    this.logger.info(`App installation status - Installed: ${isInstalled}, Not Installed: ${isNotInstalled}`);
     
     if (isInstalled) {
       // App is already installed - look for Open app button
@@ -192,7 +193,7 @@ export class MitreChartPage extends BasePage {
           throw new Error('App is installed but cannot find working Open app button');
         }
       }
-    } else {
+    } else if (isNotInstalled) {
       // App needs installation - look for Install now link
       this.logger.info('App not installed, looking for Install now link');
       const installLink = this.page.getByRole('link', { name: 'Install now' });
@@ -218,10 +219,12 @@ export class MitreChartPage extends BasePage {
         
         this.logger.success('App installed and opened successfully');
       } else {
-        // Unable to determine app state clearly
-        this.logger.error(`Unable to find Install now link for app "${appName}"`);
         throw new Error(`App "${appName}" cannot be installed - Install now link not found.`);
       }
+    } else {
+      // Unable to determine app installation status
+      await this.page.screenshot({ path: 'test-results/app-status-debug.png', fullPage: true });
+      throw new Error(`Unable to determine app installation status for "${appName}". Neither "Installed" nor "Not installed" status found.`);
     }
   }
 
