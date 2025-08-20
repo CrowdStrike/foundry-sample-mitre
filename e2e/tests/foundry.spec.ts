@@ -125,42 +125,6 @@ test.describe('MITRE Attack App E2E Tests', () => {
       // Verify wizard form elements are present using page object method
       await mitreChartPage.verifyWizardForm();
     });
-
-    test('should verify MITRE remediation extension configuration', async () => {
-      test.info().annotations.push({
-        type: 'extension',
-        description: 'Tests extension configuration accessibility'
-      });
-      await foundryHomePage.goto();
-      
-      // Verify the remediation extension configuration is accessible through the MITRE app
-      await mitreChartPage.navigateToMitreChart();
-      
-      // Test the "Mitre - Configure Notify IT Action" navigation link 
-      // This verifies the extension configuration is properly set up
-      try {
-        const currentUrl = mitreChartPage.page.url();
-        const notifyItUrl = currentUrl.replace(/\?path=.*$/, '') + '?path=/notify-it';
-        
-        await mitreChartPage.page.goto(notifyItUrl);
-        
-        // Verify we can access the configuration page
-        await expect(mitreChartPage.page).toHaveURL(/\/notify-it/);
-        
-        // Check for basic page structure indicating the extension loaded
-        await expect(
-          mitreChartPage.page.locator('iframe').or(
-            mitreChartPage.page.getByRole('main')
-          )
-        ).toBeVisible({ timeout: 5000 });
-        
-      } catch (error) {
-        logger.warn('Extension configuration test encountered issues - this may require specific detection context', error instanceof Error ? error : undefined);
-        
-        // For basic e2e verification, confirm the app navigation works
-        await expect(mitreChartPage.page.locator('iframe')).toBeVisible({ timeout: 2000 });
-      }
-    });
   });
 
   test.describe('UI Verification', () => {

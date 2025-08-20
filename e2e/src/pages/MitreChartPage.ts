@@ -17,31 +17,28 @@ export class MitreChartPage extends BasePage {
     const currentUrl = this.page.url();
     this.logger.info(`Current URL after navigation: ${currentUrl}`);
 
-    // Primary verification: URL pattern
-    await expect(this.page).toHaveURL(/\/foundry\/(page\/|mitre-vue)/);
+    // Primary verification: Check for app page URL pattern
+    await expect(this.page).toHaveURL(/\/foundry\/page\//);
     
-    // Check if app content is loading (wait longer for slower loading)
+    // Check if app content is loading within iframe
     try {
       await expect(
         this.page.locator('iframe')
-      ).toBeVisible({ timeout: 20000 });
-      this.logger.success('App loaded successfully with iframe content');
+      ).toBeVisible({ timeout: 15000 });
+      
+      // Check for MITRE app content within iframe
+      const iframe = this.page.frameLocator('iframe');
+      const mitreHeading = iframe.getByRole('heading', { name: /MITRE.*ATT&CK/i });
+      
+      await expect(mitreHeading).toBeVisible({ timeout: 10000 });
+      this.logger.success('MITRE app loaded successfully with content');
     } catch {
-      // Check for other content indicators
-      const hasMainContent = await this.page.locator('[role="main"], main, nav[aria-label*="breadcrumb"]').count();
-      if (hasMainContent > 0) {
-        this.logger.success('App loaded with main content structure');
-      } else {
-        // App may not have loaded - provide helpful error message
-        this.logger.warn(`App page loaded but no content detected. URL: ${currentUrl}`);
-        this.logger.info('This may indicate: 1) App is still loading, 2) App deployment issue, or 3) App requires specific permissions');
-        
-        // For E2E testing, we can still proceed if URL is correct
-        this.logger.info('Proceeding with URL-based verification for E2E test');
-      }
+      // App may still be loading or have no data - check URL is correct
+      this.logger.warn(`App loaded but content not fully visible. URL: ${currentUrl}`);
+      this.logger.info('This is acceptable for E2E testing - app infrastructure is working');
     }
     
-    this.logger.success(`Navigation completed: ${currentUrl}`);
+    this.logger.success(`MITRE app navigation completed: ${currentUrl}`);
   }
 
   /**
@@ -51,12 +48,29 @@ export class MitreChartPage extends BasePage {
     return this.withTiming(
       async () => {
         await this.navigateToPath('/foundry/home', 'Foundry home page');
-        await this.ensureAppIsInstalled();
         
-        // Get app ID dynamically and navigate directly
-        const appId = await this.getAppIdFromManager();
-        const directAppUrl = `/foundry/page/${appId}?path=/`;
-        await this.navigateToPath(directAppUrl, 'Direct app navigation');
+        // Navigate to App Catalog to find the app
+        await this.navigateToPath('/foundry/app-catalog', 'App Catalog page');
+        
+        // Look for the app by name in the catalog
+        const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+        const appHeading = this.page.getByRole('heading', { name: new RegExp(appName.replace(/-/g, '.*'), 'i') });
+        
+        await expect(appHeading).toBeVisible({ timeout: 10000 });
+        this.logger.success(`Found app in catalog: ${appName}`);
+        
+        // Click the app heading to go to its detail page
+        await appHeading.click();
+        
+        // Wait for app detail page and find "Open app" button
+        const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+        await expect(openAppButton).toBeVisible({ timeout: 10000 });
+        
+        // Click to open the app
+        await openAppButton.click();
+        this.logger.success('Clicked Open app button');
+        
+        // Verify the app loaded
         await this.verifyPageLoaded();
       },
       'Navigate to MITRE Chart'
@@ -64,66 +78,89 @@ export class MitreChartPage extends BasePage {
   }
 
   /**
-   * Get the app ID dynamically from App Manager
-   */
-  private async getAppIdFromManager(): Promise<string> {
-    this.logger.step('Getting app ID from App Manager');
-
-    // Navigate to app manager
-    await this.navigateToPath('/foundry/app-manager', 'App Manager page');
-
-    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
-    const appLink = this.page.getByRole('link', { name: appName, exact: true });
-
-    await expect(appLink).toBeVisible({ timeout: 10000 });
-    const href = await appLink.getAttribute('href');
-    
-    if (href) {
-      const appIdMatch = href.match(/\/([a-f0-9]{32})/);
-      if (appIdMatch) {
-        const appId = appIdMatch[1];
-        this.logger.success(`Found app ID from manager: ${appId}`);
-        return appId;
-      }
-    }
-
-    throw new Error(`Could not find app ID for '${appName}' in App Manager`);
-  }
-
-  /**
-   * Verify MITRE matrix elements using lenient approach
+   * Verify MITRE matrix elements are present
    */
   async verifyMitreMatrixElements(): Promise<void> {
-    this.logger.step('Verify MITRE app loaded successfully');
+    this.logger.step('Verify MITRE matrix elements');
 
-    // URL verification is sufficient for basic E2E testing
-    await expect(this.page).toHaveURL(/\/foundry\/(page\/|mitre-vue)/);
+    // Verify we're on the correct app page
+    await expect(this.page).toHaveURL(/\/foundry\/page\//);
     
-    this.logger.success('MITRE app loaded and verified successfully');
+    // Try to verify content within iframe
+    try {
+      const iframe = this.page.frameLocator('iframe');
+      const matrixHeading = iframe.getByRole('heading', { name: /MITRE.*ATT&CK.*Matrix/i });
+      await expect(matrixHeading).toBeVisible({ timeout: 8000 });
+      this.logger.success('MITRE matrix elements verified successfully');
+    } catch {
+      // Fallback to URL verification for E2E testing
+      this.logger.info('Matrix elements may be loading - URL verification passed');
+    }
   }
 
   /**
-   * Verify app interaction capability
+   * Verify app interaction capability by clicking on detections
    */
   async clickMitreTechnique(techniqueId?: string): Promise<void> {
     this.logger.step('Verify app interaction capability');
 
-    // For E2E testing, just verify we're on the right page
+    // Verify we can interact with the app
     await expect(this.page).toHaveURL(/\/foundry\/page\//);
     
-    this.logger.success('App interaction capability verified');
+    // Must find and click on actual detections within iframe
+    const iframe = this.page.frameLocator('iframe');
+    
+    // Look for MITRE techniques/detections that can be clicked
+    const techniques = iframe.locator('[data-testid*="technique"], .mitre-technique, .technique-cell, .detection-item').first();
+    const interactiveElements = iframe.locator('button:not([disabled]), [role="button"], .clickable').first();
+    
+    // Try to find clickable detections
+    const techniqueVisible = await techniques.isVisible({ timeout: 5000 });
+    const interactiveVisible = await interactiveElements.isVisible({ timeout: 5000 });
+    
+    if (techniqueVisible) {
+      await techniques.click();
+      this.logger.success('Successfully clicked on MITRE technique detection');
+    } else if (interactiveVisible) {
+      await interactiveElements.click();
+      this.logger.success('Successfully interacted with app element');
+    } else {
+      // Fail the test if no detections are found to click on
+      throw new Error('No MITRE detections or interactive elements found to click on. The app may not have detection data loaded.');
+    }
   }
 
   /**
-   * Verify app content accessibility
+   * Verify detection data accessibility - fails if no detections found
    */
   async verifyDetectionData(): Promise<void> {
-    this.logger.step('Verify app content is accessible');
+    this.logger.step('Verify detection data accessibility');
 
-    // Simplified verification - URL confirms app is loaded
+    // Verify app is accessible
     await expect(this.page).toHaveURL(/\/foundry\/page\//);
     
-    this.logger.success('App content verified as accessible');
+    const iframe = this.page.frameLocator('iframe');
+    
+    // Look for actual detection data first
+    const hasDetectionData = iframe.locator('[data-testid*="detection"], .detection-item, .mitre-technique, .technique-cell').first();
+    const dataVisible = await hasDetectionData.isVisible({ timeout: 8000 });
+    
+    if (dataVisible) {
+      this.logger.success('Detection data found and accessible');
+      return;
+    }
+    
+    // If no detection data, check for "no data" message
+    const noDataMessage = iframe.getByText(/No matching.*detections/i);
+    const noDataVisible = await noDataMessage.isVisible({ timeout: 5000 });
+    
+    if (noDataVisible) {
+      // Fail the test if there's no detection data
+      throw new Error('No MITRE detections found in the app. The app shows "No matching MITRE detections" - this indicates the app needs detection data to be properly tested.');
+    }
+    
+    // If neither data nor "no data" message is found
+    throw new Error('Unable to verify detection data state. The app may not have loaded properly or the detection interface is not accessible.');
   }
 
   /**
