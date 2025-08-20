@@ -49,33 +49,25 @@ export class MitreChartPage extends BasePage {
       async () => {
         await this.navigateToPath('/foundry/home', 'Foundry home page');
         
-        // Navigate to App Catalog to find the app
-        await this.navigateToPath('/foundry/app-catalog', 'App Catalog page');
+        // Navigate to App Manager to find the deployed app
+        await this.navigateToPath('/foundry/app-manager', 'App Manager page');
         
-        // Look for the app by name in the catalog - try multiple patterns
+        // Look for the app by exact name in the manager
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
         this.logger.info(`Looking for app: ${appName}`);
         
-        // Try exact heading match first
-        let appHeading = this.page.getByRole('heading', { name: appName, exact: true });
+        const appLink = this.page.getByRole('link', { name: appName, exact: true });
         
-        // If not found, try flexible pattern matching
-        if (!(await appHeading.isVisible({ timeout: 3000 }))) {
-          // Try with MITRE in the name
-          appHeading = this.page.getByRole('heading', { name: /MITRE.*ATTACK/i });
-        }
+        await expect(appLink).toBeVisible({ timeout: 15000 });
+        this.logger.success(`Found app in manager: ${appName}`);
         
-        // If still not found, try partial match
-        if (!(await appHeading.isVisible({ timeout: 3000 }))) {
-          const namePattern = appName.replace(/[-\s]+/g, '.*');
-          appHeading = this.page.getByRole('heading', { name: new RegExp(namePattern, 'i') });
-        }
+        // Click the app link to go to its detail page
+        await appLink.click();
         
-        await expect(appHeading).toBeVisible({ timeout: 10000 });
-        this.logger.success(`Found app in catalog: ${await appHeading.textContent()}`);
-        
-        // Click the app heading to go to its detail page
-        await appHeading.click();
+        // Now click "View in catalog" to access the app properly
+        const viewCatalogLink = this.page.getByRole('link', { name: 'View in catalog' });
+        await expect(viewCatalogLink).toBeVisible({ timeout: 10000 });
+        await viewCatalogLink.click();
         
         // Wait for app detail page and find "Open app" button
         const openAppButton = this.page.getByRole('button', { name: 'Open app' });
