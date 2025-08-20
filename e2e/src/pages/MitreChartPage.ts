@@ -105,20 +105,17 @@ export class MitreChartPage extends BasePage {
     }
     
     // Check if app is already installed or needs installation
-    // Check multiple indicators for installation status
+    // First wait for page to load and check for installation indicators
+    await this.page.waitForTimeout(2000); // Give page time to load
+    
     const installedIndicator = this.page.getByText('Installed').first();
-    const installLink = this.page.getByRole('link', { name: 'Install now' });
-    const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+    const isInstalled = await installedIndicator.isVisible({ timeout: 3000 });
     
-    const isInstalled = await installedIndicator.isVisible({ timeout: 2000 });
-    const hasInstallLink = await installLink.isVisible({ timeout: 2000 });
-    const hasOpenButton = await openAppButton.isVisible({ timeout: 2000 });
+    this.logger.info(`App installation status check - Installed text visible: ${isInstalled}`);
     
-    this.logger.info(`App status check - Installed: ${isInstalled}, Install link: ${hasInstallLink}, Open button: ${hasOpenButton}`);
-    
-    if (isInstalled || hasOpenButton) {
-      // App is already installed - check for success dialog first, then main page button
-      this.logger.info('App is already installed, opening directly');
+    if (isInstalled) {
+      // App is already installed - look for Open app button
+      this.logger.info('App is already installed, looking for Open app button');
       
       // First check if there's a success dialog (from previous install)
       const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
@@ -131,32 +128,52 @@ export class MitreChartPage extends BasePage {
         await dialogOpenButton.click();
         this.logger.success('Opened app from success dialog');
       } else {
-        // Click "Open app" button from main page (use the one we already found)
-        await expect(openAppButton).toBeVisible({ timeout: 10000 });
-        await openAppButton.click();
-        this.logger.success('Opened already installed app');
+        // Look for "Open app" button on main page - re-locate it to avoid stale references
+        const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+        const hasOpenButton = await openAppButton.isVisible({ timeout: 3000 });
+        
+        if (hasOpenButton) {
+          await openAppButton.click();
+          this.logger.success('Opened already installed app');
+        } else {
+          // Try alternative button selectors
+          const altOpenButton = this.page.getByTestId('app-details-page__use-app-button');
+          const hasAltButton = await altOpenButton.isVisible({ timeout: 3000 });
+          
+          if (hasAltButton) {
+            await altOpenButton.click();
+            this.logger.success('Opened app using alternative button selector');
+          } else {
+            this.logger.error('App appears installed but no Open app button found');
+            throw new Error('App is installed but cannot find Open app button');
+          }
+        }
       }
-    } else if (hasInstallLink) {
-      // App needs installation, click "Install now" LINK
-      this.logger.info('App not installed, installing from catalog...');
-      await expect(installLink).toBeVisible({ timeout: 10000 });
-      await installLink.click();
-      
-      // Click "Save and install" button in permissions dialog
-      const saveInstallButton = this.page.getByRole('button', { name: 'Save and install' });
-      await expect(saveInstallButton).toBeVisible({ timeout: 10000 });
-      await saveInstallButton.click();
-      
-      // Wait for success dialog and click "Open App" from the dialog
-      const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
-      const dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' });
-      await expect(dialogOpenButton).toBeVisible({ timeout: 15000 });
-      await dialogOpenButton.click();
-      this.logger.success('App installed and opened successfully');
     } else {
-      // Unable to determine app state clearly
-      this.logger.error(`Unable to determine app installation state. Installed: ${isInstalled}, Install link: ${hasInstallLink}, Open button: ${hasOpenButton}`);
-      throw new Error(`App "${appName}" is in an unclear state. Cannot find Install now link or Open app button.`);
+      // App needs installation - look for Install now link
+      this.logger.info('App not installed, looking for Install now link');
+      const installLink = this.page.getByRole('link', { name: 'Install now' });
+      const hasInstallLink = await installLink.isVisible({ timeout: 3000 });
+      
+      if (hasInstallLink) {
+        await installLink.click();
+        
+        // Click "Save and install" button in permissions dialog
+        const saveInstallButton = this.page.getByRole('button', { name: 'Save and install' });
+        await expect(saveInstallButton).toBeVisible({ timeout: 10000 });
+        await saveInstallButton.click();
+        
+        // Wait for success dialog and click "Open App" from the dialog
+        const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
+        const dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' });
+        await expect(dialogOpenButton).toBeVisible({ timeout: 15000 });
+        await dialogOpenButton.click();
+        this.logger.success('App installed and opened successfully');
+      } else {
+        // Unable to determine app state clearly
+        this.logger.error(`Unable to find Install now link for app "${appName}"`);
+        throw new Error(`App "${appName}" cannot be installed - Install now link not found.`);
+      }
     }
   }
 
