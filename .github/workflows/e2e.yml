@@ -60,6 +60,15 @@ jobs:
               echo "Deployment successful, releasing app..."
               foundry apps release --change-type=major --notes="e2e release"
               echo "App released successfully"
+              
+              # Wait for app to appear in catalog (allow time for propagation)
+              echo "Waiting for app to appear in catalog..."
+              sleep 30
+              
+              # Verify app is accessible
+              echo "Verifying app release status..."
+              foundry apps list-releases
+              
               exit 0
             fi
           
