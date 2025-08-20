@@ -83,12 +83,12 @@ jobs:
           cache: 'npm'
           cache-dependency-path: e2e/package-lock.json
 
-      - name: Install dependencies in parallel
-        run: |
-          # Install npm dependencies and Playwright browsers in parallel
-          npm ci &
-          npx playwright install chromium --with-deps &
-          wait
+      - name: Install dependencies
+        run: npm ci
+        working-directory: e2e
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
         working-directory: e2e
 
       - name: Make envfile
@@ -101,7 +101,7 @@ jobs:
           directory: e2e
 
       - name: Run Playwright tests
-        run: npx dotenvx run -- npx playwright test --reporter=list
+        run: npx dotenvx run -- npx playwright test
         working-directory: e2e
         env:
           CI: true
@@ -110,7 +110,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-${{ github.run_number }}
+          name: playwright-report-${{ env.APP_NAME }}
           path: e2e/playwright-report/
           retention-days: 7
 

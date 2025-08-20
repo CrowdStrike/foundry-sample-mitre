@@ -129,7 +129,7 @@ export class TestConfig {
   public logSummary(): void {
     if (this.isCI) {
       // Very minimal logging in CI
-      console.log(`E2E Test Config: ${this.isCI ? 'CI' : 'Local'} | ${this.appName} | ${this.falconBaseUrl}`);
+      console.log(`E2E Test Config: ${this.isCI ? 'CI' : 'Local'} | ${this.appName}`);
     } else {
       // Detailed logging for local development
       console.log('🔧 Test Configuration:');
