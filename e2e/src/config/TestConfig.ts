@@ -43,10 +43,10 @@ export class TestConfig {
     // App configuration
     this.appName = this.getRequiredEnv('APP_NAME');
     
-    // Test timeouts (configurable defaults)
-    this.defaultTimeout = parseInt(process.env.DEFAULT_TIMEOUT || '30000');
-    this.navigationTimeout = parseInt(process.env.NAVIGATION_TIMEOUT || '15000');
-    this.retryAttempts = parseInt(process.env.RETRY_ATTEMPTS || '3');
+    // Test timeouts (configurable defaults - longer in CI due to slower hardware)
+    this.defaultTimeout = parseInt(process.env.DEFAULT_TIMEOUT || (this.isCI ? '45000' : '30000'));
+    this.navigationTimeout = parseInt(process.env.NAVIGATION_TIMEOUT || (this.isCI ? '30000' : '15000'));
+    this.retryAttempts = parseInt(process.env.RETRY_ATTEMPTS || (this.isCI ? '3' : '2'));
     
     // Paths
     this.screenshotPath = process.env.SCREENSHOT_PATH || 'test-results';
@@ -96,7 +96,7 @@ export class TestConfig {
     return {
       timeout: this.defaultTimeout,
       navigationTimeout: this.navigationTimeout,
-      actionTimeout: this.isCI ? 10000 : 5000,
+      actionTimeout: this.isCI ? 15000 : 10000, // Longer in CI for slower hardware
     };
   }
   
