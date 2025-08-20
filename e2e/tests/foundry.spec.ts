@@ -16,19 +16,24 @@ test.describe('MITRE Attack App E2E Tests', () => {
   // Global setup for the entire test suite
   test.beforeAll(async () => {
     config.logSummary();
-    logger.info('Starting MITRE Attack app E2E test suite');
     
-    // Log test environment info
-    logger.info('Test Environment', {
-      isCI: config.isCI,
-      baseUrl: config.falconBaseUrl,
-      appName: process.env.APP_NAME || 'foundry-sample-mitre'
-    });
+    if (!config.isCI) {
+      logger.info('Starting MITRE Attack app E2E test suite');
+      
+      // Log test environment info (only in local dev)
+      logger.info('Test Environment', {
+        isCI: config.isCI,
+        baseUrl: config.falconBaseUrl,
+        appName: process.env.APP_NAME || 'foundry-sample-mitre'
+      });
+    }
   });
 
   // Setup fresh page objects for each test
   test.beforeEach(async ({ page }, testInfo) => {
-    logger.info(`Starting test: ${testInfo.title}`);
+    if (!config.isCI) {
+      logger.info(`Starting test: ${testInfo.title}`);
+    }
     
     foundryHomePage = new FoundryHomePage(page);
     mitreChartPage = new MitreChartPage(page);
@@ -185,11 +190,13 @@ test.describe('MITRE Attack App E2E Tests', () => {
 
   // Global cleanup for the entire test suite
   test.afterAll(async () => {
-    logger.info('MITRE Attack app E2E test suite completed');
-    
-    // Log final test suite summary
-    logger.info('Test suite completed successfully', {
-      timestamp: new Date().toISOString()
-    });
+    if (!config.isCI) {
+      logger.info('MITRE Attack app E2E test suite completed');
+      
+      // Log final test suite summary
+      logger.info('Test suite completed successfully', {
+        timestamp: new Date().toISOString()
+      });
+    }
   });
 });

@@ -153,9 +153,13 @@ export class Logger {
       ...context
     };
     
-    // In CI, use structured JSON logging for better parsing
-    if (this.isCI && level !== 'step') {
-      console.log(JSON.stringify(logEntry));
+    // In CI, be much less verbose - only log errors and key milestones
+    if (this.isCI) {
+      // Only log errors, warnings, and major success milestones in CI
+      if (level === 'error' || level === 'warn' || 
+          (level === 'info' && (message.includes('✅ Test passed') || message.includes('❌ Test failed')))) {
+        console.log(JSON.stringify(logEntry));
+      }
     } else {
       // In local development, use human-readable format
       console.log(message);

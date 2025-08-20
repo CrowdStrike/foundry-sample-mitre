@@ -127,13 +127,19 @@ export class TestConfig {
    * Log configuration summary (safe for logs)
    */
   public logSummary(): void {
-    console.log('🔧 Test Configuration:');
-    console.log(`  Environment: ${this.isCI ? 'CI' : 'Local'}`);
-    console.log(`  Base URL: ${this.falconBaseUrl}`);
-    console.log(`  App Name: ${this.appName}`);
-    console.log(`  Default Timeout: ${this.defaultTimeout}ms`);
-    console.log(`  Retry Attempts: ${this.retryAttempts}`);
-    console.log(`  Debug Mode: ${this.isDebugMode}`);
+    if (this.isCI) {
+      // Very minimal logging in CI
+      console.log(`E2E Test Config: ${this.isCI ? 'CI' : 'Local'} | ${this.appName} | ${this.falconBaseUrl}`);
+    } else {
+      // Detailed logging for local development
+      console.log('🔧 Test Configuration:');
+      console.log(`  Environment: ${this.isCI ? 'CI' : 'Local'}`);
+      console.log(`  Base URL: ${this.falconBaseUrl}`);
+      console.log(`  App Name: ${this.appName}`);
+      console.log(`  Default Timeout: ${this.defaultTimeout}ms`);
+      console.log(`  Retry Attempts: ${this.retryAttempts}`);
+      console.log(`  Debug Mode: ${this.isDebugMode}`);
+    }
   }
 }
 
