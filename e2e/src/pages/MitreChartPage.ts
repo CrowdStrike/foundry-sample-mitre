@@ -272,7 +272,7 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Handle clicking Open app button with TestId fallbacks
+   * Handle clicking Open app button with TestId fallbacks and 3-dot menu support
    */
   private async handleOpenAppButton(): Promise<void> {
     // Look for Open app button with TestId fallbacks (more reliable)
@@ -285,16 +285,19 @@ export class MitreChartPage extends BasePage {
     ];
     
     let buttonClicked = false;
+    
+    // First try direct "Open app" buttons with increased timeout for CI
+    const directButtonTimeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
     for (const button of openButtons) {
       try {
-        await expect(button).toBeVisible({ timeout: MitreChartPage.BUTTON_TIMEOUT });
+        await expect(button).toBeVisible({ timeout: directButtonTimeout });
         
         // Wait for navigation after clicking the button  
         const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
         await button.click();
         await navigationPromise;
         
-        this.logger.success('Opened already installed app');
+        this.logger.success('Opened already installed app via direct button');
         buttonClicked = true;
         break;
       } catch {
@@ -303,9 +306,67 @@ export class MitreChartPage extends BasePage {
       }
     }
     
+    // If direct buttons failed, try 3-dot menu approach (for already installed apps)
+    if (!buttonClicked) {
+      this.logger.info('Direct Open app button not found, trying 3-dot menu approach');
+      try {
+        // Look for the 3-dot menu button
+        const menuButton = this.page.getByRole('button', { name: /open menu/i }).or(
+          this.page.getByRole('button').filter({ hasText: /⋯|•••|\.\.\./ })
+        );
+        
+        // Wait longer in CI for menu to appear
+        const menuTimeout = process.env.CI ? 15000 : 5000;
+        await expect(menuButton).toBeVisible({ timeout: menuTimeout });
+        await menuButton.click();
+        
+        // Look for "Open app" in the dropdown menu
+        const openAppMenuItem = this.page.getByRole('menuitem', { name: /open app/i });
+        await expect(openAppMenuItem).toBeVisible({ timeout: 5000 });
+        
+        // Wait for navigation after clicking the menu item
+        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+        await openAppMenuItem.click();
+        await navigationPromise;
+        
+        this.logger.success('Opened already installed app via 3-dot menu');
+        buttonClicked = true;
+      } catch (menuError) {
+        this.logger.warn(`3-dot menu approach failed: ${menuError.message}`);
+      }
+    }
+    
+    // Final fallback: wait and retry with page refresh
+    if (!buttonClicked && process.env.CI) {
+      this.logger.info('Trying page refresh approach for CI timing issues');
+      try {
+        await this.page.reload({ waitUntil: 'networkidle' });
+        await this.page.waitForTimeout(3000);
+        
+        // Retry direct buttons after refresh
+        for (const button of openButtons) {
+          try {
+            await expect(button).toBeVisible({ timeout: 5000 });
+            
+            const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+            await button.click();
+            await navigationPromise;
+            
+            this.logger.success('Opened already installed app after page refresh');
+            buttonClicked = true;
+            break;
+          } catch {
+            continue;
+          }
+        }
+      } catch (refreshError) {
+        this.logger.warn(`Page refresh approach failed: ${refreshError.message}`);
+      }
+    }
+    
     if (!buttonClicked) {
       await this.page.screenshot({ path: 'test-results/app-install-debug.png', fullPage: true });
-      throw new Error('App is installed but cannot find working Open app button');
+      throw new Error('App is installed but cannot find working Open app button or 3-dot menu');
     }
   }
   
