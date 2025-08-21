@@ -260,7 +260,7 @@ export class MitreChartPage extends BasePage {
       () => successDialog.getByRole('button', { name: /open|launch/i }),
       () => successDialog.getByRole('button', { name: /use.*app/i }),
       () => successDialog.locator('button').filter({ hasText: /open|launch|use/i }).first(),
-      () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }), // Fallback to page-level
+      () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }).first(), // Fallback to page-level
       () => this.page.getByTestId('app-details-page__use-app-button') // Fallback to page-level
     ];
     
@@ -394,7 +394,7 @@ export class MitreChartPage extends BasePage {
           () => successDialog.getByRole('button', { name: /open|launch/i }),
           () => successDialog.getByRole('button', { name: /use.*app/i }),
           () => successDialog.locator('button').filter({ hasText: /open|launch|use/i }).first(),
-          () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }), // Fallback to page-level
+          () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }).first(), // Fallback to page-level
           () => this.page.getByTestId('app-details-page__use-app-button') // Fallback to page-level
         ];
         
@@ -418,7 +418,7 @@ export class MitreChartPage extends BasePage {
           this.logger.warn('Dialog button strategies failed, trying page-level fallback');
           await this.page.waitForTimeout(2000); // Give UI time to settle
           
-          const pageOpenButton = this.page.getByRole('button', { name: /^Open [Aa]pp$/i });
+          const pageOpenButton = this.page.getByRole('button', { name: /^Open [Aa]pp$/i }).first();
           if (await pageOpenButton.isVisible({ timeout: 3000 })) {
             dialogOpenButton = pageOpenButton;
             this.logger.info('Found open button at page level after dialog strategies failed');
