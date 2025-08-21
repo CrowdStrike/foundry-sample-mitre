@@ -252,13 +252,13 @@ export class MitreChartPage extends BasePage {
    * Handle opening app from success dialog after installation
    */
   private async handleSuccessDialog(successDialog: any): Promise<void> {
-    const candidate = successDialog.getByTestId('app-details-page__use-app-button');
-    if (await candidate.isVisible({ timeout: 3000 })) {
+    const openAppButton = successDialog.getByTestId('app-details-page__use-app-button');
+    if (await openAppButton.isVisible({ timeout: 3000 })) {
       this.logger.debug('Found success dialog button using TestId selector');
       
       // Wait for navigation after clicking the button
       const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-      await candidate.click();
+      await openAppButton.click();
       await navigationPromise;
       
       // Close the success dialog if it's still visible
@@ -286,12 +286,12 @@ export class MitreChartPage extends BasePage {
   private async handleOpenAppButton(): Promise<void> {
     const timeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
     
-    const button = this.page.getByTestId('app-details-page__use-app-button');
-    await expect(button).toBeVisible({ timeout });
+    const openAppButton = this.page.getByTestId('app-details-page__use-app-button');
+    await expect(openAppButton).toBeVisible({ timeout });
     
     // Wait for navigation after clicking
     const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-    await button.click();
+    await openAppButton.click();
     await navigationPromise;
     
     this.logger.success('Opened app via TestId selector');
@@ -353,13 +353,13 @@ export class MitreChartPage extends BasePage {
         }
         
         // Handle dialog-based installation
-        const candidate = successDialog.getByTestId('app-details-page__use-app-button');
-        if (await candidate.isVisible({ timeout: 3000 })) {
+        const openAppButton = successDialog.getByTestId('app-details-page__use-app-button');
+        if (await openAppButton.isVisible({ timeout: 3000 })) {
           this.logger.debug('Found dialog open button using TestId selector');
           
           // Wait for navigation after clicking the button
           const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-          await candidate.click();
+          await openAppButton.click();
           await navigationPromise;
           
           // Close the dialog if it's still visible
