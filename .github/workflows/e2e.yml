@@ -17,7 +17,7 @@ jobs:
       FOUNDRY_CID: ${{ secrets.FOUNDRY_CID }}
       FOUNDRY_CLOUD_REGION: ${{ secrets.FOUNDRY_CLOUD_REGION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@master
