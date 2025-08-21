@@ -281,43 +281,20 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Handle clicking Open app button with TestId primary + role fallback
+   * Handle clicking Open app button with TestId selector
    */
   private async handleOpenAppButton(): Promise<void> {
     const timeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
     
-    // Try TestId first, then role-based fallback for CI compatibility
-    try {
-      const button = this.page.getByTestId('app-details-page__use-app-button');
-      await expect(button).toBeVisible({ timeout });
-      
-      // Wait for navigation after clicking
-      const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-      await button.click();
-      await navigationPromise;
-      
-      this.logger.success('Opened app via TestId selector');
-      return;
-        
-    } catch (error) {
-      this.logger.debug(`TestId strategy failed, trying role-based fallback: ${error.message}`);
-      
-      // Fallback to role-based selector for CI edge cases
-      try {
-        const button = this.page.getByRole('button', { name: /^Open [Aa]pp$/i }).first();
-        await expect(button).toBeVisible({ timeout: 5000 });
-        
-        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-        await button.click();
-        await navigationPromise;
-        
-        this.logger.success('Opened app via role-based fallback');
-        return;
-        
-      } catch (fallbackError) {
-        throw new Error(`Both TestId and role-based strategies failed. TestId: ${error.message}, Role: ${fallbackError.message}`);
-      }
-    }
+    const button = this.page.getByTestId('app-details-page__use-app-button');
+    await expect(button).toBeVisible({ timeout });
+    
+    // Wait for navigation after clicking
+    const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+    await button.click();
+    await navigationPromise;
+    
+    this.logger.success('Opened app via TestId selector');
   }
   
   /**
