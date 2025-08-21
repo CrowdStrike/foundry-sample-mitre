@@ -254,23 +254,18 @@ export class MitreChartPage extends BasePage {
   private async handleSuccessDialog(successDialog: any): Promise<void> {
     // Try each selector strategy until one works
     const strategies = [
-      () => successDialog.getByTestId('app-details-page__use-app-button'),
-      () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i })
+      () => successDialog.getByTestId('app-details-page__use-app-button')
     ];
     
     let dialogOpenButton = null;
-    for (const [index, getButton] of strategies.entries()) {
-      try {
-        const candidate = getButton();
-        if (await candidate.isVisible({ timeout: 3000 })) {
-          dialogOpenButton = candidate;
-          this.logger.debug(`Found success dialog button using strategy ${index + 1}`);
-          break;
-        }
-      } catch (error) {
-        this.logger.debug(`Success dialog strategy ${index + 1} failed: ${error.message}`);
-        continue;
+    try {
+      const candidate = strategies[0](); // Only one strategy now  
+      if (await candidate.isVisible({ timeout: 3000 })) {
+        dialogOpenButton = candidate;
+        this.logger.debug('Found success dialog button using TestId selector');
       }
+    } catch (error) {
+      this.logger.debug(`Success dialog TestId strategy failed: ${error.message}`);
     }
     
     if (!dialogOpenButton) {
@@ -306,8 +301,7 @@ export class MitreChartPage extends BasePage {
     
     // Try each selector in priority order - simplified strategies
     const strategies = [
-      () => this.page.getByTestId('app-details-page__use-app-button'),
-      () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }).first()
+      () => this.page.getByTestId('app-details-page__use-app-button')
     ];
     
     for (const [index, getButton] of strategies.entries()) {
@@ -320,17 +314,11 @@ export class MitreChartPage extends BasePage {
         await button.click();
         await navigationPromise;
         
-        const strategyName = ['TestId selector', 'Open App button'][index];
-        this.logger.success(`Opened app via ${strategyName}`);
+        this.logger.success('Opened app via TestId selector');
         return;
         
       } catch (error) {
-        const strategyName = ['TestId', 'Open App'][index];
-        if (index < strategies.length - 1) {
-          this.logger.debug(`${strategyName} strategy failed, trying next: ${error.message}`);
-          continue;
-        }
-        throw new Error(`All button strategies failed. Last error: ${error.message}`);
+        throw new Error(`TestId button strategy failed: ${error.message}`);
       }
     }
   }
@@ -386,23 +374,18 @@ export class MitreChartPage extends BasePage {
         
         // Try dialog-specific strategies only
         const strategies = [
-          () => successDialog.getByTestId('app-details-page__use-app-button'),
-          () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i })
+          () => successDialog.getByTestId('app-details-page__use-app-button')
         ];
         
         let dialogOpenButton = null;
-        for (const [index, getButton] of strategies.entries()) {
-          try {
-            const candidate = getButton();
-            if (await candidate.isVisible({ timeout: 3000 })) {
-              dialogOpenButton = candidate;
-              this.logger.debug(`Found dialog open button using strategy ${index + 1}`);
-              break;
-            }
-          } catch (error) {
-            this.logger.debug(`Dialog strategy ${index + 1} failed: ${error.message}`);
-            continue;
+        try {
+          const candidate = strategies[0](); // Only one strategy now
+          if (await candidate.isVisible({ timeout: 3000 })) {
+            dialogOpenButton = candidate;
+            this.logger.debug('Found dialog open button using TestId selector');
           }
+        } catch (error) {
+          this.logger.debug(`Dialog TestId strategy failed: ${error.message}`);
         }
         
         if (!dialogOpenButton) {
