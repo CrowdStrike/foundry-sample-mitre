@@ -249,12 +249,28 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Handle opening app from success dialog
+   * Handle opening app from success dialog (after fresh installation)
    */
   private async handleSuccessDialog(successDialog: any): Promise<void> {
-    // Click "Open app" button from the success dialog
-    const dialogOpenButton = successDialog.getByRole('button', { name: 'Open app' });
-    await expect(dialogOpenButton).toBeVisible({ timeout: 5000 });
+    // Priority 1: Try reliable TestId selector for dialog button
+    let dialogOpenButton = successDialog.getByTestId('app-details-page__use-app-button');
+    let buttonFound = await dialogOpenButton.isVisible({ timeout: 2000 });
+    
+    if (!buttonFound) {
+      // Priority 2: Try text-based approach - dialog buttons often use "Open App" (uppercase A)
+      dialogOpenButton = successDialog.getByRole('button', { name: /^Open [Aa]pp$/i });
+      buttonFound = await dialogOpenButton.isVisible({ timeout: 2000 });
+    }
+    
+    if (!buttonFound) {
+      // Priority 3: Fallback to any open/launch button in dialog
+      dialogOpenButton = successDialog.getByRole('button', { name: /open|launch/i });
+      buttonFound = await dialogOpenButton.isVisible({ timeout: 2000 });
+    }
+    
+    if (!buttonFound) {
+      throw new Error('No "Open app" button found in success dialog');
+    }
     
     // Wait for navigation after clicking the button
     const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
@@ -272,12 +288,14 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Handle clicking Open app button with TestId fallbacks and 3-dot menu support
+   * Handle clicking Open app button with reliable TestId selector (prioritized)
    */
   private async handleOpenAppButton(): Promise<void> {
-    // Look for Open app button with TestId fallbacks (more reliable)
-    const openButtons = [
-      this.page.getByTestId('app-details-page__use-app-button'),
+    // Primary: Use reliable TestId selector discovered through UI inspection
+    const primaryButton = this.page.getByTestId('app-details-page__use-app-button');
+    
+    // Fallback: Traditional text-based selectors for compatibility
+    const fallbackButtons = [
       this.page.getByRole('button', { name: /^(Open app|Launch|Use app|Open)$/i }),
       this.page.getByRole('link', { name: /open/i }),
       this.page.getByRole('button', { name: /launch/i }),
@@ -286,29 +304,47 @@ export class MitreChartPage extends BasePage {
     
     let buttonClicked = false;
     
-    // First try direct "Open app" buttons with increased timeout for CI
+    // First try reliable TestId selector with increased timeout for CI
     const directButtonTimeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
-    for (const button of openButtons) {
-      try {
-        await expect(button).toBeVisible({ timeout: directButtonTimeout });
-        
-        // Wait for navigation after clicking the button  
-        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-        await button.click();
-        await navigationPromise;
-        
-        this.logger.success('Opened already installed app via direct button');
-        buttonClicked = true;
-        break;
-      } catch {
-        // Try next button variant
-        continue;
+    
+    try {
+      await expect(primaryButton).toBeVisible({ timeout: directButtonTimeout });
+      
+      // Wait for navigation after clicking the button  
+      const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+      await primaryButton.click();
+      await navigationPromise;
+      
+      this.logger.success('Opened already installed app via reliable TestId selector');
+      buttonClicked = true;
+    } catch (primaryError) {
+      this.logger.debug(`TestId selector failed: ${primaryError.message}, trying fallback methods`);
+      
+      // Fallback: Try traditional text-based selectors
+      for (const button of fallbackButtons) {
+        try {
+          await expect(button).toBeVisible({ timeout: directButtonTimeout });
+          
+          // Wait for navigation after clicking the button  
+          const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+          await button.click();
+          await navigationPromise;
+          
+          this.logger.success('Opened already installed app via fallback text selector');
+          buttonClicked = true;
+          break;
+        } catch {
+          // Try next button variant
+          continue;
+        }
       }
     }
     
-    // If direct buttons failed, try 3-dot menu approach (for already installed apps)
+    // If direct buttons failed, try 3-dot menu approach - NOTE: Based on UI inspection,
+    // installed apps only have "Uninstall app" in the 3-dot menu, not "Open app"
+    // This is kept for compatibility with other app states or edge cases
     if (!buttonClicked) {
-      this.logger.info('Direct Open app button not found, trying 3-dot menu approach');
+      this.logger.info('Direct Open app button not found, trying 3-dot menu approach (rare case)');
       try {
         // Look for the 3-dot menu button
         const menuButton = this.page.getByRole('button', { name: /open menu/i }).or(
@@ -320,17 +356,23 @@ export class MitreChartPage extends BasePage {
         await expect(menuButton).toBeVisible({ timeout: menuTimeout });
         await menuButton.click();
         
-        // Look for "Open app" in the dropdown menu
+        // Look for "Open app" in the dropdown menu (unlikely for installed apps)
         const openAppMenuItem = this.page.getByRole('menuitem', { name: /open app/i });
-        await expect(openAppMenuItem).toBeVisible({ timeout: 5000 });
+        const menuItemVisible = await openAppMenuItem.isVisible({ timeout: 2000 });
         
-        // Wait for navigation after clicking the menu item
-        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-        await openAppMenuItem.click();
-        await navigationPromise;
-        
-        this.logger.success('Opened already installed app via 3-dot menu');
-        buttonClicked = true;
+        if (menuItemVisible) {
+          // Wait for navigation after clicking the menu item
+          const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+          await openAppMenuItem.click();
+          await navigationPromise;
+          
+          this.logger.success('Opened already installed app via 3-dot menu');
+          buttonClicked = true;
+        } else {
+          this.logger.info('3-dot menu opened but no "Open app" option found (expected for installed apps)');
+          // Close the menu
+          await this.page.keyboard.press('Escape');
+        }
       } catch (menuError) {
         this.logger.warn(`3-dot menu approach failed: ${menuError.message}`);
       }
@@ -417,8 +459,22 @@ export class MitreChartPage extends BasePage {
         
         // Wait for success dialog and click "Open App" from the dialog
         const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
-        const dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' });
-        await expect(dialogOpenButton).toBeVisible({ timeout: 15000 });
+        
+        // Priority 1: Try reliable TestId selector for dialog button
+        let dialogOpenButton = successDialog.getByTestId('app-details-page__use-app-button');
+        let buttonFound = await dialogOpenButton.isVisible({ timeout: 5000 });
+        
+        if (!buttonFound) {
+          // Priority 2: Try text-based approach - dialog buttons often use "Open App" (uppercase A)
+          dialogOpenButton = successDialog.getByRole('button', { name: /^Open [Aa]pp$/i });
+          buttonFound = await dialogOpenButton.isVisible({ timeout: 10000 });
+        }
+        
+        if (!buttonFound) {
+          // Priority 3: Fallback to legacy selector
+          dialogOpenButton = successDialog.getByRole('button', { name: 'Open App' }); 
+          await expect(dialogOpenButton).toBeVisible({ timeout: 15000 });
+        }
         
         // Wait for navigation after clicking the button
         const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
