@@ -7,6 +7,9 @@ updates:
     open-pull-requests-limit: 15
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "14:00"
+      timezone: "UTC"
     groups:
       typescript:
         patterns:
@@ -16,3 +19,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "14:00"
+      timezone: "UTC"
