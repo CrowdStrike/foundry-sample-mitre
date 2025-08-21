@@ -249,16 +249,13 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Handle opening app from success dialog (after fresh installation)
+   * Handle opening app from success dialog after installation
    */
   private async handleSuccessDialog(successDialog: any): Promise<void> {
-    // Strategy-based approach for dialog buttons
+    // Try each selector strategy until one works
     const strategies = [
-      // Primary: TestId (most reliable)
       () => successDialog.getByTestId('app-details-page__use-app-button'),
-      // Fallback: Text-based with case variations
       () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
-      // Final: Any open/launch button in dialog
       () => successDialog.getByRole('button', { name: /open|launch/i })
     ];
     
@@ -291,18 +288,15 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Handle clicking Open app button with simplified, reliable selector strategies
+   * Handle clicking Open app button with multiple selector strategies
    */
   private async handleOpenAppButton(): Promise<void> {
     const timeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
     
-    // Strategy-based approach: try each selector in priority order
+    // Try each selector in priority order
     const strategies = [
-      // Primary: TestId (most reliable - confirmed working in CI)
       () => this.page.getByTestId('app-details-page__use-app-button'),
-      // Fallback: Text-based with case variations (handles UI changes)
       () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }),
-      // Final: Any open/launch button (broad compatibility)
       () => this.page.getByRole('button', { name: /open|launch/i })
     ];
     
@@ -376,10 +370,10 @@ export class MitreChartPage extends BasePage {
           throw new Error('Could not find install confirmation button');
         }
         
-        // Wait for success dialog and click "Open App" from the dialog
+        // Wait for success dialog and click "Open App" button
         const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
         
-        // Use same strategy-based approach for consistency
+        // Try multiple selector strategies for the dialog button
         const strategies = [
           () => successDialog.getByTestId('app-details-page__use-app-button'),
           () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
