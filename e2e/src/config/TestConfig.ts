@@ -107,8 +107,8 @@ export class TestConfig {
     return {
       path: this.screenshotPath,
       fullPage: true,
-      type: 'png' as const,
-      quality: this.isCI ? 80 : 100
+      type: 'png' as const
+      // Note: quality parameter is not supported for PNG screenshots
     };
   }
   
@@ -138,7 +138,7 @@ export class TestConfig {
       console.log(`  App Name: ${this.appName}`);
       console.log(`  Default Timeout: ${this.defaultTimeout}ms`);
       console.log(`  Retry Attempts: ${this.retryAttempts}`);
-      console.log(`  Debug Mode: ${this.isDebugMode}`);
+      console.log(`  Debug Mode: ${this.isDebugMode}${this.isDebugMode ? '' : ' (enable with DEBUG=true npm test or npm run test:debug)'}`);
     }
   }
 }

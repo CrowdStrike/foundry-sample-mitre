@@ -5,7 +5,8 @@
   "scripts": {
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
-    "test:debug": "npx playwright test --debug"
+    "test:debug": "npx playwright test --debug",
+    "test:verbose": "DEBUG=true npx playwright test --reporter=list"
   },
   "keywords": [],
   "license": "MIT",

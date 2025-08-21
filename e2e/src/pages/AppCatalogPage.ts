@@ -202,8 +202,8 @@ export class AppCatalogPage extends BasePage {
       `1. In LOCAL environment: The app needs to be manually deployed first using the Foundry CLI`,
       `2. In CI environment: The app deployment step may have failed\n`,
       `To fix this locally:`,
-      `- Run: foundry app deploy`,
-      `- Then run: foundry app release`,
+      `- Run: foundry apps deploy`,
+      `- Then run: foundry apps release`,
       `- Make sure your APP_NAME in .env matches your deployed app name\n`,
       `Current APP_NAME from .env: ${appName}`
     ].join('\n');

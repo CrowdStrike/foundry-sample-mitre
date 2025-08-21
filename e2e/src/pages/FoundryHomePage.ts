@@ -20,7 +20,7 @@ export class FoundryHomePage extends BasePage {
   }
 
   async navigateToAppManager(): Promise<void> {
-    this.logger.step('Navigate to App Manager');
+    this.logger.step('Navigate to App manager');
     
     await this.smartClick(
       this.page.getByRole('link', { name: 'App manager' }),
@@ -28,6 +28,6 @@ export class FoundryHomePage extends BasePage {
     );
     
     await expect(this.page).toHaveTitle('App manager | Foundry | Falcon');
-    this.logger.success('Navigated to App Manager');
+    this.logger.success('Navigated to App manager');
   }
 }

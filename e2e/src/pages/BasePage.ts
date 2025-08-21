@@ -117,19 +117,32 @@ export abstract class BasePage {
   protected async takeScreenshot(filename: string, context: LogContext = {}): Promise<void> {
     try {
       const screenshotConfig = config.getScreenshotConfig();
-      const fullPath = `${screenshotConfig.path}/${filename}`;
+      
+      // Ensure the directory exists
+      const fs = require('fs');
+      const path = require('path');
+      const screenshotDir = screenshotConfig.path;
+      if (!fs.existsSync(screenshotDir)) {
+        fs.mkdirSync(screenshotDir, { recursive: true });
+      }
+      
+      // Create full path for the screenshot file
+      const fullPath = path.join(screenshotDir, filename);
       
       await this.page.screenshot({ 
         path: fullPath,
-        ...screenshotConfig 
+        fullPage: screenshotConfig.fullPage,
+        type: screenshotConfig.type
       });
       
       this.logger.debug(`Screenshot saved: ${filename}`, { 
         ...context, 
         path: fullPath 
       });
+      this.logger.success(`Screenshot saved: ${filename}`);
     } catch (error) {
-      this.logger.warn(`Failed to take screenshot: ${filename}`, error instanceof Error ? error : undefined, context);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.warn(`Failed to take screenshot: ${filename} - ${errorMessage}`, error instanceof Error ? error : undefined, context);
     }
   }
 

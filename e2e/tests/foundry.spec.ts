@@ -12,19 +12,42 @@ test.describe('MITRE Attack App E2E Tests', () => {
   let foundryHomePage: FoundryHomePage;
   let mitreChartPage: MitreChartPage; 
   let mitreRemediationPage: MitreRemediationPage;
+  let initialAppState: 'installed' | 'not_installed' | 'unknown' = 'unknown';
 
   // Global setup for the entire test suite
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ browser }) => {
     config.logSummary();
     
     if (!config.isCI) {
       logger.info('Starting MITRE Attack app E2E test suite');
       
+      // Detect initial app state to restore it later
+      try {
+        const context = await browser.newContext();
+        const detectionPage = await context.newPage();
+        const detectionMitreChartPage = new MitreChartPage(detectionPage);
+        
+        // Perform login for detection page
+        const foundryHomePage = new FoundryHomePage(detectionPage);
+        await foundryHomePage.goto();
+        
+        // Detect current app installation state
+        initialAppState = await detectionMitreChartPage.detectAppInstallationState();
+        logger.info(`Initial app state detected: ${initialAppState}`);
+        
+        // Clean up the detection context
+        await context.close();
+      } catch (error) {
+        logger.warn('Failed to detect initial app state:', error);
+        initialAppState = 'unknown';
+      }
+      
       // Log test environment info (only in local dev)
       logger.info('Test Environment', {
         isCI: config.isCI,
         baseUrl: config.falconBaseUrl,
-        appName: process.env.APP_NAME || 'foundry-sample-mitre'
+        appName: process.env.APP_NAME || 'foundry-sample-mitre',
+        initialAppState
       });
     }
   });
@@ -136,14 +159,45 @@ test.describe('MITRE Attack App E2E Tests', () => {
   });
 
   // Global cleanup for the entire test suite
-  test.afterAll(async () => {
+  test.afterAll(async ({ browser }) => {
+    // Restore initial app state
+    if (!config.isCI && browser && initialAppState !== 'unknown') {
+      try {
+        const context = await browser.newContext();
+        const cleanupPage = await context.newPage();
+        const cleanupMitreChartPage = new MitreChartPage(cleanupPage);
+        
+        // Perform login for cleanup page
+        const foundryHomePage = new FoundryHomePage(cleanupPage);
+        await foundryHomePage.goto();
+        
+        // Get current state and restore to initial state
+        const currentState = await cleanupMitreChartPage.detectAppInstallationState();
+        logger.info(`Current app state: ${currentState}, Initial app state: ${initialAppState}`);
+        
+        if (currentState !== initialAppState) {
+          if (initialAppState === 'installed' && currentState === 'not_installed') {
+            logger.info('Restoring app to installed state...');
+            await cleanupMitreChartPage.ensureAppIsInstalled();
+          } else if (initialAppState === 'not_installed' && currentState === 'installed') {
+            logger.info('Restoring app to uninstalled state...');
+            await cleanupMitreChartPage.uninstallApp();
+          }
+          logger.success(`Successfully restored app to initial state: ${initialAppState}`);
+        } else {
+          logger.info('App is already in the correct initial state');
+        }
+        
+        // Clean up the context
+        await context.close();
+      } catch (error) {
+        // Don't fail tests due to cleanup issues
+        logger.warn('Failed to restore app state during cleanup:', error);
+      }
+    }
+    
     if (!config.isCI) {
       logger.info('MITRE Attack app E2E test suite completed');
-      
-      // Log final test suite summary
-      logger.info('Test suite completed successfully', {
-        timestamp: new Date().toISOString()
-      });
     }
   });
 });
