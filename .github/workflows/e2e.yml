@@ -47,6 +47,8 @@ jobs:
             UNIQUE_NAME="${REPO_BASE}-${SHORT_ACTOR}-$(date +"%m%d%H%M")"
           fi
           
+          # Export for yq and set the manifest name
+          export UNIQUE_NAME
           yq -i '.name = env(UNIQUE_NAME)' manifest.yml
           
           # Set app name as environment variable
