@@ -252,19 +252,30 @@ export class MitreChartPage extends BasePage {
    * Handle opening app from success dialog after installation
    */
   private async handleSuccessDialog(successDialog: any): Promise<void> {
-    // Try each selector strategy until one works
+    // Try each selector strategy until one works with enhanced strategies
+    const timeout = process.env.CI ? 8000 : 2000;
     const strategies = [
       () => successDialog.getByTestId('app-details-page__use-app-button'),
       () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
-      () => successDialog.getByRole('button', { name: /open|launch/i })
+      () => successDialog.getByRole('button', { name: /open|launch/i }),
+      () => successDialog.getByRole('button', { name: /use.*app/i }),
+      () => successDialog.locator('button').filter({ hasText: /open|launch|use/i }).first(),
+      () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }), // Fallback to page-level
+      () => this.page.getByTestId('app-details-page__use-app-button') // Fallback to page-level
     ];
     
     let dialogOpenButton = null;
-    for (const getButton of strategies) {
-      const candidate = getButton();
-      if (await candidate.isVisible({ timeout: 2000 })) {
-        dialogOpenButton = candidate;
-        break;
+    for (const [index, getButton] of strategies.entries()) {
+      try {
+        const candidate = getButton();
+        if (await candidate.isVisible({ timeout: timeout })) {
+          dialogOpenButton = candidate;
+          this.logger.debug(`Found success dialog button using strategy ${index + 1}`);
+          break;
+        }
+      } catch (error) {
+        this.logger.debug(`Success dialog strategy ${index + 1} failed: ${error.message}`);
+        continue;
       }
     }
     
@@ -291,13 +302,15 @@ export class MitreChartPage extends BasePage {
    * Handle clicking Open app button with multiple selector strategies
    */
   private async handleOpenAppButton(): Promise<void> {
-    const timeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
+    const timeout = process.env.CI ? 15000 : MitreChartPage.BUTTON_TIMEOUT;
     
-    // Try each selector in priority order
+    // Try each selector in priority order with enhanced strategies
     const strategies = [
       () => this.page.getByTestId('app-details-page__use-app-button'),
       () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }),
-      () => this.page.getByRole('button', { name: /open|launch/i })
+      () => this.page.getByRole('button', { name: /open|launch/i }),
+      () => this.page.getByRole('button', { name: /use.*app/i }),
+      () => this.page.locator('button').filter({ hasText: /open|launch|use/i }).first()
     ];
     
     for (const [index, getButton] of strategies.entries()) {
@@ -310,12 +323,12 @@ export class MitreChartPage extends BasePage {
         await button.click();
         await navigationPromise;
         
-        const strategyName = ['TestId selector', 'text-based selector', 'generic selector'][index];
+        const strategyName = ['TestId selector', 'text-based selector', 'generic selector', 'use app selector', 'filtered button selector'][index];
         this.logger.success(`Opened app via ${strategyName}`);
         return;
         
       } catch (error) {
-        const strategyName = ['TestId', 'text-based', 'generic'][index];
+        const strategyName = ['TestId', 'text-based', 'generic', 'use app', 'filtered'][index];
         if (index < strategies.length - 1) {
           this.logger.debug(`${strategyName} strategy failed, trying next: ${error.message}`);
           continue;
@@ -373,24 +386,45 @@ export class MitreChartPage extends BasePage {
         // Wait for success dialog and click "Open App" button
         const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
         
-        // Try multiple selector strategies for the dialog button
+        // Try multiple selector strategies for the dialog button with enhanced selectors
+        const timeout = process.env.CI ? 10000 : 5000;
         const strategies = [
           () => successDialog.getByTestId('app-details-page__use-app-button'),
           () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
-          () => successDialog.getByRole('button', { name: /open|launch/i })
+          () => successDialog.getByRole('button', { name: /open|launch/i }),
+          () => successDialog.getByRole('button', { name: /use.*app/i }),
+          () => successDialog.locator('button').filter({ hasText: /open|launch|use/i }).first(),
+          () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }), // Fallback to page-level
+          () => this.page.getByTestId('app-details-page__use-app-button') // Fallback to page-level
         ];
         
         let dialogOpenButton = null;
-        for (const getButton of strategies) {
-          const candidate = getButton();
-          if (await candidate.isVisible({ timeout: 5000 })) {
-            dialogOpenButton = candidate;
-            break;
+        for (const [index, getButton] of strategies.entries()) {
+          try {
+            const candidate = getButton();
+            if (await candidate.isVisible({ timeout: timeout })) {
+              dialogOpenButton = candidate;
+              this.logger.debug(`Found dialog open button using strategy ${index + 1}`);
+              break;
+            }
+          } catch (error) {
+            this.logger.debug(`Strategy ${index + 1} failed: ${error.message}`);
+            continue;
           }
         }
         
         if (!dialogOpenButton) {
-          throw new Error('No "Open App" button found in installation success dialog');
+          // Final fallback: wait longer and try again with page-level selectors
+          this.logger.warn('Dialog button strategies failed, trying page-level fallback');
+          await this.page.waitForTimeout(2000); // Give UI time to settle
+          
+          const pageOpenButton = this.page.getByRole('button', { name: /^Open [Aa]pp$/i });
+          if (await pageOpenButton.isVisible({ timeout: 3000 })) {
+            dialogOpenButton = pageOpenButton;
+            this.logger.info('Found open button at page level after dialog strategies failed');
+          } else {
+            throw new Error('No "Open App" button found in installation success dialog or page');
+          }
         }
         
         // Wait for navigation after clicking the button
