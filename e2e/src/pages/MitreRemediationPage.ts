@@ -60,17 +60,20 @@ export class MitreRemediationPage extends BasePage {
         if (await this.elementExists(closeModalButton, 3000)) {
           this.logger.step('Closing endpoint detections modal');
           await this.smartClick(closeModalButton, 'Close modal button');
-          await this.page.waitForTimeout(1000);
+          // Wait for modal to be dismissed
+          await closeModalButton.waitFor({ state: 'detached', timeout: 5000 });
         }
         
-        // Wait for detections to load (they take time after modal is dismissed)
+        // Wait for detections to load using condition-based waiting
         this.logger.step('Waiting for detections to load');
-        await this.page.waitForTimeout(5000); // Give detections time to load
-        
-        // Look for detection rows using semantic locators first
         const detectionTable = this.page.getByRole('table').or(
           this.page.getByRole('grid')
         );
+        
+        // Wait for table to appear instead of fixed timeout
+        await expect(detectionTable.or(
+          this.page.getByText(/no.*detection/i)
+        )).toBeVisible({ timeout: 10000 });
         
         if (await this.elementExists(detectionTable, 5000)) {
           // Try to find clickable rows in the table
@@ -81,9 +84,20 @@ export class MitreRemediationPage extends BasePage {
             this.logger.step('Found detection table rows');
             await this.smartClick(firstDataRow, 'First detection row');
             
-            // Wait for detection details page to load
+            // Wait for detection details page to load and extensions to initialize
             await this.waiter.waitForPageLoad('Detection details loaded');
-            await this.page.waitForTimeout(3000); // Give extensions time to load
+            
+            // Wait for extension content to be available instead of fixed timeout
+            const extensionContent = this.page.getByRole('complementary').or(
+              this.page.locator('[data-testid*="extension"]')
+            ).or(
+              this.page.locator('.extension-container, [class*="extension"]')
+            );
+            
+            await expect(extensionContent.or(
+              this.page.getByText(/no.*extension/i)
+            )).toBeVisible({ timeout: 8000 });
+            
             return;
           }
         }
@@ -128,9 +142,19 @@ export class MitreRemediationPage extends BasePage {
           throw new Error('No detections found or detections page did not load properly. This may require actual detection data in the environment.');
         }
 
-        // Wait for detection details page to load
+        // Wait for detection details page to load and extensions to initialize
         await this.waiter.waitForPageLoad('Detection details loaded');
-        await this.page.waitForTimeout(3000); // Give extensions time to load
+        
+        // Wait for extension content to be available instead of fixed timeout
+        const extensionContent = this.page.getByRole('complementary').or(
+          this.page.locator('[data-testid*="extension"]')
+        ).or(
+          this.page.locator('.extension-container, [class*="extension"]')
+        );
+        
+        await expect(extensionContent.or(
+          this.page.getByText(/no.*extension/i)
+        )).toBeVisible({ timeout: 8000 });
       },
       'Navigate to detection with MITRE remediation'
     );

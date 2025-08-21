@@ -108,7 +108,7 @@ export class MitreChartPage extends BasePage {
 
   /**
    * Install app from App catalog (used in both CI and local environments)
-   * Follows the same pattern as foundry-tutorial-quickstart - fails immediately if not found
+   * Follows the same pattern as foundry-tutorial-quickstart - with retry for CI timing
    */
   private async installAppFromCatalog(appName: string): Promise<void> {
     await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
@@ -116,23 +116,46 @@ export class MitreChartPage extends BasePage {
     const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
     await searchBox.fill(appName);
     await this.page.keyboard.press('Enter');
-    await this.page.waitForTimeout(3000);
     
-    // Check if app exists in catalog first - fail fast if not found
+    // Wait for search results to load instead of fixed timeout
+    await this.page.waitForLoadState('networkidle');
+    
+    // Check if app exists in catalog - with retry for CI timing
     const appLink = this.page.getByRole('link', { name: appName, exact: true });
     
     try {
-      await expect(appLink).toBeVisible({ timeout: 5000 }); // Short timeout for fast failure
+      // First attempt with short timeout for local/immediate availability
+      await expect(appLink).toBeVisible({ timeout: 3000 });
       this.logger.success(`Found app "${appName}" in catalog`);
-      await appLink.click();
-      
-      // Wait for navigation to app details page
-      await this.page.waitForURL(/\/foundry\/app-catalog\/[^\/]+$/, { timeout: 10000 });
     } catch (error) {
-      // App not found in catalog - fail immediately with helpful error
-      const errorMessage = this.buildAppNotFoundError(appName);
-      throw new Error(errorMessage);
+      // Second attempt for CI - app might need more time to appear in catalog
+      this.logger.debug(`App not immediately visible, refreshing and retrying...`);
+      await this.page.reload();
+      await this.page.waitForLoadState('networkidle');
+      
+      // Re-search after refresh
+      const refreshedSearchBox = this.page.getByRole('searchbox', { name: 'Search' });
+      await refreshedSearchBox.fill(appName);
+      await this.page.keyboard.press('Enter');
+      
+      // Wait for search results after refresh
+      await this.page.waitForLoadState('networkidle');
+      
+      const refreshedAppLink = this.page.getByRole('link', { name: appName, exact: true });
+      try {
+        await expect(refreshedAppLink).toBeVisible({ timeout: 10000 }); // Longer timeout for CI
+        this.logger.success(`Found app "${appName}" in catalog after refresh`);
+      } catch (retryError) {
+        // App not found in catalog - fail with helpful error
+        const errorMessage = this.buildAppNotFoundError(appName);
+        throw new Error(errorMessage);
+      }
     }
+    
+    await appLink.click();
+    
+    // Wait for navigation to app details page
+    await this.page.waitForURL(/\/foundry\/app-catalog\/[^\/]+$/, { timeout: 10000 });
     
     await this.handleAppInstallation(appName);
   }
@@ -783,7 +806,7 @@ export class MitreChartPage extends BasePage {
       const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
       await searchBox.fill(appName);
       await this.page.keyboard.press('Enter');
-      await this.page.waitForTimeout(2000);
+      await this.page.waitForLoadState('networkidle');
       
       // Find the app link
       const appLink = this.page.getByRole('link', { name: appName, exact: true });
@@ -834,7 +857,7 @@ export class MitreChartPage extends BasePage {
           const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
           await searchBox.fill(appName);
           await this.page.keyboard.press('Enter');
-          await this.page.waitForTimeout(2000);
+          await this.page.waitForLoadState('networkidle');
           
           // Find the app link
           const appLink = this.page.getByRole('link', { name: appName, exact: true });
