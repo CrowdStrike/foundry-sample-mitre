@@ -61,9 +61,9 @@ jobs:
               foundry apps release --change-type=major --notes="e2e release"
               echo "App released successfully"
               
-              # Wait for app to appear in catalog (allow time for propagation)
-              echo "Waiting for app to appear in catalog..."
-              sleep 90
+              # Brief wait for release to complete - E2E tests handle app discovery with retries
+              echo "Allowing brief time for release to complete..."
+              sleep 15
               
               # Verify deployment status and get app details
               echo "Verifying final deployment status..."
