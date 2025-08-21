@@ -255,8 +255,7 @@ export class MitreChartPage extends BasePage {
     // Try each selector strategy until one works
     const strategies = [
       () => successDialog.getByTestId('app-details-page__use-app-button'),
-      () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
-      () => successDialog.getByRole('button', { name: /open|launch/i })
+      () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i })
     ];
     
     let dialogOpenButton = null;
@@ -308,8 +307,7 @@ export class MitreChartPage extends BasePage {
     // Try each selector in priority order - simplified strategies
     const strategies = [
       () => this.page.getByTestId('app-details-page__use-app-button'),
-      () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }).first(),
-      () => this.page.getByRole('button', { name: /open|launch/i }).first()
+      () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }).first()
     ];
     
     for (const [index, getButton] of strategies.entries()) {
@@ -322,12 +320,12 @@ export class MitreChartPage extends BasePage {
         await button.click();
         await navigationPromise;
         
-        const strategyName = ['TestId selector', 'Open App button', 'generic selector'][index];
+        const strategyName = ['TestId selector', 'Open App button'][index];
         this.logger.success(`Opened app via ${strategyName}`);
         return;
         
       } catch (error) {
-        const strategyName = ['TestId', 'Open App', 'generic'][index];
+        const strategyName = ['TestId', 'Open App'][index];
         if (index < strategies.length - 1) {
           this.logger.debug(`${strategyName} strategy failed, trying next: ${error.message}`);
           continue;
@@ -389,8 +387,7 @@ export class MitreChartPage extends BasePage {
         // Try dialog-specific strategies only
         const strategies = [
           () => successDialog.getByTestId('app-details-page__use-app-button'),
-          () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
-          () => successDialog.getByRole('button', { name: /open|launch/i })
+          () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i })
         ];
         
         let dialogOpenButton = null;
