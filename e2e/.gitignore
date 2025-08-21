@@ -1,0 +1,14 @@
+# .dotenvx
+.env
+.env.keys
+
+# IntelliJ IDEA
+.idea
+
+# Playwright
+node_modules/
+/test-results/
+/playwright/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

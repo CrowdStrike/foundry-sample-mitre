@@ -16,8 +16,6 @@ ignored:
     - node_modules
     - yarn.lock
     - package.json
-    - ui/node_modules
-    - ui/shared/node_modules
     - ui/(extensions|pages)/[^\/]*?/public
     - ui/(extensions|pages)/[^\/]*?/index.html
     - ui/(extensions|pages)/[^\/]*?/favicon.ico
@@ -31,6 +29,8 @@ ignored:
     - ui/(extensions|pages)/.*?/.*?\.(md|log|lock|cjs)
     - ui/(extensions|pages)/.*?/*\.ts
     - ui/(extensions|pages)/*\.gz
+    - e2e
+    - e2e/.+
 ui:
     homepage: pages.mitre-vue
     extensions:
@@ -132,4 +132,4 @@ parsers: []
 logscale:
     saved_searches: []
 lookup_files: []
-app_docs: []
+docs: {}
