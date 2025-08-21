@@ -15,7 +15,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.47.3",
+    "@dotenvx/dotenvx": "^1.49.0",
     "otpauth": "^9.4.1"
   },
   "devDependencies": {
