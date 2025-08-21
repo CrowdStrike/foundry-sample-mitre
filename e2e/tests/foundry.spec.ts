@@ -35,10 +35,9 @@ test.describe('MITRE Attack App E2E Tests', () => {
   });
 
   test.describe('App Installation and Basic Navigation', () => {
-    test('should install and verify MITRE app in Foundry', async () => {
-      await foundryHomePage.goto();
-      await foundryHomePage.verifyLoaded();
-      await mitreChartPage.navigateToMitreChart();
+    test('should verify MITRE app accessibility', async () => {
+      await mitreChartPage.navigateToInstalledApp();
+      await mitreChartPage.verifyMitreMatrixElements();
     });
 
     test('should navigate to MITRE chart and verify matrix elements', async () => {

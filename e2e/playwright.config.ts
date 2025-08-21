@@ -29,12 +29,30 @@ export default defineConfig({
       testMatch: /authenticate.setup.ts/,
     },
     {
-      name: 'chromium',
+      name: 'app-install',
+      testMatch: /app-install.setup.ts/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: AuthFile
       },
       dependencies: ["setup"]
+    },
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: AuthFile
+      },
+      dependencies: ["setup", "app-install"]
+    },
+    {
+      name: 'app-uninstall',
+      testMatch: /app-uninstall.teardown.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: AuthFile
+      },
+      dependencies: ["chromium"]
     },
   ],
 });
