@@ -9,7 +9,7 @@ jobs:
           - shared/mitre-vue
           - ui/extensions/remediations
           - ui/pages/chart-vue
-    name: Build and Test (${{ matrix.path }})
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -18,20 +18,19 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-          cache-dependency-path: |
-            yarn.lock
-            ${{ matrix.path }}/yarn.lock
-      - name: Enable Corepack for Yarn
-        run: |
-          corepack enable
-          corepack prepare yarn@stable --activate
-      - name: Install dependencies in ${{ matrix.path }}
-        working-directory: ${{ matrix.path }}
-        run: yarn install --immutable
+      - name: Run yarn install in ${{ matrix.path }}
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: install
+          dir: ${{ matrix.path }}
       - name: Build Vue app in ${{ matrix.path }}
         if: matrix.path != 'shared/mitre-vue'
-        working-directory: ${{ matrix.path }}
-        run: yarn build
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: build
+          dir: ${{ matrix.path }}
       - name: Test the Vue app in ${{ matrix.path }}
-        working-directory: ${{ matrix.path }}
-        run: yarn test:unit
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: test:unit
+          dir: ${{ matrix.path }}
