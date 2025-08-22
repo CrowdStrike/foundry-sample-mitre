@@ -9,18 +9,18 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0, // More retries in CI for flaky environments
-  workers: process.env.CI ? 1 : undefined,
-  timeout: process.env.CI ? 90 * 1000 : 60 * 1000, // Longer timeout in CI
+  retries: process.env.CI ? 1 : 0, // Reduced retries for faster feedback
+  workers: process.env.CI ? 2 : 4, // Allow more parallelism in CI for speed
+  timeout: process.env.CI ? 60 * 1000 : 45 * 1000, // Reduced timeouts for faster execution
   expect: {
-    timeout: process.env.CI ? 15 * 1000 : 10 * 1000, // Longer expectation timeout in CI
+    timeout: process.env.CI ? 10 * 1000 : 8 * 1000, // Shorter expectation timeouts
   },
   reporter: 'html',
   use: {
     testIdAttribute: 'data-test-selector',
     trace: 'on-first-retry',
-    actionTimeout: process.env.CI ? 20 * 1000 : 15 * 1000, // Longer action timeout in CI
-    navigationTimeout: process.env.CI ? 45 * 1000 : 30 * 1000, // Longer navigation timeout in CI
+    actionTimeout: process.env.CI ? 15 * 1000 : 10 * 1000, // Faster action timeouts
+    navigationTimeout: process.env.CI ? 30 * 1000 : 20 * 1000, // Faster navigation
   },
 
   projects: [
@@ -29,12 +29,30 @@ export default defineConfig({
       testMatch: /authenticate.setup.ts/,
     },
     {
-      name: 'chromium',
+      name: 'app-install',
+      testMatch: /app-install.setup.ts/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: AuthFile
       },
       dependencies: ["setup"]
+    },
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: AuthFile
+      },
+      dependencies: ["setup", "app-install"]
+    },
+    {
+      name: 'app-uninstall',
+      testMatch: /app-uninstall.teardown.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: AuthFile
+      },
+      dependencies: ["chromium"]
     },
   ],
 });

@@ -69,7 +69,7 @@ export class MitreChartPage extends BasePage {
       async () => {
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
         
-        // Both CI and Local: Always try App catalog approach first (same as foundry-tutorial-quickstart)
+        // Try App catalog approach first
         this.logger.info(`Attempting to install app "${appName}" from App catalog`);
         await this.installAppFromCatalog(appName);
         
@@ -108,7 +108,6 @@ export class MitreChartPage extends BasePage {
 
   /**
    * Install app from App catalog (used in both CI and local environments)
-   * Follows the same pattern as foundry-tutorial-quickstart - with retry for CI timing
    */
   private async installAppFromCatalog(appName: string): Promise<void> {
     await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
@@ -161,7 +160,7 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Build helpful error message when app not found in catalog (same pattern as foundry-tutorial-quickstart)
+   * Build helpful error message when app not found in catalog
    */
   private buildAppNotFoundError(appName: string): string {
     return [
@@ -252,77 +251,49 @@ export class MitreChartPage extends BasePage {
    * Handle opening app from success dialog after installation
    */
   private async handleSuccessDialog(successDialog: any): Promise<void> {
-    // Try each selector strategy until one works
-    const strategies = [
-      () => successDialog.getByTestId('app-details-page__use-app-button'),
-      () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
-      () => successDialog.getByRole('button', { name: /open|launch/i })
-    ];
-    
-    let dialogOpenButton = null;
-    for (const getButton of strategies) {
-      const candidate = getButton();
-      if (await candidate.isVisible({ timeout: 2000 })) {
-        dialogOpenButton = candidate;
-        break;
+    const openAppButton = successDialog.getByTestId('app-details-page__use-app-button');
+    if (await openAppButton.isVisible({ timeout: 3000 })) {
+      this.logger.debug('Found success dialog button using TestId selector');
+      
+      // Wait for navigation after clicking the button
+      const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+      await openAppButton.click();
+      await navigationPromise;
+      
+      // Close the success dialog if it's still visible
+      try {
+        if (await successDialog.isVisible({ timeout: 2000 })) {
+          const closeButton = successDialog.getByRole('button', { name: /close|dismiss/i }).first();
+          if (await closeButton.isVisible({ timeout: 1000 })) {
+            await closeButton.click();
+            this.logger.debug('Closed success dialog');
+          }
+        }
+      } catch (error) {
+        this.logger.debug('Success dialog already closed or no close button found');
       }
-    }
-    
-    if (!dialogOpenButton) {
+      
+      this.logger.success('Opened app from success dialog');
+    } else {
       throw new Error('No "Open app" button found in success dialog');
     }
-    
-    // Wait for navigation after clicking the button
-    const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-    await dialogOpenButton.click();
-    await navigationPromise;
-    
-    // Close the success dialog if it's still visible
-    const closeButton = successDialog.getByRole('button', { name: 'Close' });
-    const isCloseVisible = await closeButton.isVisible({ timeout: 2000 });
-    if (isCloseVisible) {
-      await closeButton.click();
-    }
-    
-    this.logger.success('Opened app from success dialog');
   }
   
   /**
-   * Handle clicking Open app button with multiple selector strategies
+   * Handle clicking Open app button with TestId selector
    */
   private async handleOpenAppButton(): Promise<void> {
     const timeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
     
-    // Try each selector in priority order
-    const strategies = [
-      () => this.page.getByTestId('app-details-page__use-app-button'),
-      () => this.page.getByRole('button', { name: /^Open [Aa]pp$/i }),
-      () => this.page.getByRole('button', { name: /open|launch/i })
-    ];
+    const openAppButton = this.page.getByTestId('app-details-page__use-app-button');
+    await expect(openAppButton).toBeVisible({ timeout });
     
-    for (const [index, getButton] of strategies.entries()) {
-      try {
-        const button = getButton();
-        await expect(button).toBeVisible({ timeout });
-        
-        // Wait for navigation after clicking
-        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-        await button.click();
-        await navigationPromise;
-        
-        const strategyName = ['TestId selector', 'text-based selector', 'generic selector'][index];
-        this.logger.success(`Opened app via ${strategyName}`);
-        return;
-        
-      } catch (error) {
-        const strategyName = ['TestId', 'text-based', 'generic'][index];
-        if (index < strategies.length - 1) {
-          this.logger.debug(`${strategyName} strategy failed, trying next: ${error.message}`);
-          continue;
-        }
-        throw new Error(`All button strategies failed. Last error: ${error.message}`);
-      }
-    }
+    // Wait for navigation after clicking
+    const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+    await openAppButton.click();
+    await navigationPromise;
+    
+    this.logger.success('Opened app via TestId selector');
   }
   
   /**
@@ -370,35 +341,43 @@ export class MitreChartPage extends BasePage {
           throw new Error('Could not find install confirmation button');
         }
         
-        // Wait for success dialog and click "Open App" button
+        // Wait for success dialog (may not appear for deployed apps)
         const successDialog = this.page.getByRole('alertdialog').or(this.page.locator('[role="dialog"]'));
+        const hasDialog = await successDialog.isVisible({ timeout: 5000 });
         
-        // Try multiple selector strategies for the dialog button
-        const strategies = [
-          () => successDialog.getByTestId('app-details-page__use-app-button'),
-          () => successDialog.getByRole('button', { name: /^Open [Aa]pp$/i }),
-          () => successDialog.getByRole('button', { name: /open|launch/i })
-        ];
-        
-        let dialogOpenButton = null;
-        for (const getButton of strategies) {
-          const candidate = getButton();
-          if (await candidate.isVisible({ timeout: 5000 })) {
-            dialogOpenButton = candidate;
-            break;
-          }
+        if (!hasDialog) {
+          this.logger.debug('No installation dialog found - app may be pre-deployed, trying direct open');
+          await this.handleOpenAppButton();
+          return;
         }
         
-        if (!dialogOpenButton) {
+        // Handle dialog-based installation
+        const openAppButton = successDialog.getByTestId('app-details-page__use-app-button');
+        if (await openAppButton.isVisible({ timeout: 3000 })) {
+          this.logger.debug('Found dialog open button using TestId selector');
+          
+          // Wait for navigation after clicking the button
+          const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+          await openAppButton.click();
+          await navigationPromise;
+          
+          // Close the dialog if it's still visible
+          try {
+            if (await successDialog.isVisible({ timeout: 2000 })) {
+              const closeButton = successDialog.getByRole('button', { name: /close|dismiss/i }).first();
+              if (await closeButton.isVisible({ timeout: 1000 })) {
+                await closeButton.click();
+                this.logger.debug('Closed installation success dialog');
+              }
+            }
+          } catch (error) {
+            this.logger.debug('Dialog already closed or no close button found');
+          }
+          
+          this.logger.success('App installed and opened successfully');
+        } else {
           throw new Error('No "Open App" button found in installation success dialog');
         }
-        
-        // Wait for navigation after clicking the button
-        const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-        await dialogOpenButton.click();
-        await navigationPromise;
-        
-        this.logger.success('App installed and opened successfully');
       } else {
         throw new Error('App needs installation but Install button not found');
       }
