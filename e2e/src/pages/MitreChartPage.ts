@@ -69,7 +69,7 @@ export class MitreChartPage extends BasePage {
       async () => {
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
         
-        // Both CI and Local: Always try App catalog approach first (same as foundry-tutorial-quickstart)
+        // Try App catalog approach first
         this.logger.info(`Attempting to install app "${appName}" from App catalog`);
         await this.installAppFromCatalog(appName);
         
@@ -108,7 +108,6 @@ export class MitreChartPage extends BasePage {
 
   /**
    * Install app from App catalog (used in both CI and local environments)
-   * Follows the same pattern as foundry-tutorial-quickstart - with retry for CI timing
    */
   private async installAppFromCatalog(appName: string): Promise<void> {
     await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
@@ -161,7 +160,7 @@ export class MitreChartPage extends BasePage {
   }
   
   /**
-   * Build helpful error message when app not found in catalog (same pattern as foundry-tutorial-quickstart)
+   * Build helpful error message when app not found in catalog
    */
   private buildAppNotFoundError(appName: string): string {
     return [
