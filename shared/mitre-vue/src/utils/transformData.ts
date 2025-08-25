@@ -54,7 +54,7 @@ export function calculateTrend(trendAggregate: TrendAggregate, from: Date, to: D
     // falls in the first range or the second one
     const middleValue = Math.round((from.getTime() + to.getTime()) / 2)
 
-    if (trendAggregate.buckets[0].label < middleValue) {
+    if (trendAggregate.buckets[0]?.label && trendAggregate.buckets[0].label < middleValue) {
       // This is a previous value, so we have a 100% decrease here
       return -1
     } else {

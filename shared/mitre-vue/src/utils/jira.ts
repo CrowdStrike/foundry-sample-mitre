@@ -591,9 +591,9 @@ export const createJiraIssue = async function (
           const out: JiraCreatedResponseValue = {
             errors: [],
             created: true,
-            id: result?.resources?.[0].response_body?.id,
-            key: result?.resources?.[0].response_body?.key,
-            api_link: result?.resources?.[0].response_body?.self
+            id: result?.resources?.[0]?.response_body?.id || '',
+            key: result?.resources?.[0]?.response_body?.key || '',
+            api_link: result?.resources?.[0]?.response_body?.self || ''
           }
 
           try {

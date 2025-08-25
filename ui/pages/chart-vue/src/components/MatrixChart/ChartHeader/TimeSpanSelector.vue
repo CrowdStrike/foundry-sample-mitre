@@ -34,7 +34,7 @@ const changeTimeRange = (item: SlChangeEvent) => {
   <div class="h-8">
     <sl-dropdown>
       <sl-button variant="neutral" size="small" slot="trigger" class="h-8" caret>{{
-        t(selectedTimeRange)
+        t(selectedTimeRange || '')
       }}</sl-button>
       <sl-menu @sl-select="changeTimeRange">
         <sl-menu-item
@@ -42,7 +42,7 @@ const changeTimeRange = (item: SlChangeEvent) => {
           :key="key"
           :value="key"
           :data-value="key"
-          >{{ t(TimeRangesTranslations[TimeRangesLabels[key]]) }}</sl-menu-item
+          >{{ t(TimeRangesTranslations[TimeRangesLabels[key]] || '') }}</sl-menu-item
         >
       </sl-menu>
     </sl-dropdown>

@@ -70,7 +70,7 @@ export const mapVariableToDetection = (
   if (varPath) {
     const [varName, transformFunction] = varPath.split(':')
     try {
-      varValue = get(detection || {}, varName) as unknown
+      varValue = varName ? get(detection || {}, varName) as unknown : ''
 
       if (transformFunction) {
         switch (transformFunction) {
