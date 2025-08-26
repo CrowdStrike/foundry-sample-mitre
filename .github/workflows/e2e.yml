@@ -125,7 +125,7 @@ jobs:
           directory: e2e
 
       - name: Run Playwright tests
-        run: npx dotenvx run -- npx playwright test
+        run: npx dotenvx run --quiet -- npx playwright test
         working-directory: e2e
         env:
           CI: true
