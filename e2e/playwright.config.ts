@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import { AuthFile } from './constants/AuthFile';
 
 if (!process.env.CI) {
-  require("dotenv").config({ path: ".env" });
+  require("dotenv").config({ path: ".env", quiet: true });
 }
 
 export default defineConfig({
