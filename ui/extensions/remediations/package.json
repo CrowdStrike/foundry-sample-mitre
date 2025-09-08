@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@crowdstrike/foundry-js": "0.19.0",
-    "@intlify/unplugin-vue-i18n": "^6.0.8",
+    "@intlify/unplugin-vue-i18n": "^11.0.0",
     "@mitre/vue-shared": "*",
     "@shoelace-style/shoelace": "^2.20.1",
     "pinia": "^3.0.3",
