@@ -7,6 +7,10 @@ on:
   pull_request:
     branches: [ main ]
 
+concurrency:
+  group: e2e-tests-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
