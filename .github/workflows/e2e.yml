@@ -16,6 +16,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    if: github.actor != 'dependabot[bot]'
     env:
       FOUNDRY_API_CLIENT_ID: ${{ secrets.FOUNDRY_API_CLIENT_ID }}
       FOUNDRY_API_CLIENT_SECRET: ${{ secrets.FOUNDRY_API_CLIENT_SECRET }}
