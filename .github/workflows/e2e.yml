@@ -147,6 +147,14 @@ jobs:
           path: e2e/playwright-report/
           retention-days: 7
 
+      - name: Upload test results and screenshots
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-test-results-${{ env.APP_NAME }}
+          path: e2e/test-results/
+          retention-days: 7
+
       - name: Delete app from Falcon
         if: always()
         run: |
