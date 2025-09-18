@@ -9,18 +9,20 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0, // Reduced retries for faster feedback
-  workers: process.env.CI ? 2 : 4, // Allow more parallelism in CI for speed
-  timeout: process.env.CI ? 60 * 1000 : 45 * 1000, // Reduced timeouts for faster execution
+  retries: process.env.CI ? 1 : 0, 
+  workers: process.env.CI ? 2 : 4,
+  timeout: process.env.CI ? 60 * 1000 : 45 * 1000, 
   expect: {
-    timeout: process.env.CI ? 10 * 1000 : 8 * 1000, // Shorter expectation timeouts
+    timeout: process.env.CI ? 10 * 1000 : 8 * 1000,
   },
   reporter: 'html',
   use: {
     testIdAttribute: 'data-test-selector',
     trace: 'on-first-retry',
-    actionTimeout: process.env.CI ? 15 * 1000 : 10 * 1000, // Faster action timeouts
-    navigationTimeout: process.env.CI ? 30 * 1000 : 20 * 1000, // Faster navigation
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    actionTimeout: process.env.CI ? 15 * 1000 : 10 * 1000,
+    navigationTimeout: process.env.CI ? 30 * 1000 : 20 * 1000, 
   },
 
   projects: [

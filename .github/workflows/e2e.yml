@@ -12,6 +12,9 @@ concurrency:
   group: e2e-tests-${{ github.repository }}
   cancel-in-progress: false  # Let running tests finish before starting new ones
 
+permissions:
+  contents: read
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -142,6 +145,14 @@ jobs:
         with:
           name: playwright-report-${{ env.APP_NAME }}
           path: e2e/playwright-report/
+          retention-days: 7
+
+      - name: Upload test results and screenshots
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-test-results-${{ env.APP_NAME }}
+          path: e2e/test-results/
           retention-days: 7
 
       - name: Delete app from Falcon
