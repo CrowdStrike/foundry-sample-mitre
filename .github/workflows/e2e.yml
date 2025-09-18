@@ -12,6 +12,9 @@ concurrency:
   group: e2e-tests-${{ github.repository }}
   cancel-in-progress: false  # Let running tests finish before starting new ones
 
+permissions:
+  contents: read
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
