@@ -1,20 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directories:
-      - "/"
-      - "/e2e"
-    open-pull-requests-limit: 15
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "14:00"
-      timezone: "UTC"
-    groups:
-      typescript:
-        patterns:
-          - "typescript"
-          - "vue-tsc"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
