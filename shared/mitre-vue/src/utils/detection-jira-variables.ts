@@ -1,7 +1,16 @@
 import type { DetectionItem } from './types'
 import type FalconApi from '@crowdstrike/foundry-js'
 import type { I18NComposer } from '../plugins/i18n'
-import get from 'lodash.get'
+
+/**
+ * Safely get a nested property value using dot notation
+ * @param obj - The object to access
+ * @param path - Dot-separated path like 'device.agent_version'
+ * @returns The value at the path or undefined if not found
+ */
+const getNestedProperty = (obj: any, path: string): unknown => {
+  return path.split('.').reduce((current, key) => current?.[key], obj)
+}
 
 /**
  * Mapping object, with transformation functions, between visible variable names and Detection's related values
@@ -70,7 +79,7 @@ export const mapVariableToDetection = (
   if (varPath) {
     const [varName, transformFunction] = varPath.split(':')
     try {
-      varValue = varName ? get(detection || {}, varName) as unknown : ''
+      varValue = varName ? getNestedProperty(detection || {}, varName) : ''
 
       if (transformFunction) {
         switch (transformFunction) {
