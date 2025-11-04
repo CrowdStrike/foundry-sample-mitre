@@ -1,6 +1,6 @@
 name: Triage with MITRE ATTACK
 description: Provides a focused, MITRE-prioritized view of XDR detections
-logo: ""
+logo: images/logo.png
 vendor: ""
 vendor_products: []
 use_case: ""
