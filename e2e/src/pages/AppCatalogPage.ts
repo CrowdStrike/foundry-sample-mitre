@@ -77,20 +77,70 @@ export class AppCatalogPage extends BasePage {
           this.page.getByRole('button', { name: 'Uninstall' }),
           'Confirm uninstall button'
         );
-        
+
         await this.waiter.waitForPageLoad();
-        
-        // Wait for uninstall to complete
-        await this.waiter.waitForCondition(
-          async () => {
-            const installedStatus = appCard.locator('text=Installed');
-            return !(await this.elementExists(installedStatus, 1000));
-          },
-          'App uninstall to complete',
-          { timeout: 15000 }
-        );
-        
-        this.logger.success(`App '${appName}' uninstalled successfully`);
+
+        // Wait for first "uninstalling" message
+        const uninstallingMessage = this.page.getByText(/uninstalling/i).first();
+
+        try {
+          await uninstallingMessage.waitFor({ state: 'visible', timeout: 30000 });
+          this.logger.success('Uninstallation started - "uninstalling" message appeared');
+        } catch (error) {
+          throw new Error(`Uninstallation failed to start for app '${appName}' - "uninstalling" message never appeared. Uninstallation may have failed immediately.`);
+        }
+
+        // Wait for second toast with final status (uninstalled or error)
+        const uninstalledMessage = this.page.getByText(/uninstalled/i).first();
+        const errorMessage = this.page.getByText(/error.*uninstall/i).first();
+
+        try {
+          await Promise.race([
+            uninstalledMessage.waitFor({ state: 'visible', timeout: 60000 }).then(() => 'success'),
+            errorMessage.waitFor({ state: 'visible', timeout: 60000 }).then(() => 'error')
+          ]).then(result => {
+            if (result === 'error') {
+              throw new Error(`Uninstallation failed for app '${appName}' - error message appeared`);
+            }
+            this.logger.success('Uninstallation completed successfully - "uninstalled" message appeared');
+          });
+        } catch (error) {
+          if (error.message.includes('Uninstallation failed')) {
+            throw error;
+          }
+          throw new Error(`Uninstallation status unclear for app '${appName}' - timed out waiting for "uninstalled" or "error" message after 60 seconds`);
+        }
+
+        // Additional wait: toast appears before app is fully uninstalled in backend
+        // Verify uninstallation status by checking app catalog
+        this.logger.info('Verifying uninstallation status in app catalog...');
+
+        // Navigate directly to app catalog with search query
+        const baseUrl = new URL(this.page.url()).origin;
+        await this.page.goto(`${baseUrl}/foundry/app-catalog?q=${appName}`);
+        await this.page.waitForLoadState('networkidle');
+
+        // Poll for status every 5 seconds (up to 60 seconds)
+        const statusText = this.page.locator('[data-test-selector="status-text"]').filter({ hasText: /not installed/i });
+        const maxAttempts = 12; // 12 attempts = up to 60 seconds
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          const isVisible = await statusText.isVisible().catch(() => false);
+
+          if (isVisible) {
+            this.logger.success('Uninstallation verified - app status shows Not installed in catalog');
+            this.logger.success(`App '${appName}' uninstalled successfully`);
+            return;
+          }
+
+          if (attempt < maxAttempts - 1) {
+            this.logger.info(`Status not yet updated, waiting 5s before refresh (attempt ${attempt + 1}/${maxAttempts})...`);
+            await this.waiter.delay(5000);
+            await this.page.reload({ waitUntil: 'domcontentloaded' });
+          }
+        }
+
+        throw new Error(`Uninstallation verification failed - status did not show 'Not installed' after ${maxAttempts * 5} seconds`);
       },
       `Uninstall app ${appName}`
     );
