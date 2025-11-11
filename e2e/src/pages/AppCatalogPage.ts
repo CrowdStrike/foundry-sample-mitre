@@ -91,8 +91,9 @@ export class AppCatalogPage extends BasePage {
         }
 
         // Wait for second toast with final status (uninstalled or error)
-        const uninstalledMessage = this.page.getByText(/uninstalled/i).first();
-        const errorMessage = this.page.getByText(/error.*uninstall/i).first();
+        // Match exact toast messages using app name
+        const uninstalledMessage = this.page.getByText(`${appName} uninstalled`).first();
+        const errorMessage = this.page.getByText(`Error uninstalling ${appName}`).first();
 
         try {
           await Promise.race([
