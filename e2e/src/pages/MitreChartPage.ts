@@ -111,11 +111,14 @@ export class MitreChartPage extends BasePage {
    */
   private async installAppFromCatalog(appName: string): Promise<void> {
     await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
-    
-    const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-    await searchBox.fill(appName);
-    await this.page.keyboard.press('Enter');
-    
+
+    // Use defensive filter approach - filter box might be in dropdown
+    const filterBox = this.page.getByPlaceholder('Type to filter');
+    if (await filterBox.isVisible().catch(() => false)) {
+      await filterBox.fill(appName);
+      await this.page.waitForLoadState('networkidle');
+    }
+
     // Wait for search results to load instead of fixed timeout
     await this.page.waitForLoadState('networkidle');
     
@@ -132,10 +135,12 @@ export class MitreChartPage extends BasePage {
       await this.page.reload();
       await this.page.waitForLoadState('networkidle');
       
-      // Re-search after refresh
-      const refreshedSearchBox = this.page.getByRole('searchbox', { name: 'Search' });
-      await refreshedSearchBox.fill(appName);
-      await this.page.keyboard.press('Enter');
+      // Re-apply filter after refresh
+      const refreshedFilterBox = this.page.getByPlaceholder('Type to filter');
+      if (await refreshedFilterBox.isVisible().catch(() => false)) {
+        await refreshedFilterBox.fill(appName);
+        await this.page.waitForLoadState('networkidle');
+      }
       
       // Wait for search results after refresh
       await this.page.waitForLoadState('networkidle');
@@ -708,9 +713,12 @@ export class MitreChartPage extends BasePage {
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
         await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
 
-        // Use semantic locators with auto-waiting
-        const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-        await searchBox.fill(appName);
+        // Use defensive filter approach - filter box might be hidden in dropdown
+        const filterBox = this.page.getByPlaceholder('Type to filter');
+        if (await filterBox.isVisible().catch(() => false)) {
+          await filterBox.fill(appName);
+          await this.page.waitForLoadState('networkidle');
+        }
         
         const appLink = this.page.getByRole('link', { name: appName, exact: true });
         await appLink.click();
@@ -815,11 +823,12 @@ export class MitreChartPage extends BasePage {
       // Navigate to app catalog
       await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
       
-      // Search for the app
-      const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-      await searchBox.fill(appName);
-      await this.page.keyboard.press('Enter');
-      await this.page.waitForLoadState('networkidle');
+      // Use defensive filter approach - filter box might be hidden in dropdown
+      const filterBox = this.page.getByPlaceholder('Type to filter');
+      if (await filterBox.isVisible().catch(() => false)) {
+        await filterBox.fill(appName);
+        await this.page.waitForLoadState('networkidle');
+      }
       
       // Find the app link
       const appLink = this.page.getByRole('link', { name: appName, exact: true });
@@ -866,11 +875,12 @@ export class MitreChartPage extends BasePage {
           // Navigate to app catalog
           await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
           
-          // Search for the app
-          const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-          await searchBox.fill(appName);
-          await this.page.keyboard.press('Enter');
-          await this.page.waitForLoadState('networkidle');
+          // Use defensive filter approach - filter box might be hidden in dropdown
+          const filterBox = this.page.getByPlaceholder('Type to filter');
+          if (await filterBox.isVisible().catch(() => false)) {
+            await filterBox.fill(appName);
+            await this.page.waitForLoadState('networkidle');
+          }
           
           // Find the app link
           const appLink = this.page.getByRole('link', { name: appName, exact: true });
