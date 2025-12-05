@@ -111,11 +111,14 @@ export class MitreChartPage extends BasePage {
    */
   private async installAppFromCatalog(appName: string): Promise<void> {
     await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
-    
-    const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-    await searchBox.fill(appName);
-    await this.page.keyboard.press('Enter');
-    
+
+    // Use defensive filter approach - filter box might be in dropdown
+    const filterBox = this.page.getByPlaceholder('Type to filter');
+    if (await filterBox.isVisible().catch(() => false)) {
+      await filterBox.fill(appName);
+      await this.page.waitForLoadState('networkidle');
+    }
+
     // Wait for search results to load instead of fixed timeout
     await this.page.waitForLoadState('networkidle');
     
@@ -132,10 +135,12 @@ export class MitreChartPage extends BasePage {
       await this.page.reload();
       await this.page.waitForLoadState('networkidle');
       
-      // Re-search after refresh
-      const refreshedSearchBox = this.page.getByRole('searchbox', { name: 'Search' });
-      await refreshedSearchBox.fill(appName);
-      await this.page.keyboard.press('Enter');
+      // Re-apply filter after refresh
+      const refreshedFilterBox = this.page.getByPlaceholder('Type to filter');
+      if (await refreshedFilterBox.isVisible().catch(() => false)) {
+        await refreshedFilterBox.fill(appName);
+        await this.page.waitForLoadState('networkidle');
+      }
       
       // Wait for search results after refresh
       await this.page.waitForLoadState('networkidle');
@@ -708,9 +713,12 @@ export class MitreChartPage extends BasePage {
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
         await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
 
-        // Use semantic locators with auto-waiting
-        const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-        await searchBox.fill(appName);
+        // Use defensive filter approach - filter box might be hidden in dropdown
+        const filterBox = this.page.getByPlaceholder('Type to filter');
+        if (await filterBox.isVisible().catch(() => false)) {
+          await filterBox.fill(appName);
+          await this.page.waitForLoadState('networkidle');
+        }
         
         const appLink = this.page.getByRole('link', { name: appName, exact: true });
         await appLink.click();
@@ -815,11 +823,12 @@ export class MitreChartPage extends BasePage {
       // Navigate to app catalog
       await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
       
-      // Search for the app
-      const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-      await searchBox.fill(appName);
-      await this.page.keyboard.press('Enter');
-      await this.page.waitForLoadState('networkidle');
+      // Use defensive filter approach - filter box might be hidden in dropdown
+      const filterBox = this.page.getByPlaceholder('Type to filter');
+      if (await filterBox.isVisible().catch(() => false)) {
+        await filterBox.fill(appName);
+        await this.page.waitForLoadState('networkidle');
+      }
       
       // Find the app link
       const appLink = this.page.getByRole('link', { name: appName, exact: true });
@@ -854,74 +863,4 @@ export class MitreChartPage extends BasePage {
     }
   }
 
-  /**
-   * Uninstall the MITRE app to ensure clean state for future test runs
-   */
-  async uninstallApp(): Promise<void> {
-    return this.withTiming(
-      async () => {
-        const appName = process.env.APP_NAME || 'foundry-sample-mitre';
-        
-        try {
-          // Navigate to app catalog
-          await this.navigateToPath('/foundry/app-catalog', 'App catalog page');
-          
-          // Search for the app
-          const searchBox = this.page.getByRole('searchbox', { name: 'Search' });
-          await searchBox.fill(appName);
-          await this.page.keyboard.press('Enter');
-          await this.page.waitForLoadState('networkidle');
-          
-          // Find the app link
-          const appLink = this.page.getByRole('link', { name: appName, exact: true });
-          
-          // Check if app exists and is installed
-          const appExists = await appLink.isVisible({ timeout: 5000 });
-          if (!appExists) {
-            this.logger.info(`App "${appName}" not found in catalog - may already be uninstalled`);
-            return;
-          }
-          
-          // Click on app to go to details page
-          await appLink.click();
-          await this.page.waitForURL(/\/foundry\/app-catalog\/[^\/]+$/, { timeout: 10000 });
-          
-          // Check if app is installed using specific selector
-          const installedStatus = this.page.getByTestId('status-text').filter({ hasText: /^Installed$/i });
-          const isInstalled = await installedStatus.isVisible({ timeout: 3000 });
-          
-          if (!isInstalled) {
-            this.logger.info(`App "${appName}" is already uninstalled`);
-            return;
-          }
-          
-          // Click open menu
-          const openMenuButton = this.page.getByRole('button', { name: 'Open menu' });
-          await expect(openMenuButton).toBeVisible({ timeout: 5000 });
-          await openMenuButton.click();
-          
-          // Click uninstall
-          const uninstallMenuItem = this.page.getByRole('menuitem', { name: 'Uninstall app' });
-          await expect(uninstallMenuItem).toBeVisible({ timeout: 5000 });
-          await uninstallMenuItem.click();
-          
-          // Confirm uninstall
-          const uninstallButton = this.page.getByRole('button', { name: 'Uninstall' });
-          await expect(uninstallButton).toBeVisible({ timeout: 5000 });
-          await uninstallButton.click();
-          
-          // Wait for success message
-          const successMessage = this.page.getByText(/has been uninstalled/i);
-          await expect(successMessage).toBeVisible({ timeout: 10000 });
-          
-          this.logger.success(`Successfully uninstalled app "${appName}"`);
-          
-        } catch (error) {
-          this.logger.warn(`Failed to uninstall app "${appName}": ${error.message}`);
-          // Don't throw error - this is cleanup, we don't want to fail tests
-        }
-      },
-      'Uninstall MITRE app'
-    );
-  }
 }

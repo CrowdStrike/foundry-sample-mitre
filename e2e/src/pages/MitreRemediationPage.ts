@@ -52,7 +52,10 @@ export class MitreRemediationPage extends BasePage {
         await this.navigateToPath('/foundry/home', 'Foundry home page');
         await this.smartClick(this.page.getByRole('button', { name: 'Menu', exact: true }), 'Menu button');
         await this.waiter.waitForMenuExpansion();
-        await this.smartClick(this.page.getByRole('button', { name: /Endpoint security/ }), 'Endpoint security button');
+
+        // Scope Endpoint security button to navigation context
+        const navigation = this.page.getByRole('navigation');
+        await this.smartClick(navigation.getByRole('button', { name: /Endpoint security/ }), 'Endpoint security button');
         await this.smartClick(this.page.getByRole('link', { name: 'Endpoint detections' }), 'Endpoint detections link');
         
         // Handle the "Explore new endpoint detections experience" modal if it appears
