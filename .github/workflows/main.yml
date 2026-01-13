@@ -23,9 +23,8 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-      - name: Run yarn install in ${{ matrix.path }}
+      - name: Run yarn install
         run: yarn install
-        working-directory: ${{ matrix.path }}
       - name: Build Vue app in ${{ matrix.path }}
         if: matrix.path != 'shared/mitre-vue'
         run: yarn build
