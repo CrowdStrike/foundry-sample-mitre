@@ -26,8 +26,6 @@ jobs:
       - name: Run yarn install in ${{ matrix.path }}
         run: yarn install
         working-directory: ${{ matrix.path }}
-        env:
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
       - name: Build Vue app in ${{ matrix.path }}
         if: matrix.path != 'shared/mitre-vue'
         run: yarn build
