@@ -6,12 +6,6 @@ permissions:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        path:
-          - shared/mitre-vue
-          - ui/extensions/remediations
-          - ui/pages/chart-vue
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
@@ -23,12 +17,9 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-      - name: Run yarn install
+      - name: Install dependencies
         run: yarn install
-      - name: Build Vue app in ${{ matrix.path }}
-        if: matrix.path != 'shared/mitre-vue'
+      - name: Build
         run: yarn build
-        working-directory: ${{ matrix.path }}
-      - name: Test the Vue app in ${{ matrix.path }}
-        run: yarn test:unit
-        working-directory: ${{ matrix.path }}
+      - name: Test
+        run: yarn test

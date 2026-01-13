@@ -3,7 +3,5 @@ node_modules/
 .DS_Store
 .vscode
 yarn-error.log
-.yarnrc.yml
-.yarn/
 .pnp.loader.mjs
 .pnp.cjs
