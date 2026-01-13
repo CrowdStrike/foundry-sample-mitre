@@ -643,7 +643,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/utils@npm:*, @floating-ui/utils@npm:^0.2.10":
+"@floating-ui/utils@npm:^0.2.10":
   version: 0.2.10
   resolution: "@floating-ui/utils@npm:0.2.10"
   checksum: 10c0/e9bc2a1730ede1ee25843937e911ab6e846a733a4488623cd353f94721b05ec2c9ec6437613a2ac9379a94c2fd40c797a2ba6fa1df2716f5ce4aa6ddb1cf9ea4
