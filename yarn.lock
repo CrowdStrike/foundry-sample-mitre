@@ -73,14 +73,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@crowdstrike/foundry-js@npm:0.19.0":
-  version: 0.19.0
-  resolution: "@crowdstrike/foundry-js@npm:0.19.0"
+"@crowdstrike/foundry-js@npm:0.20.0":
+  version: 0.20.0
+  resolution: "@crowdstrike/foundry-js@npm:0.20.0"
   dependencies:
     emittery: "npm:^1.0.3"
     typescript-memoize: "npm:^1.1.1"
     uuid: "npm:^11.1.0"
-  checksum: 10c0/f6661ea795ce9183be49836c278e918d64cd4163267a53dc3e6726ff909391741063154ae6c10e77375f52d3cb32002ebbef88650d6ddc9119dcf5fedd704e96
+  checksum: 10c0/84c4ea6f93e31f02c832d23e85460695d2d93ff6
   languageName: node
   linkType: hard
 
@@ -965,7 +965,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/chart-vue@workspace:ui/pages/chart-vue"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.19.0"
+    "@crowdstrike/foundry-js": "npm:0.20.0"
     "@intlify/unplugin-vue-i18n": "npm:11.0.1"
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:1.1.1"
@@ -1011,7 +1011,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/remediations@workspace:ui/extensions/remediations"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.19.0"
+    "@crowdstrike/foundry-js": "npm:0.20.0"
     "@intlify/unplugin-vue-i18n": "npm:11.0.1"
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:1.1.1"
@@ -1050,7 +1050,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/vue-shared@workspace:shared/mitre-vue"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.19.0"
+    "@crowdstrike/foundry-js": "npm:0.20.0"
     "@intlify/unplugin-vue-i18n": "npm:11.0.1"
     "@rushstack/eslint-patch": "npm:1.12.0"
     "@shoelace-style/shoelace": "npm:2.20.1"
