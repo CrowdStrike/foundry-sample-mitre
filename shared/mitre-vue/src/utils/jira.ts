@@ -311,7 +311,7 @@ export const retrieveJiraAccountProjects = async function (
         request: {}
       }
     ]
-  })) as ApiResponsePayload<ProjectDefinition>
+  } as any)) as ApiResponsePayload<ProjectDefinition>
 
   falconApi.api.plugins.postEntitiesExecuteV1
 
@@ -351,7 +351,7 @@ export const retrieveJiraAccountLabels = async function (
         request: {}
       }
     ]
-  })) as ApiResponsePayload<LabelDefinition>
+  } as any)) as ApiResponsePayload<LabelDefinition>
 
   return (result.resources ?? [])
     ?.filter((resource) => {
@@ -387,7 +387,7 @@ export const retrieveJiraAccountPriorities = async function (
         request: {}
       }
     ]
-  })) as ApiResponsePayload<PriorityDefinition>
+  } as any)) as ApiResponsePayload<PriorityDefinition>
 
   return (result.resources ?? [])
     ?.filter((resource) => {
@@ -433,7 +433,7 @@ export const retrieveJiraAccountAndProjectIssueTypes = async function (
         }
       }
     ]
-  })) as ApiResponsePayload<IssueTypeDefinition>
+  } as any)) as ApiResponsePayload<IssueTypeDefinition>
 
   return (result.resources ?? [])
     ?.filter((resource) => {
@@ -585,7 +585,7 @@ export const createJiraIssue = async function (
               }
             }
           ]
-        })) as ApiResponsePayload<JiraIssueCreated>
+        } as any)) as ApiResponsePayload<JiraIssueCreated>
 
         if (result?.resources?.length && !result?.errors?.length) {
           const out: JiraCreatedResponseValue = {
