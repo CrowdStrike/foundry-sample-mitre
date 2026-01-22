@@ -25,7 +25,7 @@ describe('Unit test - retrieveDetection', () => {
         })
 
         const matrixMap = await retrieveDetection(falconApi, detectionId);
-        expect(postEntitiesAlertsV1Spy).toHaveBeenCalledWith({ ids: [detectionId]})
+        expect(postEntitiesAlertsV1Spy).toHaveBeenCalledWith({}, { ids: [detectionId]})
         expect(matrixMap).toBe(resources[0])
     })
 
