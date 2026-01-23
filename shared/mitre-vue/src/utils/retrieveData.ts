@@ -137,5 +137,5 @@ export default async function retrieveData<T extends TacticAggregate>(
 ): Promise<ApiResponsePayload<T> | undefined> {
   const requestData = getRequest(from, showTrends, matrixMapInfos, filterCS)
 
-  return falconApi.api.alerts.postAggregatesAlertsV1(requestData) as Promise<ApiResponsePayload<T>>
+  return falconApi.api.alerts.postAggregatesAlertsV1(requestData as any) as Promise<ApiResponsePayload<T>>
 }

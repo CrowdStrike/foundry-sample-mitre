@@ -20,7 +20,7 @@ export default async function retrieveDetection<T extends DetectionItem>(
     return undefined
   }
 
-  const data = (await falconApi.api.alerts.postEntitiesAlertsV1({
+  const data = (await falconApi.api.alerts.postEntitiesAlertsV1({} as any, {
     ids: [detectionId]
   })) as ApiResponsePayload<T>
 
