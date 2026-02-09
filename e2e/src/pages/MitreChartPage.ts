@@ -289,16 +289,17 @@ export class MitreChartPage extends BasePage {
    */
   private async handleOpenAppButton(): Promise<void> {
     const timeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
-    
+
     const openAppButton = this.page.getByTestId('app-details-page__use-app-button');
-    await expect(openAppButton).toBeVisible({ timeout });
-    
-    // Wait for navigation after clicking
-    const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-    await openAppButton.click();
-    await navigationPromise;
-    
-    this.logger.success('Opened app via TestId selector');
+    if (await openAppButton.isVisible({ timeout }).catch(() => false)) {
+      const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+      await openAppButton.click();
+      await navigationPromise;
+      this.logger.success('Opened app via TestId selector');
+    } else {
+      this.logger.info('"Use App" button not found, falling back to Custom Apps navigation');
+      await this.navigateViaCustomApps();
+    }
   }
   
   /**
