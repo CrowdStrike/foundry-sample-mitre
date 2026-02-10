@@ -289,16 +289,17 @@ export class MitreChartPage extends BasePage {
    */
   private async handleOpenAppButton(): Promise<void> {
     const timeout = process.env.CI ? 10000 : MitreChartPage.BUTTON_TIMEOUT;
-    
+
     const openAppButton = this.page.getByTestId('app-details-page__use-app-button');
-    await expect(openAppButton).toBeVisible({ timeout });
-    
-    // Wait for navigation after clicking
-    const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
-    await openAppButton.click();
-    await navigationPromise;
-    
-    this.logger.success('Opened app via TestId selector');
+    if (await openAppButton.isVisible({ timeout }).catch(() => false)) {
+      const navigationPromise = this.page.waitForURL(/\/foundry\/page\//, { timeout: 15000 });
+      await openAppButton.click();
+      await navigationPromise;
+      this.logger.success('Opened app via TestId selector');
+    } else {
+      this.logger.info('"Use App" button not found, falling back to Custom Apps navigation');
+      await this.navigateViaCustomApps();
+    }
   }
   
   /**
@@ -477,47 +478,59 @@ export class MitreChartPage extends BasePage {
   }
 
   /**
-   * Fallback navigation method via Custom apps menu
+   * Navigate via Custom apps menu.
+   * Uses 5-attempt retry with page refresh to handle platform flakiness
+   * where Custom Apps button doesn't appear on first load.
    */
   private async navigateViaCustomApps(): Promise<void> {
     this.logger.step('Attempting navigation via Custom apps menu');
-    
-    // Navigate to home first
+
     await this.navigateToPath('/foundry/home', 'Foundry home page');
-    
-    // Open hamburger menu
-    const menuButton = this.page.getByTestId('nav-trigger');
-    await expect(menuButton).toBeVisible({ timeout: 10000 });
-    await menuButton.click();
-    
-    // Click Custom apps
-    const customAppsButton = this.page.getByRole('button', { name: 'Custom apps' });
-    await expect(customAppsButton).toBeVisible({ timeout: 10000 });
-    await customAppsButton.click();
-    
-    // Look for the app in the Custom apps menu (try both exact and partial matches)
-    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
-    let appButton = this.page.getByRole('button', { name: appName, exact: true });
-    
-    try {
-      await expect(appButton).toBeVisible({ timeout: 5000 });
-    } catch {
-      // Try partial match with base name
-      const baseName = appName.includes('MITRE') ? 'Triage with MITRE ATTACK' : 'foundry-sample-mitre';
-      appButton = this.page.getByRole('button', { name: new RegExp(baseName, 'i') }).first();
-      await expect(appButton).toBeVisible({ timeout: 5000 });
+    await this.page.waitForLoadState('networkidle');
+
+    // Retry with page refresh if Custom apps menu doesn't appear
+    let customAppsFound = false;
+    for (let attempt = 1; attempt <= 5; attempt++) {
+      const menuButton = this.page.getByTestId('nav-trigger');
+      await menuButton.waitFor({ state: 'visible', timeout: 30000 });
+      await menuButton.click();
+      await this.page.waitForLoadState('networkidle');
+
+      const customAppsButton = this.page.getByRole('button', { name: 'Custom apps' });
+      try {
+        await customAppsButton.waitFor({ state: 'visible', timeout: 20000 });
+        await customAppsButton.click();
+        await this.waiter.delay(1500);
+        customAppsFound = true;
+        this.logger.info(`Custom apps button found on attempt ${attempt}`);
+        break;
+      } catch (e) {
+        this.logger.warn(`Custom apps not visible on attempt ${attempt}, refreshing page...`);
+        await this.page.reload();
+        await this.page.waitForLoadState('networkidle');
+        await this.waiter.delay(3000);
+      }
     }
-    
+    if (!customAppsFound) {
+      throw new Error('Custom apps button not found after 5 attempts with page refresh');
+    }
+
+    // Look for the app in the Custom apps menu
+    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+    const appButton = this.page.getByRole('button', { name: appName, exact: false }).first();
+    await expect(appButton).toBeVisible({ timeout: 20000 });
+
     // Expand the app menu if needed
-    if (!await appButton.getAttribute('aria-expanded')) {
+    const isExpanded = await appButton.getAttribute('aria-expanded');
+    if (isExpanded !== 'true') {
       await appButton.click();
     }
-    
+
     // Click the main chart/app link
     const chartLink = this.page.getByRole('link', { name: /mitre.*chart|mitre.*app/i }).first();
     await expect(chartLink).toBeVisible({ timeout: 5000 });
     await chartLink.click();
-    
+
     this.logger.success('Successfully navigated via Custom apps menu');
   }
 

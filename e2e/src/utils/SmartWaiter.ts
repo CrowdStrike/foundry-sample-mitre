@@ -111,6 +111,13 @@ export class SmartWaiter {
   }
 
   /**
+   * Delay execution
+   */
+  async delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
    * Smart wait for app installation status
    */
   async waitForAppInstallationStatus(appName: string, expectedStatus: 'installed' | 'not-installed'): Promise<void> {
