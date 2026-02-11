@@ -94,12 +94,42 @@ export class MitreChartPage extends BasePage {
     return this.withTiming(
       async () => {
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
-        
-        // Always use the "existing app" flow since app is already installed
-        this.logger.info(`Navigating to already installed app "${appName}"`);
-        await this.accessExistingApp(appName);
-        
-        // Verify the app loaded
+        const maxAttempts = process.env.CI ? 3 : 1;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          this.logger.info(`Navigating to already installed app "${appName}" (attempt ${attempt}/${maxAttempts})`);
+          await this.accessExistingApp(appName);
+
+          // Verify URL pattern
+          const currentUrl = this.page.url();
+          const isFoundryPage = /\/foundry\/page\/[a-f0-9]+/.test(currentUrl);
+          if (!isFoundryPage) {
+            throw new Error(`Expected Foundry app page URL pattern, but got: ${currentUrl}`);
+          }
+
+          // Check if iframe actually loaded
+          const iframeVisible = await this.page.locator('iframe').isVisible({ timeout: 15000 }).catch(() => false);
+          if (iframeVisible) {
+            this.logger.success('App iframe is visible');
+            await this.verifyPageLoaded();
+            return;
+          }
+
+          if (attempt < maxAttempts) {
+            this.logger.warn(`Iframe not visible on attempt ${attempt}, retrying full navigation...`);
+            await this.page.reload({ waitUntil: 'networkidle' });
+            // Check once more after reload before retrying the full flow
+            const iframeAfterReload = await this.page.locator('iframe').isVisible({ timeout: 10000 }).catch(() => false);
+            if (iframeAfterReload) {
+              this.logger.success('App iframe appeared after reload');
+              await this.verifyPageLoaded();
+              return;
+            }
+          }
+        }
+
+        // Final attempt exhausted - let verifyPageLoaded handle the outcome
+        this.logger.warn(`Iframe not visible after ${maxAttempts} navigation attempts`);
         await this.verifyPageLoaded();
       },
       'Navigate to Installed App'
