@@ -40,7 +40,6 @@ ui:
           entrypoint: ui/extensions/remediations/dist/index.html
           sockets:
             - activity.detections.details
-            - crowdscore.incidents.details
           content_security_policy:
             connect-src:
                 - self
