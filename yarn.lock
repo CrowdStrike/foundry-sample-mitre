@@ -2457,7 +2457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:>=1.13.5":
+"axios@npm:1.13.6":
   version: 1.13.6
   resolution: "axios@npm:1.13.6"
   dependencies:
@@ -5004,7 +5004,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:>=4.17.23":
+"lodash@npm:4.17.23":
   version: 4.17.23
   resolution: "lodash@npm:4.17.23"
   checksum: 10c0/1264a90469f5bb95d4739c43eb6277d15b6d9e186df4ac68c3620443160fc669e2f14c11e7d8b2ccf078b81d06147c01a8ccced9aab9f9f63d50dcf8cace6bf6
@@ -5131,7 +5131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:>=9.0.7":
+"minimatch@npm:10.2.4":
   version: 10.2.4
   resolution: "minimatch@npm:10.2.4"
   dependencies:
@@ -6736,7 +6736,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar@npm:>=7.5.8":
+"tar@npm:7.5.9":
   version: 7.5.9
   resolution: "tar@npm:7.5.9"
   dependencies:
