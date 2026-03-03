@@ -37,7 +37,7 @@ export default async function retrieveMitreMatrixMap(
     const defaultVal = (await response)?.resources?.[0]
 
     return (defaultVal ?? mitreMatrixDefinition) as MatrixMapResponse
-  } catch (error) {
+  } catch {
     // using the static data as a fallback as it's not going to change so often
     return mitreMatrixDefinition as unknown as MatrixMapResponse
   }
