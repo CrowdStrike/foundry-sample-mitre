@@ -73,14 +73,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@crowdstrike/foundry-js@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@crowdstrike/foundry-js@npm:0.20.0"
+"@crowdstrike/foundry-js@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@crowdstrike/foundry-js@npm:0.21.0"
   dependencies:
     emittery: "npm:1.2.0"
     typescript-memoize: "npm:1.1.1"
     uuid: "npm:13.0.0"
-  checksum: 10c0/b5e9ddd5057435c0ac91dc5632cf2126d8b3b0eb1f69dd64c4b0afde4c38d787c645c8dab1f317acd06bbbed724699ae28aa6254f9186d32077ad836d5879344
+  checksum: 10c0/1d313f488555a362bd2fa4c28b514aab5866b7c3e0ef0728128c614e559b0a0a7e4f395aa4175bcf6e346b41264bd3486f219daa3eea259ee47b109e1d55f86c
   languageName: node
   linkType: hard
 
@@ -930,7 +930,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/chart-vue@workspace:ui/pages/chart-vue"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.20.0"
+    "@crowdstrike/foundry-js": "npm:0.21.0"
     "@intlify/unplugin-vue-i18n": "npm:11.0.1"
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:1.1.1"
@@ -976,7 +976,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/remediations@workspace:ui/extensions/remediations"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.20.0"
+    "@crowdstrike/foundry-js": "npm:0.21.0"
     "@intlify/unplugin-vue-i18n": "npm:11.0.1"
     "@mitre/vue-shared": "npm:*"
     "@modyfi/vite-plugin-yaml": "npm:1.1.1"
@@ -1015,7 +1015,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mitre/vue-shared@workspace:shared/mitre-vue"
   dependencies:
-    "@crowdstrike/foundry-js": "npm:0.20.0"
+    "@crowdstrike/foundry-js": "npm:0.21.0"
     "@intlify/unplugin-vue-i18n": "npm:11.0.1"
     "@rushstack/eslint-patch": "npm:1.12.0"
     "@shoelace-style/shoelace": "npm:2.20.1"
@@ -3822,10 +3822,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flatted@npm:3.4.1":
-  version: 3.4.1
-  resolution: "flatted@npm:3.4.1"
-  checksum: 10c0/3987a7f1e39bc7215cece001354313b462cdb4fb2dde0df4f7acd9e5016fbae56ee6fb3f0870b2150145033be8bda4f01af6f87a00946049651131bbfca7dfa6
+"flatted@npm:3.4.2":
+  version: 3.4.2
+  resolution: "flatted@npm:3.4.2"
+  checksum: 10c0/a65b67aae7172d6cdf63691be7de6c5cd5adbdfdfe2e9da1a09b617c9512ed794037741ee53d93114276bff3f93cd3b0d97d54f9b316e1e4885dde6e9ffdf7ed
   languageName: node
   linkType: hard
 
