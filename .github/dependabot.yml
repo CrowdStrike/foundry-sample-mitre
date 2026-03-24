@@ -16,3 +16,5 @@ updates:
         versions: [">=8.0.0"]
       - dependency-name: "actions/upload-artifact"
         versions: [">=7.0.0"]
+      - dependency-name: "actions/cache"
+        versions: [">=5.0.4"]
