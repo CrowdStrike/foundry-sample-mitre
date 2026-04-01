@@ -488,8 +488,9 @@ export class MitreChartPage extends BasePage {
     await this.navigateToPath('/foundry/home', 'Foundry home page');
     await this.page.waitForLoadState('networkidle');
 
-    // Retry with page refresh if Custom apps menu doesn't appear
-    let customAppsFound = false;
+    // Retry with page refresh if Custom apps menu or app button doesn't appear
+    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+    let appFound = false;
     for (let attempt = 1; attempt <= 5; attempt++) {
       const menuButton = this.page.getByTestId('nav-trigger');
       await menuButton.waitFor({ state: 'visible', timeout: 30000 });
@@ -501,29 +502,40 @@ export class MitreChartPage extends BasePage {
         await customAppsButton.waitFor({ state: 'visible', timeout: 20000 });
         await customAppsButton.click();
         await this.waiter.delay(1500);
-        customAppsFound = true;
         this.logger.info(`Custom apps button found on attempt ${attempt}`);
-        break;
       } catch (e) {
         this.logger.warn(`Custom apps not visible on attempt ${attempt}, refreshing page...`);
         await this.page.reload();
         await this.page.waitForLoadState('networkidle');
         await this.waiter.delay(3000);
+        continue;
+      }
+
+      // Check if the app button appears in the submenu
+      const appButtonCheck = this.page.getByRole('button', { name: appName, exact: false }).first();
+      try {
+        await appButtonCheck.waitFor({ state: 'visible', timeout: 10000 });
+        appFound = true;
+        this.logger.info(`App '${appName}' found in Custom apps menu on attempt ${attempt}`);
+        break;
+      } catch (e) {
+        this.logger.warn(`App '${appName}' not in Custom apps on attempt ${attempt}, refreshing page...`);
+        await this.page.reload();
+        await this.page.waitForLoadState('networkidle');
+        await this.waiter.delay(3000);
       }
     }
-    if (!customAppsFound) {
-      throw new Error('Custom apps button not found after 5 attempts with page refresh');
+    if (!appFound) {
+      throw new Error(`App '${appName}' not found in Custom apps menu after 5 attempts with page refresh`);
     }
 
-    // Look for the app in the Custom apps menu
-    const appName = process.env.APP_NAME || 'foundry-sample-mitre';
+    // Expand the app menu only if not already expanded
     const appButton = this.page.getByRole('button', { name: appName, exact: false }).first();
-    await expect(appButton).toBeVisible({ timeout: 20000 });
-
-    // Expand the app menu if needed
+    await expect(appButton).toBeVisible({ timeout: 10000 });
     const isExpanded = await appButton.getAttribute('aria-expanded');
     if (isExpanded !== 'true') {
       await appButton.click();
+      await this.waiter.delay(500);
     }
 
     // Click the main chart/app link
