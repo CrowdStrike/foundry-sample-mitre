@@ -94,16 +94,49 @@ export class MitreChartPage extends BasePage {
     return this.withTiming(
       async () => {
         const appName = process.env.APP_NAME || 'foundry-sample-mitre';
-        
-        // Always use the "existing app" flow since app is already installed
-        this.logger.info(`Navigating to already installed app "${appName}"`);
+
+        // Strategy 1: Try "Open app" from the App Catalog detail page
+        const openedViaCatalog = await this.tryOpenAppViaCatalog(appName);
+        if (openedViaCatalog) return;
+
+        // Strategy 2: Fall back to Custom Apps menu navigation
+        this.logger.info('Falling back to Custom Apps menu navigation');
         await this.accessExistingApp(appName);
-        
-        // Verify the app loaded
         await this.verifyPageLoaded();
       },
       'Navigate to Installed App'
     );
+  }
+
+  /**
+   * Try to open the app via the "Open app" button on its App Catalog detail page.
+   * Returns true if successful, false if the button wasn't available.
+   */
+  private async tryOpenAppViaCatalog(appName: string): Promise<boolean> {
+    try {
+      this.logger.info('Trying to open app via App Catalog "Open app" button');
+      const baseUrl = this.getBaseURL();
+      const filterParam = encodeURIComponent(`name:~'${appName}'`);
+      await this.page.goto(`${baseUrl}/foundry/app-catalog?filter=${filterParam}`);
+      await this.page.waitForLoadState('domcontentloaded');
+
+      const appLink = this.page.getByRole('link', { name: appName, exact: true });
+      await appLink.waitFor({ state: 'visible', timeout: 15000 });
+      await appLink.click();
+
+      const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+      await openAppButton.waitFor({ state: 'visible', timeout: 10000 });
+      await openAppButton.click();
+      this.logger.success('Clicked "Open app" button from App Catalog');
+
+      const iframe = this.page.locator('iframe');
+      await iframe.waitFor({ state: 'visible', timeout: 30000 });
+      await this.verifyPageLoaded();
+      return true;
+    } catch (e) {
+      this.logger.warn(`"Open app" button not available: ${(e as Error).message}`);
+      return false;
+    }
   }
 
   /**
