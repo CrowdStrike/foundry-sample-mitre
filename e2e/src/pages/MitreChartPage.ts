@@ -33,13 +33,13 @@ export class MitreChartPage extends BasePage {
     // Check if app content is loading within iframe
     try {
       await expect(
-        this.page.locator('iframe')
+        this.page.locator('iframe[name="portal"]')
       ).toBeVisible({ timeout: 15000 });
       
       this.logger.success('App iframe is visible');
       
       // Check for MITRE app content within iframe
-      const iframe = this.page.frameLocator('iframe');
+      const iframe = this.page.frameLocator('iframe[name="portal"]');
       const mitreHeading = iframe.getByRole('heading', { name: /MITRE.*ATT&CK/i });
       
       await expect(mitreHeading).toBeVisible({ timeout: 10000 });
@@ -48,7 +48,7 @@ export class MitreChartPage extends BasePage {
       // App may still be loading or have no data
       this.logger.warn(`App content not fully visible - may still be loading`);
       
-      const iframeExists = await this.page.locator('iframe').isVisible({ timeout: 3000 });
+      const iframeExists = await this.page.locator('iframe[name="portal"]').isVisible({ timeout: 3000 });
       if (iframeExists) {
         this.logger.info('Iframe exists but content may still be loading');
       } else {
@@ -142,7 +142,7 @@ export class MitreChartPage extends BasePage {
         await this.retryPageLoadAfter404();
       }
 
-      const iframe = this.page.locator('iframe');
+      const iframe = this.page.locator('iframe[name="portal"]');
       await iframe.waitFor({ state: 'visible', timeout: 30000 });
       await this.verifyPageLoaded();
       return true;
@@ -677,7 +677,7 @@ export class MitreChartPage extends BasePage {
     
     // Try to verify content within iframe
     try {
-      const iframe = this.page.frameLocator('iframe');
+      const iframe = this.page.frameLocator('iframe[name="portal"]');
       const matrixHeading = iframe.getByRole('heading', { name: /MITRE.*ATT&CK.*Matrix/i });
       await expect(matrixHeading).toBeVisible({ timeout: 8000 });
       this.logger.success('MITRE matrix elements verified successfully');
@@ -701,7 +701,7 @@ export class MitreChartPage extends BasePage {
     }
     
     // Must find and click on actual detections within iframe
-    const iframe = this.page.frameLocator('iframe');
+    const iframe = this.page.frameLocator('iframe[name="portal"]');
     
     try {
       // Look for MITRE techniques/detections that can be clicked
@@ -759,7 +759,7 @@ export class MitreChartPage extends BasePage {
       throw new Error(`Expected to be on a Foundry app page, but current URL is: ${currentUrl}`);
     }
     
-    const iframe = this.page.frameLocator('iframe');
+    const iframe = this.page.frameLocator('iframe[name="portal"]');
     
     // Look for actual detection data first
     const hasDetectionData = iframe.locator('[data-testid*="detection"], .detection-item, .mitre-technique, .technique-cell').first();
