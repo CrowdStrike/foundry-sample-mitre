@@ -1,6 +1,5 @@
 import { Page, expect } from '@playwright/test';
-import { BasePage } from './BasePage';
-import { RetryHandler } from '../utils/SmartWaiter';
+import { BasePage, RetryHandler } from '@crowdstrike/foundry-playwright';
 
 /**
  * Page object for MITRE Attack chart/matrix view
