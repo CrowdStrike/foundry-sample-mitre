@@ -28,7 +28,10 @@ const techniqueHref = computed(() => calculateMitreTechniqueUrl(extensionStore.d
 
 const hostnameHref = computed(() => calculateHostNameRef(extensionStore.detection))
 
-const onClick = (e: MouseEvent) => falconApi.navigation.onClick(e, '_blank', 'falcon')
+const onClick = (e: MouseEvent) => {
+  const href = (e.currentTarget as HTMLAnchorElement).href
+  falconApi.navigation.navigateTo({ path: href, target: '_blank', type: 'falcon' })
+}
 </script>
 <template>
   <CollapsiblePanel :label="t('ransomwareRemediation')" font-class="type-md-medium" :open="true">

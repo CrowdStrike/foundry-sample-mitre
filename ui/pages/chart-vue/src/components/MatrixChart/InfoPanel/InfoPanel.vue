@@ -17,9 +17,7 @@ import TechniqueOverview from './TechniqueOverview.vue'
 const { t } = inject<I18NComposer>(SYMBOLS.I18N) as I18NComposer
 const falconApi: FalconApi = inject(SYMBOLS.FALCON_API) as FalconApi
 
-// Necessary as:
-// - sl-button doesn't allow for internal elements to take 100% width
-// - falconApi.navigation.click accepts href only from anchors
+// Necessary as sl-button doesn't allow for internal elements to take 100% width
 const seeDetectionAnchor = ref()
 const matrixChart = useMatrixChartStore()
 
@@ -32,7 +30,8 @@ const detectionUrl = computed(() =>
 )
 
 function goToDetections(e: MouseEvent) {
-  falconApi.navigation.onClick(e, '_blank')
+  const href = (e.currentTarget as HTMLAnchorElement).href
+  falconApi.navigation.navigateTo({ path: href, target: '_blank' })
 }
 </script>
 

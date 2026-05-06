@@ -31,7 +31,10 @@ interface OverviewProps {
 
 const props = defineProps<OverviewProps>()
 
-const readFullDescription = (e: MouseEvent) => falconApi.navigation.onClick(e, '_blank')
+const readFullDescription = (e: MouseEvent) => {
+  const href = (e.currentTarget as HTMLAnchorElement).href
+  falconApi.navigation.navigateTo({ path: href, target: '_blank' })
+}
 
 const headerClasses = computed(() => {
   return [
