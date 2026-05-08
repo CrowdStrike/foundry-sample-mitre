@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { BasePage } from '@crowdstrike/foundry-playwright';
 
 /**
  * Page object for MITRE remediation extension
