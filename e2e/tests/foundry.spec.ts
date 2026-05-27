@@ -56,4 +56,11 @@ test.describe('MITRE Attack App E2E Tests', () => {
       ).toHaveCount(0, { timeout: 3000 });
     });
   });
+
+  test.describe('Remediation Extension', () => {
+    test('should render Triage App extension in Endpoint Detections', async ({ mitreRemediationPage }) => {
+      const iframe = await mitreRemediationPage.openTriageExtension();
+      await expect(iframe.locator('body')).not.toBeEmpty();
+    });
+  });
 });
