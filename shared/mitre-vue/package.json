@@ -30,7 +30,7 @@
     "test:unit:watch": "yarn test:unit --watch"
   },
   "dependencies": {
-    "@crowdstrike/foundry-js": "0.21.0",
+    "@crowdstrike/foundry-js": "0.22.0",
     "@intlify/unplugin-vue-i18n": "11.0.1",
     "@shoelace-style/shoelace": "2.20.1",
     "pinia": "3.0.3",
@@ -63,7 +63,7 @@
     "sinon": "21.0.0",
     "typescript": "5.9.2",
     "vite": "7.3.2",
-    "vitest": "3.2.4",
+    "vitest": "4.1.8",
     "vue-tsc": "3.0.7"
   },
   "volta": {
