@@ -4,9 +4,6 @@ export default defineConfig({
     test: {
       watch: false,
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/*'],
-      transformMode: {
-        web: [/\.[jt]sx$/]
-      }
+      exclude: [...configDefaults.exclude, 'e2e/*']
     }
   })
