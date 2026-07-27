@@ -16,13 +16,7 @@ jobs:
     if: github.repository == 'CrowdStrike/foundry-sample-mitre'
     runs-on: ubuntu-latest
     steps:
-      - name: Enable Corepack
-        run: corepack enable
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
-      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
-        with:
-          node-version: 22
-          cache: 'yarn'
       - name: Check if rebuild needed
         id: check
         run: |
@@ -41,6 +35,14 @@ jobs:
             echo "Dependency changes detected:"
             echo "$CHANGES"
           fi
+      - name: Enable Corepack
+        if: steps.check.outputs.skip != 'true'
+        run: corepack enable
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
+        if: steps.check.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: 'yarn'
       - name: Install dependencies
         if: steps.check.outputs.skip != 'true'
         run: yarn install
