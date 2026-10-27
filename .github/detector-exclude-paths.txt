@@ -1,0 +1,22 @@
+# False positives - sample/placeholder values, not real secrets
+\.github/*
+\.githooks/*
+
+# file already deleted but preserved in history with false positive so excluding
+e2e/src/authenticate.cjs
+
+# Additional false positives (build output, lock files, sample data)
+yarn.lock
+e2e/.env.sample
+shared/mitre-vue/src/data-sample/mitre-matrix-definition-v11.json
+ui/extensions/remediations/dist/assets/index-PYBBue2D.js
+ui/extensions/remediations/dist/assets/index-dd87a9ce.js
+ui/extensions/remediations/dist/assets/index-fOkzRxnB.js
+ui/pages/chart-vue/dist/assets/index-8e6d8805.js
+ui/pages/chart-vue/dist/assets/index-B1xCELxw.js
+ui/pages/chart-vue/dist/assets/index-BZ_BTD1L.js
+ui/pages/chart-vue/dist/assets/index-DKsHQBBi.js
+ui/pages/chart-vue/dist/assets/index-DnV0LXLq.js
+ui/pages/chart-vue/dist/assets/index-PhC7y9Qy.js
+ui/pages/chart-vue/dist/assets/index-grhMW5uq.js
+ui/pages/chart-vue/dist/assets/index-miwmUONx.js

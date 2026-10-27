@@ -18,3 +18,7 @@ updates:
         versions: [">=7.0.0"]
       - dependency-name: "actions/cache"
         versions: [">=5.0.4"]
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
