@@ -24,6 +24,7 @@ You can use this app to configure automated and manual actions for specific tact
 ## Prerequisites
 
 * The Foundry CLI (instructions below).
+* Node 22+ (needed if modifying the app's UI). See https://nodejs.org/en/download for installation instructions.
 * Yarn (needed if modifying the app's UI). See https://yarnpkg.com/getting-started for installation instructions.
 
 ### Install the Foundry CLI
