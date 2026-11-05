@@ -20,3 +20,4 @@ ui/pages/chart-vue/dist/assets/index-DnV0LXLq.js
 ui/pages/chart-vue/dist/assets/index-PhC7y9Qy.js
 ui/pages/chart-vue/dist/assets/index-grhMW5uq.js
 ui/pages/chart-vue/dist/assets/index-miwmUONx.js
+ui/pages/chart-vue/dist/assets/index-A6HdLCQ8.js
