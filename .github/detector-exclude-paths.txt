@@ -9,5 +9,6 @@ e2e/src/authenticate.cjs
 yarn.lock
 e2e/.env.sample
 shared/mitre-vue/src/data-sample/mitre-matrix-definition-v11.json
-ui/extensions/remediations/dist/
-ui/pages/chart-vue/dist/
+ui/extensions/remediations/dist/*
+ui/pages/chart-vue/dist/*
+
